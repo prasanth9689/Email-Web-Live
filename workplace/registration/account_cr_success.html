@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <title>Email verification success</title>
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+    <script>
+
+        const params = new URLSearchParams(window.location.search);
+        const value = params.get('email');
+
+        // alert(value);
+
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        inter: ['Inter', 'sans-serif'],
+                    },
+                },
+            },
+        };
+    </script>
+</head>
+
+<body class="relative font-inter antialiased">
+
+    <main class="relative min-h-screen flex flex-col justify-center  overflow-hidden" style="background-color: rgb(199, 247, 226);">
+        <div class="w-full max-w-6xl mx-auto px-4 md:px-6 py-24">
+            <div class="flex justify-center">
+
+                <div class="max-w-md mx-auto text-center bg-white px-4 sm:px-8 py-10 rounded-xl shadow">
+                    <header class="mb-8">
+                        <h1 class="text-2xl font-bold mb-1">Email verification success</h1>
+                        <h1 class="text-2xl font-bold mb-1">Account created. Now you can login worksplace.</h1>
+                        <p class="text-[15px] text-slate-500">Continue with login now.</p>
+                    </header>
+                        <div class="max-w-[260px] mx-auto mt-4">
+
+                            <div style="
+                                         cursor: pointer;" id="verify" onclick="Validate()"
+                                class="w-full inline-flex justify-center whitespace-nowrap rounded-lg bg-indigo-500 px-3.5 py-2.5 text-sm font-medium text-white shadow-sm shadow-indigo-950/10 hover:bg-indigo-600 focus:outline-none focus:ring focus:ring-indigo-300 focus-visible:outline-none focus-visible:ring focus-visible:ring-indigo-300 transition-colors duration-150">
+                                Login </div>
+                        </div>
+                    <!-- <div class="text-sm text-slate-500 mt-4">Didn't receive code? <a
+                            class="font-medium text-indigo-500 hover:text-indigo-600" href="#0">Resend</a></div> -->
+                </div>
+                <script>
+
+                    function Validate() {
+                        window.open("https://skyblue.co.in/workplace/" , "_self")
+                    }
+                                       
+                </script>
+
+            </div>
+        </div>
+    </main>
+
+    <!-- Page footer -->
+    <footer class="absolute left-6 right-6 md:left-12 md:right-auto bottom-4 md:bottom-8 text-center md:text-left">
+        <a class="text-xs text-slate-500 hover:underline" href="https://skyblue.co.in">&copy;Skyblue Workplace</a>
+    </footer>
+
+    <!-- Banner with links -->
+    <!-- <div class="fixed bottom-0 right-0 w-full md:bottom-6 md:right-12 md:w-auto z-50"
+        :class="bannerOpen ? '' : 'hidden'" x-data="{ bannerOpen: true }">
+        <div class="bg-slate-800 text-sm p-3 md:rounded shadow flex justify-between">
+            <div class="text-slate-500 inline-flex">
+                <a class="font-medium hover:underline text-slate-300" href="https://skyblue.co.in/help">
+                    Trouble need help?
+                </a>
+
+            </div>
+            <button class="text-slate-500 hover:text-slate-400 pl-2 ml-3 border-l border-slate-700"
+                @click="bannerOpen = false">
+                <span class="sr-only">Close</span>
+                <svg class="w-4 h-4 shrink-0 fill-current" viewBox="0 0 16 16">
+                    <path
+                        d="M12.72 3.293a1 1 0 00-1.415 0L8.012 6.586 4.72 3.293a1 1 0 00-1.414 1.414L6.598 8l-3.293 3.293a1 1 0 101.414 1.414l3.293-3.293 3.293 3.293a1 1 0 001.414-1.414L9.426 8l3.293-3.293a1 1 0 000-1.414z" />
+                </svg>
+            </button>
+        </div>
+    </div> -->
+
+</body>
+
+</html>

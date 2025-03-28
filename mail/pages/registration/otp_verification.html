@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>Skyblue Business E-mail Login</title>
+	<link rel="stylesheet" href="/assets/main/css/styles.css">
+	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.1.3/dist/css/bootstrap.min.css"
+		integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+	<link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=Ubuntu" />
+</head>
+
+<body>
+	<div class="Loading" id="Loading"></div>
+	<!-- Header -->
+	<div class="header2">
+		<div class="leftSide">
+			<div class="left">
+				<!-- <img class="burger" src="./img/burger.svg" alt=""> -->
+				<!-- https://www.freepik.com/icon/email_2099199 -->
+				<a href="#" class="logo"><img class="logo" src="/assets/main/img/logo4.png" alt=""
+						style="height: 40px;"></a>
+				<a href="#" class="logo1"><img class="logo1" src="/assets/main/img/skyblue1.png" alt=""
+						style="height: 80px;"></a>
+			</div>
+
+		</div>
+
+		<a href="/index.html" target="_blank" rel="noopener noreferrer" style="text-decoration: none;">
+			<div class="phone-support-text button-primary" style="margin-top: 20px;">
+				<button class="button-blue" onclick="openPrice()" type="submit" id="btn-cr">Login</button>
+			</div>
+		</a>
+	</div>
+
+
+	<div class="container" style="background-color: brown;">
+		<div class="row">
+			<div class="col-sm left-side" style="height: 400px;">
+				
+				<!-- <img class="left-side-img" src="/assets/main/img/register.png" style="margin-top: 20px;" width="400px"
+					height="400px" /> -->
+                    <div style="margin-top: 20px; background-color: white;" width="400px"
+					height="400px">
+
+                    </div>
+			</div>
+			<div class="col-sm right-side">
+				<!-- One of three columns -->
+
+				<div class="container-2"
+					style="background-color: azure; width: 100%; margin-right: 50%; padding-left: 100px;">
+
+					<div id="frm">
+						<div class="login">
+							<h3><strong>Enter OTP for verification.</strong></h3>
+                            <h5>OTP sent to +91 8940570614</h5>
+						</div>
+
+						<form class="form1" name="form" autocomplete="new-password">
+							<p>
+
+								<input name="mobile1" style="margin-top:10px;" id="mobile1" type="text"
+									placeholder="Enter 6 digit OTP" class="edit username" autocomplete="new-password">
+							</p>
+							<p class="error-field" id="error-field">Enter valid email or mobile number.</p>
+							<p></p>
+							<p></p>
+							<div class="message" id="message">
+							</div>
+							<p>
+							</p>
+							<div id="button-phone" type="submit" class="btn-submit button-blue"
+								onclick="showProgress()">
+								<div id="text"> VERIFY </div>
+								<div id="progressCircle" class="hidden" style="margin-top: 30px; margin-left: 20px;">
+								</div>
+							</div>
+					</div>
+					<p></p>
+					</form>
+				</div>
+
+			</div>
+		</div>
+	</div>
+	</div>
+	<script>
+const button = document.getElementById('button-phone');
+button.addEventListener('click', function () {
+
+    var mobile1 = document.form.mobile1.value;
+
+    if (mobile1.length == "") {
+    
+        document.getElementById("mobile1").className = document.getElementById("mobile1").className + " error";  // this adds the error class
+        mobile1.focus();
+        mobile1.scrollIntoView();
+        document.getElementById('error-field').style.display = 'block';
+        return false;
+    }
+
+
+});
+
+
+	</script>
+	<!-- <script src="/assets/main/js/login.js"></script> -->
+</body>
+
+</html>

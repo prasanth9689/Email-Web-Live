@@ -1,0 +1,147 @@
+body {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+    margin: 0;
+    background-color: #f4f4f4;
+}
+
+#frm {
+    border-radius: 10px;
+    border: 1px solid #ccc;
+    width: 28%;
+    background: white;
+    padding-left: 40px;
+    padding-right: 40px;
+    padding-top: 10px;
+    padding-bottom: 50px;
+    left: 50%;
+    top: 50%;
+    position: absolute;
+    transform: translate(-50%, -50%);
+}
+
+.login {
+    color: rgb(50, 49, 48);
+    text-align: center;
+    z-index: 1;
+    -webkit-margin-before: 0;
+    margin-block-start: 0;
+    font-family: Segoe UI Variable Display, "Segoe UI", "Segoe UI Web (West European)", "Segoe UI", -apple-system, BlinkMacSystemFont, "Roboto", "Helvetica Neue", sans-serif;
+    font-size: 30px;
+    font-weight: 500;
+    line-height: 1.2;
+    letter-spacing: 0.5px;
+    margin-bottom: 25px;
+}
+
+label {
+    width: 100%;
+    margin-bottom: 5px;
+    margin-top: 10px;
+    font-weight: 600;
+}
+
+
+.edit {
+    width: 100%;
+    height: 35px;
+    margin-top: 0px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+    padding-left: 15px;
+}
+
+.error-username {
+    color: #ff3500;
+    font-size: 12px;
+    margin-top: -15px;
+    display: none;
+}
+
+.error-email {
+    color: #ff3500;
+    font-size: 12px;
+    margin-top: -15px;
+    display: none;
+}
+
+.error-password {
+    color: #ff3500;
+    font-size: 12px;
+    margin-top: -15px;
+    display: none;
+}
+
+#response {
+    margin-top: 20px;
+}
+
+/* Submit button */
+
+.btn-submit {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 40px;
+    font-size: 16px;
+    width: 100%;
+    color: #fff;
+    background: #337ab7;
+    background-color: #0085d5;
+    border: rgb(195, 216, 255) 1px;
+    color: white;
+    padding: 10px 32px;
+    border-radius: 10px;
+    margin-top: 25px;
+    margin-bottom: 0px;
+    box-shadow: 7px 6px 28px 1px rgba(0, 0, 0, 0.24);
+    cursor: pointer;
+    outline: none;
+    transition: 0.2s all;
+}
+
+.hidden {
+    display: none;
+}
+
+#progressCircle {
+    width: 30px;
+    height: 30px;
+    border: 4px solid #ffffff;
+    border-top: 4px solid #3498db;
+    border-radius: 50%;
+    animation: spin 0.5s linear infinite;
+    transform: translate(-50%, -50%);
+}
+
+@keyframes spin {
+    0% {
+        transform: translate(-50%, -50%) rotate(0deg);
+    }
+
+    100% {
+        transform: translate(-50%, -50%) rotate(360deg);
+    }
+}
+
+
+@media only screen and (max-width: 600px) {
+    #frm {
+        background-color: #ff0000;
+        border-radius: 10px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        width: 80%;
+        background: white;
+        padding-left: 40px;
+        padding-right: 40px;
+        padding-top: 50px;
+        padding-bottom: 50px;
+        left      : 50%;
+        top       : 50%;
+        position  : absolute;
+        transform : translate(-50%, -50%);
+    }
+} 

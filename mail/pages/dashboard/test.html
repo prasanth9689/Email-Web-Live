@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Multiple Views</title>
+  <style>
+
+    *{
+        margin: 0px;
+    }
+
+    .view {
+        margin-top: 58px;
+        margin-left: 243px;
+        position:absolute;
+    top:0;
+    bottom:0;
+   width: 100%;
+    }
+    
+    
+
+    .view { display: none; } /* Hide all views */
+    .active { display: block; } /* Show only the active view */
+
+
+    .content__email_list a {
+    font-family: 'Roboto', sans-serif;
+    display: flex;
+    align-items: center;
+    padding: 10px 15px;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+    color: #202124;
+    text-decoration: none;
+    font-size: 15px;
+    font-weight: 400;
+}
+
+.select__emails,
+.email__select {
+    width: 15px;
+    height: 15px;
+    display: block;
+    border: 2px solid #333;
+    border-radius: 2px;
+    margin: 10px;
+}
+
+.email__select {
+    margin: 0 10px;
+}
+
+.email__start {
+    width: 0px;
+    height: 24px;
+    display: block;
+    background: url('../img/icon-star-vazia.png') no-repeat center center;
+}
+
+.email__name {
+    margin-left: 15px;
+    font-weight: 700;
+}
+
+.email__content {
+    margin-left: 60px;
+    color: #5f6368;
+}
+
+ul
+{
+    list-style-type:none;
+    padding:0px;
+    margin:0px;
+}
+  </style>
+</head>
+<body>
+
+  <nav>
+    <button onclick="showView('home')">Home</button>
+    <button onclick="showView('about')">About</button>
+    <button onclick="showView('contact')">Contact</button>
+  </nav>
+
+  <div id="home" class="view active" style="background-color: white; height: 100%;">
+    <div class="content__email_list">
+        <ul>
+          <li>
+            <a href="#">
+                <div class="email__start"></div>
+              <p class="email__name">Emaill Name</p>
+              <p class="email__content">Lorem ipsum dolor sit amet consectetur adipisicing elit....</p>
+            </a>
+          </li>
+
+          <li>
+            <a href="#">
+                <div class="email__start"></div>
+              <p class="email__name">Emaill Name</p>
+              <p class="email__content">Lorem ipsum dolor sit amet consectetur adipisicing elit....</p>
+            </a>
+          </li>
+
+          <li>
+            <a href="#">
+                <div class="email__start"></div>
+              <p class="email__name">Emaill Name</p>
+              <p class="email__content">Lorem ipsum dolor sit amet consectetur adipisicing elit....</p>
+            </a>
+          </li>
+
+          <li>
+            <a href="#">
+                <div class="email__start"></div>
+              <p class="email__name">Emaill Name</p>
+              <p class="email__content">Lorem ipsum dolor sit amet consectetur adipisicing elit....</p>
+            </a>
+          </li>
+
+          <li>
+            <a href="#">
+                <div class="email__start"></div>
+              <p class="email__name">Emaill Name</p>
+              <p class="email__content">Lorem ipsum dolor sit amet consectetur adipisicing elit....</p>
+            </a>
+          </li>
+
+          <li>
+            <a href="#">
+                <div class="email__start"></div>
+              <p class="email__name">Emaill Name</p>
+              <p class="email__content">Lorem ipsum dolor sit amet consectetur adipisicing elit....</p>
+            </a>
+          </li>
+
+          <li>
+            <a href="#">
+                <div class="email__start"></div>
+              <p class="email__name">Emaill Name</p>
+              <p class="email__content">Lorem ipsum dolor sit amet consectetur adipisicing elit....</p>
+            </a>
+          </li>
+
+          <li>
+            <a href="#">
+                <div class="email__start"></div>
+              <p class="email__name">Emaill Name</p>
+              <p class="email__content">Lorem ipsum dolor sit amet consectetur adipisicing elit....</p>
+            </a>
+          </li>
+
+          <li>
+            <a href="#">
+                <div class="email__start"></div>
+              <p class="email__name">Emaill Name</p>
+              <p class="email__content">Lorem ipsum dolor sit amet consectetur adipisicing elit....</p>
+            </a>
+          </li>
+
+          <li>
+            <a href="#">
+                <div class="email__start"></div>
+              <p class="email__name">Emaill Name</p>
+              <p class="email__content">Lorem ipsum dolor sit amet consectetur adipisicing elit....</p>
+            </a>
+          </li>
+
+          <li>
+            <a href="#">
+                <div class="email__start"></div>
+              <p class="email__name">Emaill Name</p>
+              <p class="email__content">Lorem ipsum dolor sit amet consectetur adipisicing elit....</p>
+            </a>
+          </li>
+
+          <li>
+            <a href="#">
+                <div class="email__start"></div>
+              <p class="email__name">Emaill Name</p>
+              <p class="email__content">Lorem ipsum dolor sit amet consectetur adipisicing elit....</p>
+            </a>
+          </li>
+        </ul>
+      </div>
+  </div>
+
+  <div id="about" class="view" style="background-color: rgb(0, 123, 255);">
+    <h1>About View</h1>
+    <p>This is the about page.</p>
+  </div>
+
+  <div id="contact" class="view" style="background-color: rgb(0, 224, 11);">
+    <h1>Contact View</h1>
+    <p>This is the contact page.</p>
+  </div>
+
+  <script>
+    function showView(viewId) {
+      document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
+      document.getElementById(viewId).classList.add('active');
+    }
+  </script>
+
+</body>
+</html>
