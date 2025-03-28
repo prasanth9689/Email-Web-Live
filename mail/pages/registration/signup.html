@@ -44,12 +44,12 @@
 		}
 
 		#layoutMobile {
-			display: block;
+			display: none;
 		}
 
 		#usernameLayout {
 			position: fixed;
-			display: none;
+			display: block;
 		}
 
 		.error-field2 {
@@ -533,7 +533,7 @@
 				<div class="container-2"
 					style="background-color: azure; width: 100%; margin-right: 50%; padding-left: 100px;">
 
-					<div id="frm" style="padding-top: 10px; padding-bottom: 10px;">
+					<div id="frm" style="padding-top: 10px; padding-bottom: 20px; width:68%;">
 
 						<!-- Header -->
 						<div class="login">
@@ -553,9 +553,16 @@
 
 							<!-- Email address -->
 							<p style="background-color: white;">
-								<input name="email_address" style="margin-top:0px;" id="email_address" type="text"
+								<!-- <input name="email_address" style="margin-top:0px;" id="email_address" type="text"
 									placeholder="Enter new email address" class="edit username"
-									autocomplete="new-password">
+									autocomplete="new-password"> -->
+
+									<div class="input-group mb-3">
+										<input type="text" name="email_address" id="email_address" class="form-control edit username" placeholder="Enter new username" aria-label="Enter new username" aria-describedby="basic-addon2">
+										<div class="input-group-append">
+										  <span class="input-group-text" id="basic-addon2">@skyblue.co.in</span>
+										</div>
+									  </div>
 							</p>
 
 							<p class="error-email-address" id="error-email-address">Enter email address.</p>
@@ -601,13 +608,25 @@
 
 							<p></p>
 							<p></p>
-							<div class="message" id="message">
+							<style>
+								.message-username {
+									border-radius: 5px;
+									background-color: #ff0032;
+									color: white;
+									padding: 6px;
+									text-align: end;
+									display: block;
+									margin-bottom: -15px;
+									display: none;
+								}
+							</style>
+							<div class="message-username" id="message-username">
 							</div>
 							<p>
 							</p>
 							<div id="button-username" type="submit" class="btn-submit button-blue"
 								onclick="showProgress()">
-								<div id="text3"> Lets Start </div>
+								<div id="text5"> Lets Start </div>
 
 								<style>
 									#progressCircle5 {
@@ -729,13 +748,62 @@
 			}
 
 
-			var textView3 = document.getElementById("text3");
+			var textView3 = document.getElementById("text5");
 			textView3.style.display = "none";
 			progressCircle5.classList.remove("hidden");
 
 
-			alert("Postapi");
+			createUser();
 		});
+
+		function createUser() {
+			const acc = "create_user";
+			const mobile = document.getElementById('mobile').value;
+
+			const data = {
+				acc: acc,
+				mobile: mobile
+			};
+
+			// POST request to the API
+			fetch('https://skyblue.co.in/mail/mail.php', {
+				method: 'POST',
+				headers: {
+					'Content-Type': 'application/json'
+				},
+				body: JSON.stringify(data)
+			})
+				.then(response => response.json())
+				.then(data => {
+					console.log(`Message: ${data.message}`);
+					const status = +`${data[0].status}`;
+					console.log("status : " + status)
+
+					if (parseInt(status) == 1) {
+						// window.open("https://skyblue.co.in/mail/pages/dashboard/", "_self");
+					}
+
+					if (status == 2) {
+						const responseMessage = document.getElementById('message-username');
+						responseMessage.textContent = `${data[0].message}`;
+						responseMessage.style.display = "block";
+
+						var textView3 = document.getElementById("text5");
+		            	textView3.style.display = "block";
+
+						var progressBar = document.getElementById("progressCircle5");
+						progressBar.style.display = "none";
+
+						var topProgressbar = document.getElementById("Loading");
+						topProgressbar.style.display = "none";
+					}
+
+
+				})
+				.catch((error) => {
+
+				});
+		}
 
 		// Input box click listener
 		const mName2 = document.getElementById("name2");

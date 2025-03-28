@@ -17,6 +17,14 @@ if (json_last_error() === JSON_ERROR_NONE) {
 
 switch ($access) {
 
+    case "create_user":
+        $mMobile = htmlspecialchars($data['mobile']);
+
+        array_push($data, array("access auth"=>"true" , "status"=>"2" , "message"=>"API Works".$mMobile ));
+        header("Content-Type:Application/json");
+        print json_encode($data);
+        break;
+
     case "mail_check_user":
         $mMobile = htmlspecialchars($data['mobile']);
 

@@ -121,7 +121,7 @@ function postApi() {
     };
 
     // POST request to the API
-    fetch('https://skyblue.co.in/skyblue_main.php', {
+    fetch('https://skyblue.co.in/workplace/workplace.php', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'
