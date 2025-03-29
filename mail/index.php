@@ -1,3 +1,12 @@
+<?php
+session_start();
+
+if (isset($_SESSION["username"])) {
+    header("Location: https://skyblue.co.in/mail/pages/dashboard/index.php");
+}
+
+?>
+
 <!DOCTYPE html>
 <html>
 <head>
@@ -22,7 +31,7 @@
 			 </div>
 		</div>
 
-		<a href="../mail/pages/registration/signup.html" target="_blank" rel="noopener noreferrer" style="text-decoration: none;">
+		<a href="../mail/pages/registration/signup.php" target="_blank" rel="noopener noreferrer" style="text-decoration: none;">
 			<div class="phone-support-text"  style="margin-top: 20px;">
 				<button class="button-green" ta onclick="openPrice()" type="submit" id="btn-cr">Create an account</button>
 			</div>

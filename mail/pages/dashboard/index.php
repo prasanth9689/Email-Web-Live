@@ -1,3 +1,11 @@
+<?php
+session_start();
+
+if (!(isset($_SESSION['username']) && $_SESSION['password'] != '')) {
+    header ("Location: https://skyblue.co.in/");
+    }
+?>
+
 <html>
 
 <head>
@@ -38,7 +46,7 @@
     <div class="position-sticky">
       <div class="list-group list-group-flush mx-3 mt-4">
 
-        <a href="#" class="list-group-item list-group-item-action py-2 ripple active">
+        <a href="#" onclick="showView('compose')" class="list-group-item list-group-item-action py-2 ripple active">
           <i class="fa fas  fa-fw me-3"></i><span>Compose Mail</span>
         </a>
 
@@ -77,10 +85,21 @@
 
 
     <?php
+
+
+//  $username = $_SESSION["username"];
+//  $password = $_SESSION["password"];
+
 // IMAP server details
 $hostname = '{imap.skyblue.co.in:993/imap/ssl/novalidate-cert}INBOX'; // Gmail IMAP server, SSL encryption, port 993
-$username = 'prasanth14';  // Your email address
-$password = '123456';     // Your email password or app-specific password
+// $username = 'test8';  // Your email address
+// $password = 'test8';     // Your email password or app-specific password
+
+$username = $_SESSION["username"];
+$password = $_SESSION["password"];
+
+// echo $username;
+// echo $password;
 
 // Open an IMAP connection
 $inbox = imap_open($hostname, $username, $password) or die('Cannot connect to mailbox: ' . imap_last_error());
@@ -163,6 +182,20 @@ imap_close($inbox);
   <div id="contact" class="view" style="background-color:white;">
     <h1>Send email list view</h1>
     <p>Development under progress.</p>
+  </div>
+
+  <style>
+      .container-compose {
+        background-color
+      }
+    </style>
+
+  <div id="compose" class="view" style="background-color:red;">
+
+        <div class="container-compose">
+
+        </div>
+  
   </div>
 
   <div id="message_view" class="view" style="background-color: white;">

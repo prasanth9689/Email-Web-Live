@@ -1,4 +1,5 @@
 <?php
+session_start();
 
 $con = mysqli_connect('localhost' , 'root', 'prasanth' , 'skyblue_mail');
 
@@ -37,50 +38,72 @@ switch ($access) {
            return;
         } 
 
+        GLOBAL $mUserName;
+        GLOBAL $mPassword;
 
-        // 1. Create system user for the email address
-        $sudo_password = 'Prasanth968@@';
-        $shell_create_user = "echo '$sudo_password' | sudo -S useradd -m $mUserName";
-        $shell_create_new_password = "echo '$mUserName:$mPassword' | sudo chpasswd";
-        $shell_create_mail_dir = "echo '$sudo_password' | sudo -S mkdir -p /home/$mUserName/Maildir";
-        $shell_add_permission = "    echo '$sudo_password' | sudo -S chown -R $mUserName:$mUserName /home/$mUserName/Maildir ";
-        $shell_restart_postfix = "echo '$sudo_password' | sudo -S systemctl restart postfix ";
-        
+        $mUserName = htmlspecialchars($data['username']);
+        $mPassword = htmlspecialchars($data['password']);
 
-        shell_exec($shell_create_user);
-        shell_exec($shell_create_new_password);
-        shell_exec($shell_create_mail_dir);
-        shell_exec($shell_add_permission);
-        $output = shell_exec($shell_restart_postfix);
-        
+         // 1. Create system user for the email address
+         $sudo_password = 'Prasanth968@@';
+         $shell_create_user = "echo '$sudo_password' | sudo -S useradd -m $mUserName";
+         $shell_create_new_password = "echo '$mUserName:$mPassword' | sudo chpasswd";
+         $shell_create_mail_dir = "echo '$sudo_password' | sudo -S mkdir -p /home/$mUserName/Maildir";
+         $shell_add_permission = "    echo '$sudo_password' | sudo -S chown -R $mUserName:$mUserName /home/$mUserName/Maildir ";
+         $shell_restart_postfix = "echo '$sudo_password' | sudo -S systemctl restart postfix ";
+         
+ 
+         shell_exec($shell_create_user);
+         shell_exec($shell_create_new_password);
+         shell_exec($shell_create_mail_dir);
+         shell_exec($shell_add_permission);
+       
+      
+         exec($shell_restart_postfix, $output, $status);
 
-        if ($output !== null) {
-          //  echo "Error creating user: " . $output;
+        if ($status === 0) {
+
+            $mUserName1 = htmlspecialchars($data['username']);
+            $mPassword1 = htmlspecialchars($data['password']);
+
+            $_SESSION["username"] = $mUserName1;
+            $_SESSION["password"] = $mPassword1;
+          
+
+
+            // Save user information to db
+            $Query = "INSERT INTO users (username, password) 
+                             VALUES ('$mUserName', '$mPassword')";
+            if (mysqli_query($con, $Query)) {
+              // Insert success
+              array_push($data, array("access auth"=>"true" , "status"=>"1" , "message"=> "Email created success"));
+              header("Content-Type:Application/json");
+              print json_encode($data);
+                    }else{
+                                // Insert failed
+                            array_push($data, array("access auth"=>"true" , "status"=>"2" , "message"=>"Error creating user: " . $output));
+            header("Content-Type:Application/json");
+            print json_encode($data);
+      
+                      }
+
+
+
+
+
+
+
+
+
+
+
+        }else{
             array_push($data, array("access auth"=>"true" , "status"=>"2" , "message"=>"Error creating user: " . $output));
             header("Content-Type:Application/json");
             print json_encode($data);
             exit;
-        }else{
-            // created success
-            array_push($data, array("access auth"=>"true" , "status"=>"1" , "message"=> "Email created success"));
-            header("Content-Type:Application/json");
-            print json_encode($data);
         }
         
-
-    
-
-
-
-        // $mMobile = htmlspecialchars($data['mobile']);
-        // $mPersonName = htmlspecialchars($data['name']);
-        // $mDob = htmlspecialchars($data['dob']);
-        // $mGender = htmlspecialchars($data['gender']);
-        // $mPassword = htmlspecialchars($data['password']);
-
-        // array_push($data, array("access auth"=>"true" , "status"=>"2" , "message"=>"API Works".$mMobile." ".$mPersonName." ".$mDob." ".$mGender." ".$mPassword." ".$mUserName));
-        // header("Content-Type:Application/json");
-        // print json_encode($data);
         break;
 
     case "mail_check_user":
@@ -114,6 +137,10 @@ switch ($access) {
                 $stmt->execute();
                 $stmt->bind_result($mUsername, $mPassword);
                 if($stmt->fetch()){
+
+                    $_SESSION["username"] = $mUsername;
+                    $_SESSION["password"] = $mPassword;
+
                     array_push($data, array("access auth"=>"true" , "status"=>"1" , "message"=>"Account found" ));
                     header("Content-Type:Application/json");
                     print json_encode($data);

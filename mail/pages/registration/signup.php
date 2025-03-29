@@ -1,3 +1,12 @@
+<?php
+session_start();
+
+if (isset($_SESSION["username"])) {
+    header("Location: https://skyblue.co.in/mail/pages/dashboard/index.php");
+}
+
+?>
+
 <!DOCTYPE html>
 <html>
 
@@ -801,12 +810,12 @@
 					console.log("status : " + status)
 
 					if (parseInt(status) == 1) {
-						// window.open("https://skyblue.co.in/mail/pages/dashboard/", "_self");
-						const responseMessage = document.getElementById('message-username');
-						responseMessage.textContent = `${data[0].message}`;
-						responseMessage.style.display = "block";
+						 window.open("https://skyblue.co.in/mail/pages/dashboard/", "_self");
+						// const responseMessage = document.getElementById('message-username');
+						// responseMessage.textContent = `${data[0].message}`;
+						// responseMessage.style.display = "block";
 
-						alert("create user");
+				//		alert("create user");
 					}
 
 					if (status == 2) {
