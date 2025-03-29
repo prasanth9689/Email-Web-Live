@@ -82,7 +82,7 @@
 						<form class="form1" name="form" autocomplete="new-password">
 							<p>
 								<input name="mobile" style="margin-top:5px; caret-color: #2971fc;" id="mobile"
-									type="tel" maxlength="13" value="+918940570614" placeholder="Enter mobile no"
+									type="tel" maxlength="13" value="+918940570615" placeholder="Enter mobile no"
 									class="edit username" autocomplete="tel" autofocus>
 							</p>
 							<p class="error-field" id="error-field">Enter mobile number.</p>
@@ -557,12 +557,14 @@
 									placeholder="Enter new email address" class="edit username"
 									autocomplete="new-password"> -->
 
-									<div class="input-group mb-3">
-										<input type="text" name="email_address" id="email_address" class="form-control edit username" placeholder="Enter new username" aria-label="Enter new username" aria-describedby="basic-addon2">
-										<div class="input-group-append">
-										  <span class="input-group-text" id="basic-addon2">@skyblue.co.in</span>
-										</div>
-									  </div>
+							<div class="input-group mb-3">
+								<input type="text" name="email_address" id="email_address"
+									class="form-control edit username" placeholder="Enter new username"
+									aria-label="Enter new username" aria-describedby="basic-addon2">
+								<div class="input-group-append">
+									<span class="input-group-text" id="basic-addon2">@skyblue.co.in</span>
+								</div>
+							</div>
 							</p>
 
 							<p class="error-email-address" id="error-email-address">Enter email address.</p>
@@ -577,14 +579,22 @@
 
 							<!-- Gender -->
 							<p>
-							<div class="box" id="gender" style="margin-top: 0px;">
+							<!-- <div class="box" id="gender" style="margin-top: 0px;">
 								<select id="select" class="required">
 									<option value="">Select Gender</option>
 									<option value="Male">Male</option>
 									<option value="Female">Female</option>
 									<option value="Transgender">Transgender</option>
 								</select>
-							</div>
+							</div> -->
+							<div class="box" style="margin-top: 0px;">
+							<select id="gender">
+								<option value="">Select Gender</option>
+									<option value="Male">Male</option>
+									<option value="Female">Female</option>
+									<option value="Transgender">Transgender</option>
+							  </select>
+							</div> 
 							</p>
 
 							<p class="error-gender" id="error-gender">Select gender.</p>
@@ -664,7 +674,7 @@
 			var name2 = document.getElementById("name2").value;
 			var email_address = document.getElementById("email_address").value;
 			var dob = document.getElementById("dob").value;
-			var gender = document.getElementById("select").value;
+			var gender = document.getElementById("gender").value;
 			var password = document.getElementById("password").value;
 			var password2 = document.getElementById("password2").value;
 
@@ -759,10 +769,21 @@
 		function createUser() {
 			const acc = "create_user";
 			const mobile = document.getElementById('mobile').value;
+			const personName = document.getElementById('name2').value;
+			const userName = document.getElementById('email_address').value; // prasanth or person name (it cover prasanth@skyblue.co.in)
+			const dob = document.getElementById('dob').value;
+			var selectElement = document.getElementById('gender');
+            var selectedValue = selectElement.value;
+			const password = document.getElementById('password').value;
 
 			const data = {
 				acc: acc,
-				mobile: mobile
+				mobile: mobile,
+				name: personName,
+				dob: dob,
+				gender: selectedValue,
+				password: password,
+				username: userName
 			};
 
 			// POST request to the API
@@ -781,6 +802,11 @@
 
 					if (parseInt(status) == 1) {
 						// window.open("https://skyblue.co.in/mail/pages/dashboard/", "_self");
+						const responseMessage = document.getElementById('message-username');
+						responseMessage.textContent = `${data[0].message}`;
+						responseMessage.style.display = "block";
+
+						alert("create user");
 					}
 
 					if (status == 2) {
@@ -789,7 +815,7 @@
 						responseMessage.style.display = "block";
 
 						var textView3 = document.getElementById("text5");
-		            	textView3.style.display = "block";
+						textView3.style.display = "block";
 
 						var progressBar = document.getElementById("progressCircle5");
 						progressBar.style.display = "none";

@@ -18,11 +18,69 @@ if (json_last_error() === JSON_ERROR_NONE) {
 switch ($access) {
 
     case "create_user":
-        $mMobile = htmlspecialchars($data['mobile']);
 
-        array_push($data, array("access auth"=>"true" , "status"=>"2" , "message"=>"API Works".$mMobile ));
-        header("Content-Type:Application/json");
-        print json_encode($data);
+        // Check username availability
+
+        $mUserName = htmlspecialchars($data['username']);
+        $mPassword = htmlspecialchars($data['password']);
+
+        $sql = "SELECT username FROM users WHERE username = ?";
+        $stmt = $con->prepare($sql);
+        $stmt->bind_param("s", $mUserName); // "s" means the database expects a string
+        $stmt->execute();
+        $result = $stmt->get_result();
+        // Check if any rows were returned
+        if ($result->num_rows > 0) {
+            array_push($data, array("access auth"=>"true" , "status"=>"2" , "message"=>"Username not availabe. try another username" ));
+            header("Content-Type:Application/json");
+            print json_encode($data);
+           return;
+        } 
+
+
+        // 1. Create system user for the email address
+        $sudo_password = 'Prasanth968@@';
+        $shell_create_user = "echo '$sudo_password' | sudo -S useradd -m $mUserName";
+        $shell_create_new_password = "echo '$mUserName:$mPassword' | sudo chpasswd";
+        $shell_create_mail_dir = "echo '$sudo_password' | sudo -S mkdir -p /home/$mUserName/Maildir";
+        $shell_add_permission = "    echo '$sudo_password' | sudo -S chown -R $mUserName:$mUserName /home/$mUserName/Maildir ";
+        $shell_restart_postfix = "echo '$sudo_password' | sudo -S systemctl restart postfix ";
+        
+
+        shell_exec($shell_create_user);
+        shell_exec($shell_create_new_password);
+        shell_exec($shell_create_mail_dir);
+        shell_exec($shell_add_permission);
+        $output = shell_exec($shell_restart_postfix);
+        
+
+        if ($output !== null) {
+          //  echo "Error creating user: " . $output;
+            array_push($data, array("access auth"=>"true" , "status"=>"2" , "message"=>"Error creating user: " . $output));
+            header("Content-Type:Application/json");
+            print json_encode($data);
+            exit;
+        }else{
+            // created success
+            array_push($data, array("access auth"=>"true" , "status"=>"1" , "message"=> "Email created success"));
+            header("Content-Type:Application/json");
+            print json_encode($data);
+        }
+        
+
+    
+
+
+
+        // $mMobile = htmlspecialchars($data['mobile']);
+        // $mPersonName = htmlspecialchars($data['name']);
+        // $mDob = htmlspecialchars($data['dob']);
+        // $mGender = htmlspecialchars($data['gender']);
+        // $mPassword = htmlspecialchars($data['password']);
+
+        // array_push($data, array("access auth"=>"true" , "status"=>"2" , "message"=>"API Works".$mMobile." ".$mPersonName." ".$mDob." ".$mGender." ".$mPassword." ".$mUserName));
+        // header("Content-Type:Application/json");
+        // print json_encode($data);
         break;
 
     case "mail_check_user":

@@ -79,8 +79,8 @@
     <?php
 // IMAP server details
 $hostname = '{imap.skyblue.co.in:993/imap/ssl/novalidate-cert}INBOX'; // Gmail IMAP server, SSL encryption, port 993
-$username = 'prasanth';  // Your email address
-$password = 'Prasanth';     // Your email password or app-specific password
+$username = 'prasanth14';  // Your email address
+$password = '123456';     // Your email password or app-specific password
 
 // Open an IMAP connection
 $inbox = imap_open($hostname, $username, $password) or die('Cannot connect to mailbox: ' . imap_last_error());

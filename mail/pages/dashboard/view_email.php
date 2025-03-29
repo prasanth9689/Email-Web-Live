@@ -8,7 +8,7 @@ if (!isset($_GET['message_id'])) {
 $message_id = $_GET['message_id'];
 
 // Connect to the IMAP server
-$mailbox = imap_open("{imap.skyblue.co.in:993/imap/ssl/novalidate-cert}INBOX", "prasanth", "Prasanth");
+$mailbox = imap_open("{imap.skyblue.co.in:993/imap/ssl/novalidate-cert}INBOX", "prasanth14", "123456");
 
 if (!$mailbox) {
     echo "Failed to connect to IMAP server.";
