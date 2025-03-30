@@ -29,13 +29,22 @@ if (!(isset($_SESSION['username']) && $_SESSION['password'] != '')) {
   </script> -->
 
   <!-- Image and text -->
-  <nav class="navbar navbar-light" style="width: 100%; position: fixed; box-shadow: 0 2px 5px 0 rgb(0 0 0 / 5%), 0 2px 10px 0 rgb(0 0 0 / 5%);">
+  <nav class="navbar navbar-light navbar-custom" style="width: 100%; position: fixed; box-shadow: 0 2px 5px 0 rgb(0 0 0 / 5%), 0 2px 10px 0 rgb(0 0 0 / 5%);">
     <a class="navbar-brand" href="#">
       <img src="/assets/mail/img/logo3.png" width="30" height="30" class="d-inline-block align-top" alt="">
       Skyblue Mail
     </a>
 
-    <form class="form-inline my-2 my-lg-0">
+    <style>
+
+@media only screen and (max-width: 400px) {
+  .form-inline {
+		display: none;
+	}
+}
+      </style>
+
+    <form class="form-inline my-2 my-lg-0 search">
       <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
       <button class="btn btn-primary my-2 my-sm-0" type="submit">Search</button>
     </form>
@@ -54,22 +63,22 @@ if (!(isset($_SESSION['username']) && $_SESSION['password'] != '')) {
             class="fa fas fa-envelope fa-fw me-3"></i><span>Inbox</span></a>
 
         <a href="#" onclick="showView('contact')" class="list-group-item list-group-item-action py-2 ripple"><i
-            class="fa fas fa-chart-line fa-fw me-3"></i><span>Sent</span></a>
+            class="fa fa-paper-plane fa-fw me-3"></i><span>Sent</span></a>
         <a href="#" class="list-group-item list-group-item-action py-2 ripple">
-          <i class="fa fas fa-chart-pie fa-fw me-3"></i><span>Draft</span>
+          <i class="fa fas fa-file-alt fa-fw me-3"></i><span>Draft</span>
         </a>
         <a href="#" class="list-group-item list-group-item-action py-2 ripple"><i
-            class="fa fas fa-chart-bar fa-fw me-3"></i><span>Important</span></a>
+            class="fa fas fa-heart fa-fw me-3"></i><span>Important</span></a>
         <a href="#" class="list-group-item list-group-item-action py-2 ripple"><i
-            class="fa fas fa-globe fa-fw me-3"></i><span>Spam</span></a>
+            class="fa fas fa-exclamation-triangle fa-fw me-3"></i><span>Spam</span></a>
         <a href="#" class="list-group-item list-group-item-action py-2 ripple"><i
-            class=" fa  fas fa-building fa-fw me-3"></i><span>Trash</span></a>
+            class=" fa  fas fa-trash fa-fw me-3"></i><span>Trash</span></a>
         <a href="#" class="list-group-item list-group-item-action py-2 ripple"><i
             class="fa fas fa-calendar fa-fw me-3"></i><span>Calendar</span></a>
         <a href="#" class="list-group-item list-group-item-action py-2 ripple"><i
-            class="fa fas fa-users fa-fw me-3"></i><span>Settings</span></a>
-        <a href="#" class="list-group-item list-group-item-action py-2 ripple"><i
-            class="fa fas fa-money-bill fa-fw me-3"></i><span>Logout</span></a>
+            class="fa fas fa-cog fa-fw me-3"></i><span>Settings</span></a>
+        <a href="logout.php" class="list-group-item list-group-item-action py-2 ripple"><i
+            class="fa fa-sign-out-alt fa-fw me-3"></i><span>Logout</span></a>
       </div>
     </div>
   </nav>
@@ -80,7 +89,7 @@ if (!(isset($_SESSION['username']) && $_SESSION['password'] != '')) {
   <style>
  
   </style>
-  <div id="home" class="view active" style="background-color: white; height: 100%;">
+  <div id="home" class="view active" style="background-color: white; height: 100%; width: 100%;">
     <div class="content__email_list">
 
 
@@ -186,13 +195,158 @@ imap_close($inbox);
 
   <style>
       .container-compose {
-        background-color
+        margin:20px;
+        height: 100%;
+        width: 100%;
       }
+
+      .btn-default {
+        background-color: white;
+        color: black;
+        border-color:#adadad
+      }
+      
+      .btn-default:hover,
+.btn-default:focus,
+.btn-default.focus,
+.btn-default:active,
+.btn-default.active,
+.open>.dropdown-toggle.btn-default {
+  color:#333;
+  background-color:#e6e6e6;
+  border-color:#adadad
+}
+
+.editor {
+    border: 1px solid #ccc;
+    padding: 10px;
+    min-height: 200px;
+    width: 100%;
+    margin-top: 10px;
+    font-size: 16px;
+    background-color: white;
+
+
+  }
     </style>
 
-  <div id="compose" class="view" style="background-color:red;">
+  <div id="compose" class="view">
 
         <div class="container-compose">
+
+              <div class="row inbox" style="height:100px;">
+
+                       <div class="col-md-9">
+
+                                <div class="panel panel-default"> 
+
+                                          <div class="panel-body "> 
+                                                 
+                                                     <p class="text-center" style="display:none;">New Message</p>
+
+                                                              <form class="form-horizontal" role="form">
+                                                                       
+                                                                         <div class="form-group d-flex justify-content-start">
+				                                                                        	<label for="to" class="col-sm-1 control-label">To:</label>
+				    	                                                                              <div class="col-sm-11">
+                                                                                                          <input type="email" class="form-control select2-offscreen" id="to" placeholder="Type email" tabindex="-1">
+				                                                                                   	</div>
+				                                                                 </div>
+
+                                                                         <div class="form-group d-flex justify-content-start">
+				    	                                                                    <label for="cc" class="col-sm-1 control-label">CC:</label>
+				                                                                                    <div class="col-sm-11">
+                                                                                                          <input type="email" class="form-control select2-offscreen" id="cc" placeholder="Type email" tabindex="-1">
+				                                                                                   	</div>
+				  	                                                             </div>
+
+                                                                         <div class="form-group d-flex justify-content-start">
+				                                                                        	<label for="bcc" class="col-sm-1 control-label">BCC:</label>
+				                                                                                  	<div class="col-sm-11">
+                                                                                                         <input type="email" class="form-control select2-offscreen" id="bcc" placeholder="Type email" tabindex="-1">
+				                                                                                   	</div>
+				  	                                                              </div>
+
+                                                              </form>
+
+                                                                        <div class="col-sm-11 col-sm-offset-1">
+
+                                                                                    <div class="btn-toolbar" role="toolbar">
+
+                                                                                               <div class="btn-group">
+
+                                                                                                          <button onclick="document.execCommand('bold')" class="btn btn-default"><span class="fa fa-bold"></span></button>
+						  	                                                                                          <button onclick="document.execCommand('italic')" class="btn btn-default"><span class="fa fa-italic"></span></button>
+						                                                                                            	<button onclick="document.execCommand('underline')" class="btn btn-default"><span class="fa fa-underline"></span></button>
+
+                                                                                               </div>
+
+
+                                                                                               <div class="btn-group" style="margin-left:5px;">
+						                                                                                             	<button onclick="document.execCommand('justifyLeft')" class="btn btn-default"><span class="fa fa-align-left"></span></button>
+						  	                                                                                          <button onclick="document.execCommand('justifyRight')" class="btn btn-default"><span class="fa fa-align-right"></span></button>
+						  	                                                                                          <button onclick="document.execCommand('justifyCenter')" class="btn btn-default"><span class="fa fa-align-center"></span></button>
+							                                                                                            <button onclick="document.execCommand('justifyLeft')" class="btn btn-default"><span class="fa fa-align-justify"></span></button>
+					                                                                                    	</div>
+
+
+                                                                                                <div class="btn-group" style="margin-left:5px;">
+						  	                                                                                         <button onclick="document.execCommand('indent')" class="btn btn-default"><span class="fa fa-indent"></span></button>
+						  	                                                                                         <button onclick="document.execCommand('outdent')" class="btn btn-default"><span class="fa fa-outdent"></span></button>
+			                                                                                     			</div>
+
+                                                                                                <div class="btn-group" style="margin-left:5px;">
+						  	                                                                                         <button onclick="document.execCommand('insertUnorderedList', false, null)" class="btn btn-default"><span class="fa fa-list-ul"></span></button>
+						  	                                                                                         <button onclick="document.execCommand('insertOrderedList', false, null)" class="btn btn-default"><span class="fa fa-list-ol"></span></button>
+						                                                                                    </div>
+
+                                                                                                         
+                                                                                                         <button class="btn btn-default" style="margin-left:5px;"><span class="fa fa-paperclip"></span></button>
+                                                                                                         <button class="btn btn-default" style="margin-left:5px;"><input type="color" id="colorPicker" value="#000000" onchange="changeTextColor()"></span></button>
+
+                                                                                                <!-- <div class="btn-group" style="margin-left:5px;">
+                                                                                          							<button class="btn btn-default dropdown-toggle" data-toggle="dropdown"><span class="fa fa-tags"></span> <span class="caret"></span></button>
+					                                                                                                  		<ul class="dropdown-menu">
+								                                                                                                         <li><a href="#">add label <span class="label label-danger"> Home</span></a></li>
+								                                                                                                         <li><a href="#">add label <span class="label label-info">Job</span></a></li>
+								                                                                                                         <li><a href="#">add label <span class="label label-success">Clients</span></a></li>
+								                                                                                                         <li><a href="#">add label <span class="label label-warning">News</span></a></li>
+							                                                                                                  </ul>
+					                                                                                      </div> -->
+
+                                                                                    </div>
+
+                                                                                    <!-- // new  -->
+                                                                                    <br>	
+
+                                                                                            <!-- <div class="form-group">
+					                                                                                            	<textarea class="form-control" id="message" name="body" rows="8" placeholder="Click here to reply"></textarea>
+				                                                                                  	</div> -->
+
+                                                                                            <div id="editor" contenteditable="true" spellcheck="false" class="editor">
+                                                                                                       <p>Start typing here...</p>
+                                                                                            </div>
+                                                                                    <!-- new stopped -->
+
+
+                                                                                    <!-- bottom btn started -->
+
+                                                                                          <div class="form-group">	
+					                                                                                         	<button type="submit" class="btn btn-success">Send</button>
+					                                                                                        	<button type="submit" class="btn btn-default">Draft</button>
+					                                                                                        	<button type="submit" class="btn btn-danger">Discard</button>
+					                                                                                </div>
+
+                                                                                    <!-- bottom button stopped -->
+
+                                                                        </div>
+                                          </div>
+
+                                </div>
+
+                       </div>
+
+              </div>
 
         </div>
   
@@ -266,6 +420,18 @@ document.querySelectorAll('.viewEmail').forEach(link => {
       alert("fuck");
     });
 
+
+
+    // Ensure the execCommand method is applied to the selected text or current cursor position
+    document.getElementById('editor').addEventListener('input', function() {
+      // This event listener ensures that input changes are immediately reflected
+    });
+
+     // Change text color based on the color picker value
+     function changeTextColor() {
+      const color = document.getElementById('colorPicker').value;
+      document.execCommand('foreColor', false, color);
+    }
   </script>
 
 

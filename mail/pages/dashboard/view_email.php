@@ -101,7 +101,12 @@ imap_close($mailbox);
     </div>
     <div class="col">
     <div class="view-date">
-                    <?php echo htmlspecialchars($date); ?>
+                    <?php 
+                    
+                    // echo htmlspecialchars($date);
+                    $mDate = new DateTime($date);
+                    echo $mDate->format('F j, Y');
+                    ?>
                     </div>
     </div>
   </div>
