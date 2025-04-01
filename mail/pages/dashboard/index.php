@@ -353,7 +353,13 @@ imap_close($inbox);
   </div>
 
   <div id="message_view" class="view" style="background-color: white;">
-
+<style>
+  #emailDetails {
+    overflow:scroll;
+    height:100%;
+    margin:auto;
+  }
+  </style>
               <div id="emailDetails">
     <!-- Full email details will be shown here -->
                  </div>
