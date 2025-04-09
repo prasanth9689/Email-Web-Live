@@ -1,93 +1,282 @@
-<?php
-// Connect to the IMAP server
-$hostname = '{imap.skyblue.co.in:993/imap/ssl/novalidate-cert}';  // Adjust for your email server
-$username = 'prasanth';           // Your email address
-$password = 'Prasanth968@@';            // Your email password or app password
-$inbox = imap_open($hostname, $username, $password);
+<style>
+        .flex-container {
+            display: inline-flex;
+            overflow-x: auto;
+            gap: 20px;
+            padding-left:10px;
+            padding-right:10px;
+            padding-top:10px;
+            padding-bottom:30px;
+            height:180px;
+            width:210px;
+        }
 
-if (!$inbox) {
+        .flex-item {
+            min-width: 200px;
+            height: 150px;
+            
+            display: flex;
+            justify-content: center;
+           
+            text-align: center;
+            border-radius: 8px;
+            position: relative;
+        }
+
+        .image-thumbnail {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 8px;
+            transition: transform 0.3s ease; 
+        }
+
+        .image-thumbnail:hover {
+            transform: scale(1.1); 
+        }
+
+        .zoomed-image-container {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.9);
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+
+        .zoomed-image {
+            max-width: 90%;
+            max-height: 90%;
+            object-fit: contain;
+            border-radius: 8px;
+        }
+
+        .close-btn {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            color: #fff;
+            font-size: 36px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        .file-name {
+            color:black;
+            
+        }
+
+        .line {
+            border-top: 1px solid #c5c9d0; /* Create a solid line with a specific thickness */
+            width: 100%;                /* Set the line width */
+            margin-top: 20px;         /* Center the line horizontally with margin */
+        }
+
+        .image-text {
+            position: absolute;
+            bottom: 0px; /* Position the text at the bottom */
+            left: 0;
+            right: 0;
+            background-color: rgba(0, 0, 0, 0.6); /* Semi-transparent black background */
+            color: white;
+            padding: 5px;
+            text-align: center;
+            font-size: 14px;
+            border-radius: 0 0 8px 8px;
+            cursor: pointer;
+        }
+    </style>
+<?php
+
+$hostname = '{imap.skyblue.co.in:993/imap/ssl/novalidate-cert}'; 
+$username = 'prasanth';          
+$password = 'Prasanth968@@';          
+$mailbox = imap_open($hostname, $username, $password);
+
+if (!$mailbox) {
     echo "Connection failed: " . imap_last_error();
     exit;
 }
 
-// Fetch the email structure (example: email number 1)
-$email_number = 15;  // Change based on the email you want to fetch
-$structure = imap_fetchstructure($inbox, $email_number);
+$message_id = 21;  
+$structure = imap_fetchstructure($mailbox, $message_id);
 
-// Initialize variables to hold content
 $plainText = '';
 $htmlContent = '';
 $attachments = [];
 
-// Check if there are parts (multipart message)
-if (isset($structure->parts)) {
 
+  $structure = imap_fetchstructure($mailbox, $message_id);
 
-        echo "<div style='color:blue;'> Structure </div>";
-    var_dump($structure);
+           function getContentType($structure) {
+               $primaryTypes = array("TEXT", "MULTIPART", "MESSAGE", "APPLICATION", "AUDIO", "IMAGE", "VIDEO", "OTHER");
+               if (isset($primaryTypes[$structure->type])) {
+                   return $primaryTypes[$structure->type] . '/' . $structure->subtype;
+               }
+               return "UNKNOWN";
+           }
+           
+           $contentType = getContentType($structure);
+    
+           ini_set("xdebug.var_display_max_children", '-1');
+           ini_set("xdebug.var_display_max_data", '-1');
+           ini_set("xdebug.var_display_max_depth", '-1');
 
-    // Loop through each part to find plain text, HTML, and inline images
-    foreach ($structure->parts as $part_number => $part) {
-        // Handle the RELATED part (subtype: "ALTERNATIVE")
-        if (isset($part->subtype) && strtolower($part->subtype) == 'alternative') {
-            if (isset($part->parts)) {
-                // Loop through the nested parts (plain text or HTML)
-                foreach ($part->parts as $sub_part_number => $sub_part) {
-                    // Extract plain text part
-                    if (isset($sub_part->subtype) && strtolower($sub_part->subtype) == 'plain') {
-                        $body = imap_fetchbody($inbox, $email_number, $part_number + 1 . '.' . ($sub_part_number + 1));
+        if (isset($structure->parts)) {
+            foreach ($structure->parts as $part_number => $part) { 
+                if (isset($part->subtype) && strtolower($part->subtype) == 'alternative') { 
+                    if (isset($part->parts)) { 
+                        foreach ($part->parts as $sub_part_number => $sub_part) { 
+                        
+                         $body = imap_fetchbody($mailbox, $message_id, $part_number + 1 . '.' . ($sub_part_number + 1));
 
-                        // Decode the body if necessary (Base64 or quoted-printable)
-                        if ($sub_part->encoding == 3) {  // Base64 encoding
-                            $body = base64_decode($body);
-                        } elseif ($sub_part->encoding == 4) {  // Quoted-printable encoding
-                            $body = quoted_printable_decode($body);
+                         // Check plain text and html available.
+                         if (isset($sub_part->subtype) && strtolower($sub_part->subtype) == 'plain') {
+                            if ($sub_part->encoding == 3) {
+                                $body = base64_decode($body);
+                               } elseif ($sub_part->encoding == 4) {
+                                $body = quoted_printable_decode($body);
+                               }
+                               $plainText .= $body;
+
+                         }elseif (isset($sub_part->subtype) && strtolower($sub_part->subtype) == 'html') {
+                            $body = imap_fetchbody($mailbox, $message_id, $part_number + 1 . '.' . ($sub_part_number + 1));
+
+                            if ($sub_part->encoding == 3) {
+                                $body = base64_decode($body);
+                            } elseif ($sub_part->encoding == 4) {
+                                $body = quoted_printable_decode($body);
+                            }
+                            $htmlContent .= $body;
+
+                            echo $htmlContent."";
+                            echo '<div class="line"></div>';
+
+                            echo '<div style="color: black; padding-top:10px;">';
+                            echo '<strong>';
+                            echo 'Attachments';
+                            echo '</strong>';
+                            echo '</div>';
+                         }
                         }
-
-                        // Store the plain text content
-                        $plainText .= $body;
-                    }
-                    // Extract HTML part
-                    elseif (isset($sub_part->subtype) && strtolower($sub_part->subtype) == 'html') {
-                        $body = imap_fetchbody($inbox, $email_number, $part_number + 1 . '.' . ($sub_part_number + 1));
-
-                        // Decode the body if necessary
-                        if ($sub_part->encoding == 3) {  // Base64 encoding
-                            $body = base64_decode($body);
-                        } elseif ($sub_part->encoding == 4) {  // Quoted-printable encoding
-                            $body = quoted_printable_decode($body);
-                        }
-
-                        // Store the HTML content
-                        $htmlContent .= $body;
                     }
                 }
             }
         }
-        // Handle inline image (MIME type: image/png)
-        elseif (isset($part->subtype) && strtolower($part->subtype) == 'png') {
-            // Check if the part has a CID (Content-ID)
-            if (isset($part->id)) {
-                $cid = trim($part->id, '<>');  // Extract the CID (remove the angle brackets)
-                $body = imap_fetchbody($inbox, $email_number, $part_number + 1);
 
-                // Decode the image if necessary (Base64 encoding)
-                if ($part->encoding == 3) {  // Base64 encoding
-                    $body = base64_decode($body);
-                } elseif ($part->encoding == 4) {  // Quoted-printable encoding
-                    $body = quoted_printable_decode($body);
-                }
+        $attachments = getAttachments($mailbox, $message_id, $structure);
 
-                // Save the image to a temporary path or database
-                $imagePath = '/var/www/skyblue.co.in/mail/data/images/' . uniqid('img_', true) . '.' . get_image_extension($part->subtype);
-                file_put_contents($imagePath, $body);
+        foreach ($attachments as $file) {
+        //    echo "<p><strong>Attachment:</strong> {$file['filename']}</p>";
 
-                // Add the CID-image path to the attachments array
-                $attachments[$cid] = $imagePath;
-            }
+               // Option 2: Display inline if image
+
+               file_put_contents('/var/www/skyblue.co.in/mail/data/images/' . $file['filename'], $file['data']);
+
+               $ext = pathinfo($file['filename'], PATHINFO_EXTENSION);
+
+ 
+
+        if (in_array(strtolower($ext), ['png', 'jpg', 'jpeg', 'gif', 'pdf'])) {
+            $base64 = base64_encode($file['data']);
+
+        echo '<div class="flex-container">';
+            echo '<div class="flex-item">';
+                echo '<div>';
+
+                      $dotPosition = strrpos($file['filename'], '.');
+                      $extension = substr($file['filename'], $dotPosition + 1);
+                      //  echo "File Extension: " . $extension;
+
+                      if($extension == 'jpg' | $extension == 'jpeg' | $extension == 'png'){
+                             
+                             echo "<img src='data:image/{$ext};base64,{$base64}' class='image-thumbnail'>";
+
+                             echo '<div class="image-text">Download';
+
+                             echo '</div>';
+                        }
+
+                      if($extension == 'pdf'){
+                                 echo "<img src='/assets/mail/img/pdf1.png' class='image-thumbnail'>";
+                                 echo '<div class="image-text">Download</div>';
+                         }
+                         echo "<p class='file-name'> {$file['filename']}</p>";
+
+
+                echo '</div>';
+            echo '</div>';
+        echo '</div>';
         }
     }
-}
+
+
+        function decodeAttachment($stream, $msgNumber, $part, $partNumber) {
+            $data = imap_fetchbody($stream, $msgNumber, $partNumber);
+            switch ($part->encoding) {
+                case 0: return $data;
+                case 1: return imap_8bit($data);
+                case 2: return imap_binary($data);
+                case 3: return base64_decode($data);
+                case 4: return quoted_printable_decode($data);
+                default: return $data;
+            }
+        }
+        
+
+        function getAttachments($stream, $msgNumber, $structure, $prefix = '') {
+            $attachments = [];
+        
+            if (isset($structure->parts)) {
+                foreach ($structure->parts as $index => $part) {
+                    $partNumber = $prefix === '' ? ($index + 1) : "$prefix." . ($index + 1);
+        
+                    // If it's multipart itself, go deeper
+                    if ($part->type == 1 && isset($part->parts)) {
+                        $attachments = array_merge($attachments, getAttachments($stream, $msgNumber, $part, $partNumber));
+                    }
+        
+                    // If it's a file (attachment or inline file)
+                    if ($part->type == 5 || ($part->ifdisposition && in_array(strtolower($part->disposition), ['attachment', 'inline']))) {
+                        $filename = null;
+        
+                        // Try to get the filename
+                        if ($part->ifdparameters) {
+                            foreach ($part->dparameters as $param) {
+                                if (strtolower($param->attribute) == 'filename') {
+                                    $filename = $param->value;
+                                    break;
+                                }
+                            }
+                        }
+        
+                        if (!$filename && $part->ifparameters) {
+                            foreach ($part->parameters as $param) {
+                                if (strtolower($param->attribute) == 'name') {
+                                    $filename = $param->value;
+                                    break;
+                                }
+                            }
+                        }
+        
+                        $filename = $filename ?: "unknown_" . $partNumber;
+        
+                        $content = decodeAttachment($stream, $msgNumber, $part, $partNumber);
+                        $attachments[] = [
+                            'filename' => $filename,
+                            'data' => $content,
+                            'mime' => "application/octet-stream", // Could improve based on subtype
+                        ];
+                    }
+                }
+            }
+        
+            return $attachments;
+        }
 
 // Function to get the image extension based on the MIME type
 function get_image_extension($mime_type) {
@@ -109,27 +298,68 @@ function get_image_extension($mime_type) {
 }
 
 // Close the IMAP connection
-imap_close($inbox);
-
-// Display the plain text content
-echo '<h3>Plain Text Content:</h3><pre>' . htmlspecialchars($plainText) . '</pre>';
-
-// Display the HTML content
-echo '<h3>HTML Content:</h3>';
-echo $htmlContent;  // This will render the HTML as it is
-
-// If there are inline images, replace CID references in HTML content
-foreach ($attachments as $cid => $imagePath) {
-    // Replace the CID in the HTML content with the image file path
-
-    $fileName = basename($imagePath);
-    $file = "https://skyblue.co.in/mail/data/images/".$fileName;
-    echo $file;
-
-
-    $htmlContent = str_replace('cid:' . $cid, $file, $htmlContent);
-}
-
-// Display HTML content with embedded images
-echo '<h3>HTML Content with Images:</h3>' . $htmlContent;
+imap_close($mailbox);
 ?>
+<div class="zoomed-image-container" id="zoomedImageContainer">
+    <span class="close-btn" id="closeZoomedImage">&times;</span>
+    <img class="zoomed-image" id="zoomedImage" src="" alt="">
+</div>
+
+<script>
+    // Get all the image thumbnails
+    const images = document.querySelectorAll(".image-thumbnail");
+
+    // Get the zoomed image container, the zoomed image itself, and the close button
+    const zoomedImageContainer = document.getElementById("zoomedImageContainer");
+    const zoomedImage = document.getElementById("zoomedImage");
+    const closeZoomedImage = document.getElementById("closeZoomedImage");
+
+    // Loop through all images and add click event listeners
+    images.forEach(image => {
+        image.addEventListener("click", function() {
+            // Set the source of the zoomed image to the clicked image's source
+            zoomedImage.src = this.src;
+            
+            // Show the zoomed image container
+            zoomedImageContainer.style.display = "flex";
+        });
+    });
+
+    // When the user clicks the close button, hide the zoomed image container
+    closeZoomedImage.addEventListener("click", function() {
+        zoomedImageContainer.style.display = "none";
+    });
+
+    // When the user clicks outside the image, hide the zoomed image container
+    zoomedImageContainer.addEventListener("click", function(event) {
+        if (event.target === zoomedImageContainer) {
+            zoomedImageContainer.style.display = "none";
+        }
+    });
+
+// JavaScript to trigger download when image is clicked
+const downloadLinks = document.getElementById("a[download]");
+
+downloadLinks.forEach(link => {
+    link.addEventListener("click", function(e) {
+        // Allow the default action (download)
+        const filename = this.getAttribute('download');
+        const fileData = this.href.split(',')[1]; // Extract base64 encoded data
+        
+        // Use the Blob API to convert base64 to a downloadable file
+        const blob = new Blob([new Uint8Array(atob(fileData).split("").map(c => c.charCodeAt(0)))], { type: 'application/octet-stream' });
+        const url = URL.createObjectURL(blob);
+
+        const anchor = document.createElement('a');
+        anchor.href = url;
+        anchor.download = filename;
+        document.body.appendChild(anchor);
+        anchor.click(); // Programmatically click to download
+        document.body.removeChild(anchor);
+        
+        // Optional: Revoke the object URL after download
+        setTimeout(() => URL.revokeObjectURL(url), 1000);
+    });
+});
+
+</script>

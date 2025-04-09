@@ -11,7 +11,7 @@ $message_id = $_GET['message_id'];
 $username = $_SESSION["username"];
 $password = $_SESSION["password"];
 
-// echo "<h1> $message_id </h1>";
+echo "<h1> $message_id </h1>";
 
 $mailbox = imap_open("{imap.skyblue.co.in:993/imap/ssl/novalidate-cert}INBOX", $username, $password);
 
