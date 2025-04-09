@@ -71,17 +71,17 @@
         }
 
         .line {
-            border-top: 1px solid #c5c9d0; /* Create a solid line with a specific thickness */
-            width: 100%;                /* Set the line width */
-            margin-top: 20px;         /* Center the line horizontally with margin */
+            border-top: 1px solid #c5c9d0; 
+            width: 100%;               
+            margin-top: 20px;         
         }
 
         .image-text {
             position: absolute;
-            bottom: 0px; /* Position the text at the bottom */
+            bottom: 0px; 
             left: 0;
             right: 0;
-            background-color: rgba(0, 0, 0, 0.6); /* Semi-transparent black background */
+            background-color: rgba(0, 0, 0, 0.6); 
             color: white;
             padding: 5px;
             text-align: center;
@@ -171,15 +171,10 @@ $attachments = [];
         $attachments = getAttachments($mailbox, $message_id, $structure);
 
         foreach ($attachments as $file) {
-        //    echo "<p><strong>Attachment:</strong> {$file['filename']}</p>";
-
                // Option 2: Display inline if image
-
                file_put_contents('/var/www/skyblue.co.in/mail/data/images/' . $file['filename'], $file['data']);
-
+          
                $ext = pathinfo($file['filename'], PATHINFO_EXTENSION);
-
- 
 
         if (in_array(strtolower($ext), ['png', 'jpg', 'jpeg', 'gif', 'pdf'])) {
             $base64 = base64_encode($file['data']);
@@ -196,14 +191,18 @@ $attachments = [];
                              
                              echo "<img src='data:image/{$ext};base64,{$base64}' class='image-thumbnail'>";
 
-                             echo '<div class="image-text">Download';
-
-                             echo '</div>';
+                             $prasanth = $file['filename'];
+                             echo "<a href='#' class='downloadFile' data-id='$prasanth' style=' text-decoration: none; color: black;'>";
+                             echo "<div class='image-text' >Download </div>";
+                             echo "</a>";
                         }
 
                       if($extension == 'pdf'){
                                  echo "<img src='/assets/mail/img/pdf1.png' class='image-thumbnail'>";
-                                 echo '<div class="image-text">Download</div>';
+                                 $prasanth = $file['filename'];
+                                 echo "<a href='#' class='downloadFile' data-id='$prasanth' style=' text-decoration: none; color: black;'>";
+                                 echo "<div class='image-text' >Download </div>";
+                                 echo "</a>";
                          }
                          echo "<p class='file-name'> {$file['filename']}</p>";
 
@@ -266,6 +265,11 @@ $attachments = [];
                         $filename = $filename ?: "unknown_" . $partNumber;
         
                         $content = decodeAttachment($stream, $msgNumber, $part, $partNumber);
+
+                    //    file_put_contents('/var/www/skyblue.co.in/mail/data/images/' . $filename, $content);
+
+                    
+
                         $attachments[] = [
                             'filename' => $filename,
                             'data' => $content,
@@ -337,29 +341,20 @@ imap_close($mailbox);
         }
     });
 
-// JavaScript to trigger download when image is clicked
-const downloadLinks = document.getElementById("a[download]");
+    document.querySelectorAll('.downloadFile').forEach(link => {
+        link.addEventListener('click', function (e) {
+            e.preventDefault();
 
-downloadLinks.forEach(link => {
-    link.addEventListener("click", function(e) {
-        // Allow the default action (download)
-        const filename = this.getAttribute('download');
-        const fileData = this.href.split(',')[1]; // Extract base64 encoded data
-        
-        // Use the Blob API to convert base64 to a downloadable file
-        const blob = new Blob([new Uint8Array(atob(fileData).split("").map(c => c.charCodeAt(0)))], { type: 'application/octet-stream' });
-        const url = URL.createObjectURL(blob);
+            const downloadFileName = this.getAttribute('data-id');
+          //  alert(downloadFileName);
 
-        const anchor = document.createElement('a');
-        anchor.href = url;
-        anchor.download = filename;
-        document.body.appendChild(anchor);
-        anchor.click(); // Programmatically click to download
-        document.body.removeChild(anchor);
-        
-        // Optional: Revoke the object URL after download
-        setTimeout(() => URL.revokeObjectURL(url), 1000);
+          const link = document.createElement("a");
+    link.href = "https://skyblue.co.in/mail/data/images/" + downloadFileName; // Path to your file
+    link.download = downloadFileName;   // Suggested filename
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+        });
     });
-});
 
 </script>
