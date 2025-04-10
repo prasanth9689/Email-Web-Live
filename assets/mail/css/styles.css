@@ -17,6 +17,102 @@ body {
 */
 
 /*
+ Attachments
+*/
+
+
+.flex-container {
+	display: inline-flex;
+	overflow-x: auto;
+	gap: 20px;
+	padding-left:10px;
+	padding-right:10px;
+	padding-top:10px;
+	padding-bottom:30px;
+	height:180px;
+	width:210px;
+}
+
+.flex-item {
+	min-width: 200px;
+	height: 150px;
+	
+	display: flex;
+	justify-content: center;
+   
+	text-align: center;
+	border-radius: 8px;
+	position: relative;
+}
+
+.image-thumbnail {
+	width: 100%;
+	height: 100%;
+	object-fit: cover;
+	border-radius: 8px;
+	transition: transform 0.3s ease; 
+}
+
+.image-thumbnail:hover {
+	transform: scale(1.1); 
+}
+
+.zoomed-image-container {
+	display: none;
+	position: fixed;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	background-color: rgba(0, 0, 0, 0.9);
+	justify-content: center;
+	align-items: center;
+	z-index: 1000;
+}
+
+.zoomed-image {
+	max-width: 90%;
+	max-height: 90%;
+	object-fit: contain;
+	border-radius: 8px;
+}
+
+.close-btn {
+	position: absolute;
+	top: 20px;
+	right: 20px;
+	color: #fff;
+	font-size: 36px;
+	cursor: pointer;
+	font-weight: bold;
+}
+
+.file-name {
+	color:black;
+	
+}
+
+.line {
+	border-top: 1px solid #c5c9d0; 
+	width: 100%;               
+	margin-top: 20px;         
+}
+
+.image-text {
+	position: absolute;
+	bottom: 0px; 
+	left: 0;
+	right: 0;
+	background-color: rgba(0, 0, 0, 0.6); 
+	color: white;
+	padding: 5px;
+	text-align: center;
+	font-size: 14px;
+	border-radius: 0 0 8px 8px;
+	cursor: pointer;
+}
+
+/*
 #############################################################
 # Email inbox dashboard                                     #
 # access id : #100                                          # 
@@ -56,6 +152,7 @@ body {
 	bottom: 0;
 	right: 0px;
 	left: 0px;
+	overflow: scroll;
 }
 
 .view {
@@ -225,6 +322,7 @@ ul {
 		top: 0;
 		bottom: 0;
 		width: 100%;
+		overflow: scroll;
 
 	}
 
