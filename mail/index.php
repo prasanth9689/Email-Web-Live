@@ -1,9 +1,26 @@
 <?php
+$handle = fopen("../mail/counter.txt", "r"); 
+if(!$handle) { 
+    echo "could not open the file"; 
+} else { 
+    $counter =(int )fread($handle,20);
+        fclose($handle); 
+        $counter++; 
+     //   echo"Number of visitors to this page so far: ". $counter . "" ; 
+    $handle = fopen("../mail/counter.txt", "w" ); 
+    
+    fwrite($handle,$counter);
+    fclose ($handle); 
+}
+?>
+
+<?php
 session_start();
 
 if (isset($_SESSION["username"])) {
     header("Location: https://skyblue.co.in/mail/pages/dashboard/index.php");
 }
+
 
 ?>
 
@@ -45,6 +62,18 @@ if (isset($_SESSION["username"])) {
 
 			<div class="col-sm left-side" style="height: 400px;">
 				<img class="left-side-img" src="../assets/mail/img/img1.png" width="500px" height="500px" />
+               
+               <?php
+
+                  global $line;
+
+                  $fh = fopen('https://skyblue.co.in/mail/counter.txt','r');
+                  while ($line = fgets($fh)) { 
+                      echo "<p class='main-text'>"."Total visters : ".($line)."<hp/>";
+                  }
+
+                fclose($fh);
+                 ?>
 			</div>
             
 			<div class="col-sm right-side">
@@ -218,6 +247,8 @@ function validateEmail(email) {
     return regex.test(email);
 }
 </script>
+
+
 
 </body>
 </html>

@@ -17,84 +17,143 @@
       <!-- access id : #100 -->
    </head>
    <body>
+
       <nav class="navbar navbar-light navbar-custom" style="width: 100%; position: fixed; box-shadow: 0 2px 5px 0 rgb(0 0 0 / 5%), 0 2px 10px 0 rgb(0 0 0 / 5%);">
-         <a class="navbar-brand" href="#">
+         <a class="navbar-brand" href="https://skyblue.co.in">
          <img src="/assets/mail/img/logo3.png" width="30" height="30" class="d-inline-block align-top" alt="">
          Skyblue Mail
          </a>
-         <style>
-            @media only screen and (max-width: 400px) {
-            .form-inline {
-            display: none;
-            }
-            }
-         </style>
+
          <form class="form-inline my-2 my-lg-0 search">
             <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
             <button class="btn btn-primary my-2 my-sm-0" type="submit">Search</button>
          </form>
       </nav>
-      <!-- Sidebar -->
+
       <nav id="sidebarMenu" class="collapse d-lg-block sidebar collapse ">
          <div class="position-sticky">
             <div class="list-group list-group-flush mx-3 mt-4">
-               <a href="#" onclick="showView('compose')" class="list-group-item list-group-item-action py-2 ripple active">
+
+               <script>
+                   
+                   function showView(viewId) {
+                   document.getElementById("emailDetails").innerHTML = "";
+                   document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
+                   document.getElementById(viewId).classList.add('active');
+                   }
+
+                  </script>
+
+               <a href="?action=COMPOSE"   class="list-group-item list-group-item-action py-2 ripple active">
                <i class="fa fas  fa-fw me-3"></i><span>Compose Mail</span>
                </a>
-               <a href="#" onclick="showView('home')" class="list-group-item list-group-item-action py-2 ripple"><i
+               <a href="?action=INBOX"  class="list-group-item list-group-item-action py-2 ripple"><i
                   class="fa fas fa-envelope fa-fw me-3"></i><span>Inbox</span></a>
-               <a href="#" onclick="showView('contact')" class="list-group-item list-group-item-action py-2 ripple"><i
+               <a href="?action=SENT"  class="list-group-item list-group-item-action py-2 ripple"><i
                   class="fa fa-paper-plane fa-fw me-3"></i><span>Sent</span></a>
-               <a href="#" class="list-group-item list-group-item-action py-2 ripple">
+                  <a href="?action=DRAFT" class="list-group-item list-group-item-action py-2 ripple">
                <i class="fa fas fa-file-alt fa-fw me-3"></i><span>Draft</span>
                </a>
-               <a href="#" class="list-group-item list-group-item-action py-2 ripple"><i
+               <a href="?action=IMPORTANT"  class="list-group-item list-group-item-action py-2 ripple"><i
                   class="fa fas fa-heart fa-fw me-3"></i><span>Important</span></a>
-               <a href="#" class="list-group-item list-group-item-action py-2 ripple"><i
+               <a href="?action=SPAM" class="list-group-item list-group-item-action py-2 ripple"><i
                   class="fa fas fa-exclamation-triangle fa-fw me-3"></i><span>Spam</span></a>
-               <a href="#" class="list-group-item list-group-item-action py-2 ripple"><i
+               <a href="?action=TRASH" class="list-group-item list-group-item-action py-2 ripple"><i
                   class=" fa  fas fa-trash fa-fw me-3"></i><span>Trash</span></a>
-               <a href="#" class="list-group-item list-group-item-action py-2 ripple"><i
+               <a  href="?action=CALENDAR" class="list-group-item list-group-item-action py-2 ripple"><i
                   class="fa fas fa-calendar fa-fw me-3"></i><span>Calendar</span></a>
-               <a href="#" class="list-group-item list-group-item-action py-2 ripple"><i
+               <a href="?action=SETTINGS" class="list-group-item list-group-item-action py-2 ripple"><i
                   class="fa fas fa-cog fa-fw me-3"></i><span>Settings</span></a>
                <a href="logout.php" class="list-group-item list-group-item-action py-2 ripple"><i
                   class="fa fa-sign-out-alt fa-fw me-3"></i><span>Logout</span></a>
             </div>
          </div>
       </nav>
-      <div id="home" class="view active" style="background-color: white; height: 100%; width: 100%;">
+      <div id="home" class="view active" style="background-color: white; height: 100%; width: 100%; overflow: scroll;">
          <div class="content__email_list">
+
+         <style>
+
+
+ .mark-box {
+  position: absolute;
+  opacity: 0;
+  cursor: pointer;
+  height: 0;
+  width: 0;
+}
+
+.checkmark {
+  position: absolute;
+  left: 5px;
+  height: 15px;
+  width: 15px;
+  background-color: white;
+  border: 1px solid #ccc;
+}
+
+.container-mark:hover .mark-box ~ .checkmark {
+  background-color: #ccc;
+}
+
+.container-mark .mark-box:checked ~ .checkmark {
+  background-color: #2196F3;
+}
+
+.checkmark:after {
+  content: "";
+  position: absolute;
+  display: none;
+}
+
+.container-mark .mark-box:checked ~ .checkmark:after {
+  display: block;
+}
+
+.container-mark .checkmark:after {
+  left: 5px;
+  top: 2px;
+  width: 3px;
+  height: 7px;
+  border: solid white;
+  border-width: 0 2px 2px 0;
+  -webkit-transform: rotate(45deg);
+  -ms-transform: rotate(45deg);
+  transform: rotate(45deg);
+}
+
+</style>
+
             <?php
                $hostname = '{imap.skyblue.co.in:993/imap/ssl/novalidate-cert}INBOX';
                $username = $_SESSION["username"];
                $password = $_SESSION["password"];
-               
+         
                $inbox = imap_open($hostname, $username, $password) or die('Cannot connect to mailbox: ' . imap_last_error());
                
                $numMessages = imap_num_msg($inbox);
                $email_ids = imap_search($inbox, 'ALL'); 
-               
-               // sort them by ascending date
-               if ($email_ids) {
-                   // Sort email IDs by ascending date
-                   rsort($email_ids);
+            
+               if ($email_ids) { // sort them by ascending date
+                   rsort($email_ids); // Sort email IDs by ascending date
                  
                    foreach ($email_ids as $email_id) {
                        $header = imap_headerinfo($inbox, $email_id);
-                       
                        $subject = $header->subject;
                        $from = $header->fromaddress;
                        $date = $header->date;
-               
-                   $decoded_subject0 = imap_utf8($subject);
-               
-                 $data = array("view"=> "message_view", "email_id"=>$email_id);
-               
-                 $js_data = json_encode($data);
-               
+                       $decoded_subject0 = imap_utf8($subject);
+                       $data = array("view"=> "message_view", "email_id"=>$email_id);
+                       $js_data = json_encode($data);
                        echo "<a href='?action=execute&messageId=$email_id' class='viewEmail' data-id='$email_id' style=' text-decoration: none; color: black;'>";
-                       echo "<div class='email__start'></div>";
+                       echo "<div class='email__start'>";
+
+                       echo '<label class="container-mark">';
+                       echo '<input class="mark-box" type="checkbox">';
+                       echo '<span class="checkmark"></span>';
+                       echo '</label>';
+
+                       echo "</div>";
                        echo "<p class='email__name'>";
                        $main = substr($from, 0, 20);
                        echo "<b></b> $main <br>";
@@ -112,41 +171,43 @@
                ?>
          </div>
       </div>
-      <div id="contact" class="view" style="background-color:white;">
+
+      <div id="sent" class="view" style="background-color:white;">
          <h1>Send email list view</h1>
          <p>Development under progress.</p>
       </div>
-      <style>
-         .container-compose {
-         margin:20px;
-         height: 100%;
-         width: 100%;
-         }
-         .btn-default {
-         background-color: white;
-         color: black;
-         border-color:#adadad
-         }
-         .btn-default:hover,
-         .btn-default:focus,
-         .btn-default.focus,
-         .btn-default:active,
-         .btn-default.active,
-         .open>.dropdown-toggle.btn-default {
-         color:#333;
-         background-color:#e6e6e6;
-         border-color:#adadad
-         }
-         .editor {
-         border: 1px solid #ccc;
-         padding: 10px;
-         min-height: 200px;
-         width: 100%;
-         margin-top: 10px;
-         font-size: 16px;
-         background-color: white;
-         }
-      </style>
+
+      <div id="draft" class="view" style="background-color:red;">
+         <h1>Draft email list view</h1>
+         <p>Development under progress.</p>
+      </div>
+
+      <div id="important" class="view" style="background-color:green;">
+         <h1>Important email list view</h1>
+         <p>Development under progress.</p>
+      </div>
+
+      <div id="spam" class="view" style="background-color:#fcba03;">
+         <h1>Spam email list view</h1>
+         <p>Development under progress.</p>
+      </div>
+
+      <div id="trash" class="view" style="background-color:#a1a1ab;">
+         <h1>Trash email list view</h1>
+         <p>Development under progress.</p>
+      </div>
+
+      <div id="calendar" class="view" style="background-color:#0b732e;">
+         <h1>Calendar view</h1>
+         <p>Development under progress.</p>
+      </div>
+
+      <div id="settings" class="view" style="background-color:#ff0073;">
+         <h1>Settings view</h1>
+         <p>Development under progress.</p>
+      </div>
+
+
       <div id="compose" class="view">
          <div class="container-compose">
             <div class="row inbox" style="height:100px;">
@@ -174,7 +235,7 @@
                               </div>
                            </div>
                         </form>
-                        <div class="col-sm-11 col-sm-offset-1">
+                        <div class="col-sm-11 col-sm-offset-1" style="max-width:100%;">
                            <div class="btn-toolbar" role="toolbar">
                               <div class="btn-group">
                                  <button onclick="document.execCommand('bold')" class="btn btn-default"><span class="fa fa-bold"></span></button>
@@ -198,19 +259,50 @@
                               <button class="btn btn-default" style="margin-left:5px;"><span class="fa fa-paperclip"></span></button>
                               <button class="btn btn-default" style="margin-left:5px;"><input type="color" id="colorPicker" value="#000000" onchange="changeTextColor()"></span></button>
                            </div>
-                           <!-- // new  -->
+
                            <br>	
+
                            <div id="editor" contenteditable="true" spellcheck="false" class="editor">
-                              <p>Start typing here...</p>
+                              Start typing here...
                            </div>
-                           <!-- new stopped -->
-                           <!-- bottom btn started -->
-                           <div class="form-group">	
-                              <button type="submit" class="btn btn-success">Send</button>
+
+     <script>
+         
+           const editor = document.getElementById('editor');
+
+           editor.addEventListener('focus', function () {
+               if (!editor.classList.contains('active')) {
+                      editor.textContent = '';
+                      editor.classList.add('active');
+                  }
+           });
+
+           editor.addEventListener('blur', function () {
+              if (editor.textContent.trim() === '') {
+                   editor.textContent = 'Write your message here...';
+                   editor.classList.remove('active');
+                 }
+           });
+
+     </script>
+
+                           <div class="form-group msg-button-con">	
+                              <button type="submit" id="sendMail" class="btn btn-success">Send</button>
                               <button type="submit" class="btn btn-default">Draft</button>
                               <button type="submit" class="btn btn-danger">Discard</button>
                            </div>
-                           <!-- bottom button stopped -->
+
+                           <script>
+                            
+                                 const sendMail = document.getElementById('sendMail');
+                                 sendMail.addEventListener('click', function () {
+                                     var editor = document.getElementById("editor").innerHTML;
+                                     console.log("log : " + editor);
+                                     alert(editor + "");
+                                  });
+
+                              </script>
+
                         </div>
                      </div>
                   </div>
@@ -218,15 +310,10 @@
             </div>
          </div>
       </div>
+
       <div id="message_view" class="view" style="background-color: white;">
-         <style>
-            #emailDetails {
-            overflow:scroll;
-            height:100%;
-            margin:auto;
-            }
-         </style>
          <div id="emailDetails" style="background-color: red;">
+
             <?php
                if (isset($_GET['action']) && $_GET['action'] === 'execute') {
                
@@ -235,6 +322,95 @@
                    loadMessageView($messageId); 
                    }
                }
+
+               switch($_GET['action']){
+                  case "COMPOSE":
+                     echo ' <script>
+                     var viewId = "compose";
+                      document.getElementById("emailDetails").innerHTML = "";
+                      document.querySelectorAll(".view").forEach(v => v.classList.remove("active"));
+                      document.getElementById(viewId).classList.add("active");
+                     </script>';
+                     break;
+
+                  case "INBOX":
+                        echo ' <script>
+                        var viewId = "home";
+                         document.getElementById("emailDetails").innerHTML = "";
+                         document.querySelectorAll(".view").forEach(v => v.classList.remove("active"));
+                         document.getElementById(viewId).classList.add("active");
+                        </script>';
+                        break;
+
+                        case "SENT":
+                           echo ' <script>
+                           var viewId = "sent";
+                            document.getElementById("emailDetails").innerHTML = "";
+                            document.querySelectorAll(".view").forEach(v => v.classList.remove("active"));
+                            document.getElementById(viewId).classList.add("active");
+                           </script>';
+                           break;
+
+                           case "DRAFT":
+                              echo ' <script>
+                              var viewId = "draft";
+                               document.getElementById("emailDetails").innerHTML = "";
+                               document.querySelectorAll(".view").forEach(v => v.classList.remove("active"));
+                               document.getElementById(viewId).classList.add("active");
+                              </script>';
+                              break;
+
+                              case "IMPORTANT":
+                                 echo ' <script>
+                                 var viewId = "important";
+                                  document.getElementById("emailDetails").innerHTML = "";
+                                  document.querySelectorAll(".view").forEach(v => v.classList.remove("active"));
+                                  document.getElementById(viewId).classList.add("active");
+                                 </script>';
+                                 break;
+
+                                 case "SPAM":
+                                    echo ' <script>
+                                    var viewId = "spam";
+                                     document.getElementById("emailDetails").innerHTML = "";
+                                     document.querySelectorAll(".view").forEach(v => v.classList.remove("active"));
+                                     document.getElementById(viewId).classList.add("active");
+                                    </script>';
+                                    break;
+
+                                    case "TRASH":
+                                       echo ' <script>
+                                       var viewId = "trash";
+                                        document.getElementById("emailDetails").innerHTML = "";
+                                        document.querySelectorAll(".view").forEach(v => v.classList.remove("active"));
+                                        document.getElementById(viewId).classList.add("active");
+                                       </script>';
+                                       break;
+
+                                       case "CALENDAR":
+                                          echo ' <script>
+                                          var viewId = "calendar";
+                                           document.getElementById("emailDetails").innerHTML = "";
+                                           document.querySelectorAll(".view").forEach(v => v.classList.remove("active"));
+                                           document.getElementById(viewId).classList.add("active");
+                                          </script>';
+                                          break;
+
+                                          case "SETTINGS":
+                                             echo ' <script>
+                                             var viewId = "settings";
+                                              document.getElementById("emailDetails").innerHTML = "";
+                                              document.querySelectorAll(".view").forEach(v => v.classList.remove("active"));
+                                              document.getElementById(viewId).classList.add("active");
+                                             </script>';
+                                             break;
+               }
+
+               // if($_GET['action'] === 'COMPOSE'){
+               //    echo "<script>alert('Your message Here');</script>"; 
+                
+               // }
+
                
                function loadMessageView($messageId){
                  echo ' <script>
@@ -252,26 +428,27 @@
                    echo "Failed to connect to IMAP server.";
                    exit;
                }
-               
-               global $subject, $from, $subject, $date;
-               $header = imap_headerinfo($mailbox, $messageId);
-               $from = $header->fromaddress;
-               $subject = $header->subject;
-               $date = $header->date;          
+                   global $subject, $from, $subject, $date;
+                   $header = imap_headerinfo($mailbox, $messageId);
+                   $from = $header->fromaddress;
+                   $subject = $header->subject;
+                   $date = $header->date;    
                }
                ?>
-            <!-- container 2 -->
-            <div class="container2" id="backBtn" onclick="showView('home')">
-               <div class="image">
-                  <img src="https://skyblue.co.in/assets/mail/img/back.png" alt="Sample Image">
+
+         <a>
+            <div class="container2" id="backBtn" onclick="goBack('home')">
+               <div >
+                  <img class="back-image" src="https://skyblue.co.in/assets/mail/img/back.png" alt="Back Image">
                </div>
-               <div class="text">
+               <a class="back-text">
                   <div class="dd">Back</div>
-               </div>
+            </a>
                <div class="container3">
                </div>
             </div>
-            <!-- container 2 over -->
+            </a>
+
             <div class="container4">
                <?php 
                   $decoded_subject = imap_utf8($subject);
@@ -279,9 +456,9 @@
                          
                   ?>
             </div>
-            <!-- container 4 over -->
+
             <div class="container5">
-               <div class="circle">
+               <div class="circle" style="width: 50px; height: 50px;">
                   <?php echo strtoupper(substr($from, 0, 1)); ?>
                </div>
                <div class="container" style="margin:0px;">
@@ -290,6 +467,12 @@
                         <div class="view-from-name">
                            <?php echo $from; ?> 
                         </div>
+                        <?php 
+                        
+                        preg_match('/<(.+)>/', $from, $matches);
+                        $fromEmail = $matches[1] ?? $fromFull;
+                        
+                        echo $fromEmail; ?> 
                      </div>
                      <div class="col">
                         <div class="view-date"> 
@@ -299,7 +482,7 @@
                   </div>
                </div>
             </div>
-            <!-- container 5 over -->
+
             <div class="container6">
                <?php
                   $structure = imap_fetchstructure($mailbox, $messageId);
@@ -313,25 +496,49 @@
                   }
                   
                   $contentType = getContentType($structure);
-                  echo "Content-Type: " . $contentType;
-                  
                   $structure = imap_fetchstructure($mailbox, $messageId);
                   $body = imap_fetchbody($mailbox, $messageId, 1);
                   
                   switch($contentType){
+                     case "TEXT/PLAIN":
+                        $structure = imap_fetchstructure($mailbox, $messageId);
+
+                        function get_part($mailbox, $messageId, $structure, $part_number) {
+                            $data = imap_fetchbody($mailbox, $messageId, $part_number);
+                        
+                            switch ($structure->encoding) {
+                                case 0: return $data; // 7BIT
+                                case 1: return imap_utf8($data); // 8BIT
+                                case 3: return base64_decode($data);
+                                case 4: return quoted_printable_decode($data);
+                                default: return $data;
+                            }
+                        }
+                        
+                        $plain_text = '';
+                        if ($structure->type == TYPEMULTIPART) {
+                            foreach ($structure->parts as $part_num => $part) {
+                                if ($part->subtype == 'PLAIN') {
+                                    $plain_text = get_part($mailbox, $messageId, $part, $part_num + 1);
+                                    break;
+                                }
+                            }
+                        } elseif ($structure->subtype == 'PLAIN') {
+                            $plain_text = get_part($mailbox, $messageId, $structure, 1);
+                        }
+                        echo "<pre>" . htmlspecialchars($plain_text) . "</pre>";
+                        break;
+
                    case "TEXT/HTML":
-                   //    echo "<h1> TEXT/HTML </h1> ";
                    if ($structure->encoding == 3) {
                        $body = base64_decode($body);
                    } elseif ($structure->encoding == 4) {
                        $body = quoted_printable_decode($body);
                    }
-                  
                    echo "$body";
                    break;
                   
                    case "MULTIPART/RELATED":
-                     //  echo "<h1> MULTIPART/RELATED </h1> ";
                      if (isset($structure->parts)) {
                              foreach ($structure->parts as $part_number => $part) {
                                   // Handle the RELATED part (subtype: "ALTERNATIVE")
@@ -379,19 +586,15 @@
                                   }
                              }
                       }
-                  
                       foreach ($attachments as $cid => $imagePath) {
                        $fileName = basename($imagePath);
                        $file = "https://skyblue.co.in/mail/data/images/".$fileName;
-                   
                        $htmlContent = str_replace('cid:' . $cid, $file, $htmlContent);
                    }
                    echo $htmlContent;
                    break;
                   
                    case "MULTIPART/MIXED":
-                  //     $structure = imap_fetchstructure($mailbox, $message_id);
-                  
                        ini_set("xdebug.var_display_max_children", '-1');
                        ini_set("xdebug.var_display_max_data", '-1');
                        ini_set("xdebug.var_display_max_depth", '-1');
@@ -412,7 +615,6 @@
                                             $body = quoted_printable_decode($body);
                                            }
                                            $plainText .= $body;
-                  
                                      }elseif (isset($sub_part->subtype) && strtolower($sub_part->subtype) == 'html') {
                                         $body = imap_fetchbody($mailbox, $messageId, $part_number + 1 . '.' . ($sub_part_number + 1));
                   
@@ -422,10 +624,8 @@
                                             $body = quoted_printable_decode($body);
                                         }
                                         $htmlContent .= $body;
-                  
                                         echo $htmlContent."";
                                         echo '<div class="line"></div>';
-                  
                                         echo '<div style="color: black; padding-top:10px;">';
                                         echo '<strong>';
                                         echo 'Attachments';
@@ -442,26 +642,23 @@
                   
                     foreach ($attachments as $file) {
                            // Option 2: Display inline if image
-                           file_put_contents('/var/www/skyblue.co.in/mail/data/images/' . $file['filename'], $file['data']);
+                           $filename = mb_decode_mimeheader($file['filename']);
+                           file_put_contents('/var/www/skyblue.co.in/mail/data/images/' . $filename, $file['data']);
                       
                            $ext = pathinfo($file['filename'], PATHINFO_EXTENSION);
-                  
-                    if (in_array(strtolower($ext), ['png', 'jpg', 'jpeg', 'gif', 'pdf'])) {
-                        $base64 = base64_encode($file['data']);
+                           $base64 = base64_encode($file['data']);
                   
                     echo '<div class="flex-container">';
                         echo '<div class="flex-item">';
                             echo '<div>';
-                  
-                                  $dotPosition = strrpos($file['filename'], '.');
-                                  $extension = substr($file['filename'], $dotPosition + 1);
-                                  //  echo "File Extension: " . $extension;
+
+                                  $filename = mb_decode_mimeheader($file['filename']);
+                                  $dotPosition = strrpos($filename, '.');
+                                  $extension = substr($filename, $dotPosition + 1); // if (in_array(strtolower($ext), ['png', 'jpg', 'jpeg', 'gif', 'pdf'])) {
                   
                                   if($extension == 'jpg' | $extension == 'jpeg' | $extension == 'png'){
-                                         
                                          echo "<img src='data:image/{$ext};base64,{$base64}' class='image-thumbnail'>";
-                  
-                                         $prasanth = $file['filename'];
+                                         $prasanth = $filename;
                                          echo "<a href='#' class='downloadFile' data-id='$prasanth' style=' text-decoration: none; color: black;'>";
                                          echo "<div class='image-text' >Download </div>";
                                          echo "</a>";
@@ -469,27 +666,21 @@
                   
                                   if($extension == 'pdf'){
                                              echo "<img src='/assets/mail/img/pdf1.png' class='image-thumbnail'>";
-                                             $prasanth = $file['filename'];
+                                             $prasanth = $filename;
                                              echo "<a href='#' class='downloadFile' data-id='$prasanth' style=' text-decoration: none; color: black;'>";
                                              echo "<div class='image-text' >Download </div>";
                                              echo "</a>";
                                      }
-                                     echo "<p class='file-name'> {$file['filename']}</p>";
-                  
-                  
+
+                                     echo "<p class='file-name'> $filename</p>";
                             echo '</div>';
                         echo '</div>';
                     echo '</div>';
-                    }
                   }
                   
                        break;
                   
                    case "MULTIPART/ALTERNATIVE":
-                     //  echo "<h1> MULTIPART/ALTERNATIVE </h1> ";
-                       
-                  
-                  
                        $structure = imap_fetchstructure($mailbox, $messageId);
                   
                        function get_part($mailbox, $messageId, $structure, $part_number) {
@@ -506,23 +697,41 @@
                   
                      if ($structure->type == TYPEMULTIPART) {
                        foreach ($structure->parts as $part_num => $part) {
-                         // if ($part->subtype == 'PLAIN') {
-                         //   $text = get_part($mailbox, $messageId, $part, $part_num + 1);
-                         //   echo "\n$text\n";
-                         //  // var_dump($part->subtype);
-                         // }  
-                         
                          if ($part->subtype == 'HTML') {
                            $html = get_part($mailbox, $messageId, $part, $part_num + 1);
                            echo "\n$html\n";
                          }
-                         
                        }
                      }
-                     
-                  
-                       
                    break;
+
+                   case "MULTIPART/REPORT":
+                     $structure = imap_fetchstructure($mailbox, $messageId);
+
+                     function get_part($mailbox, $messageId, $part, $part_number) {
+                         $body = imap_fetchbody($mailbox, $messageId, $part_number);
+                         switch ($part->encoding) {
+                             case 0: return $body; // 7BIT
+                             case 1: return imap_utf8($body); // 8BIT
+                             case 3: return base64_decode($body);
+                             case 4: return quoted_printable_decode($body);
+                             default: return $body;
+                         }
+                     }
+                     
+                     $plain_text = '';
+                     
+                     if ($structure->type == TYPEMULTIPART && strtolower($structure->subtype) === 'report') {
+                         foreach ($structure->parts as $index => $part) {
+                             if ($part->type == TYPETEXT && strtolower($part->subtype) === 'plain') {
+                                 $plain_text = get_part($mailbox, $messageId, $part, $index + 1);
+                                 break;
+                             }
+                         }
+                     }
+                     
+                     echo "<pre>" . htmlspecialchars($plain_text) . "</pre>";
+                     break;
                   
                    default:
                        echo "<script type='text/javascript'>alert('default');</script>";
@@ -542,7 +751,6 @@
                        case 'gif':
                            $ext = 'gif';
                            break;
-                       // Add other types as necessary
                    }
                    return $ext;
                   }
@@ -559,7 +767,7 @@
                    }
                   }
                   
-                  function getAttachments($stream, $msgNumber, $structure, $prefix = '') {
+                   function getAttachments($stream, $msgNumber, $structure, $prefix = '') {
                    $attachments = [];
                   
                    if (isset($structure->parts)) {
@@ -575,7 +783,6 @@
                            if ($part->type == 5 || ($part->ifdisposition && in_array(strtolower($part->disposition), ['attachment', 'inline']))) {
                                $filename = null;
                   
-                               // Try to get the filename
                                if ($part->ifdparameters) {
                                    foreach ($part->dparameters as $param) {
                                        if (strtolower($param->attribute) == 'filename') {
@@ -593,14 +800,8 @@
                                        }
                                    }
                                }
-                  
                                $filename = $filename ?: "unknown_" . $partNumber;
-                  
                                $content = decodeAttachment($stream, $msgNumber, $part, $partNumber);
-                  
-                           //    file_put_contents('/var/www/skyblue.co.in/mail/data/images/' . $filename, $content);
-                  
-                           
                   
                                $attachments[] = [
                                    'filename' => $filename,
@@ -610,24 +811,33 @@
                            }
                        }
                    }
-                  
                    return $attachments;
                   }
-                  
                   imap_close($mailbox);
                   ?>
             </div>
          </div>
       </div>
+
       <div class="zoomed-image-container" id="zoomedImageContainer">
          <span class="close-btn" id="closeZoomedImage">&times;</span>
          <img class="zoomed-image" id="zoomedImage" src="" alt="">
       </div>
+
       <script>
+
          function showView(viewId) {
             document.getElementById("emailDetails").innerHTML = "";
             document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
             document.getElementById(viewId).classList.add('active');
+         }
+
+         function goBack(viewId) {
+            document.getElementById("emailDetails").innerHTML = "";
+            document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
+            document.getElementById(viewId).classList.add('active');
+
+            history.replaceState(null, '', '/mail/pages/dashboard/index.php?action=INBOX');
          }
          
          function showEmail(data) {
@@ -635,10 +845,9 @@
             var viewId = t['view'];
             var emailId = t['email_id'];
             document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
-            document.getElementById(viewId).classList.add('active');
-         
+            document.getElementById(viewId).classList.add('active');         
          }
-         
+
          document.getElementById('editor').addEventListener('input', function () {
          
          });
@@ -649,7 +858,6 @@
          }
          
          const images = document.querySelectorAll(".image-thumbnail");
-         
          const zoomedImageContainer = document.getElementById("zoomedImageContainer");
          const zoomedImage = document.getElementById("zoomedImage");
          const closeZoomedImage = document.getElementById("closeZoomedImage");
@@ -684,7 +892,8 @@
                document.body.removeChild(link);
             });
          });
-           
+
+
       </script>
    </body>
 </html>

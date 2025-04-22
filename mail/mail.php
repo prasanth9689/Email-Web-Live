@@ -87,16 +87,6 @@ switch ($access) {
       
                       }
 
-
-
-
-
-
-
-
-
-
-
         }else{
             array_push($data, array("access auth"=>"true" , "status"=>"2" , "message"=>"Error creating user: " . $output));
             header("Content-Type:Application/json");

@@ -176,15 +176,19 @@ $attachments = [];
           
                $ext = pathinfo($file['filename'], PATHINFO_EXTENSION);
 
-        if (in_array(strtolower($ext), ['png', 'jpg', 'jpeg', 'gif', 'pdf'])) {
+      //  if (in_array(strtolower($ext), ['png', 'jpg', 'jpeg', 'gif', 'pdf'])) {
             $base64 = base64_encode($file['data']);
 
         echo '<div class="flex-container">';
             echo '<div class="flex-item">';
                 echo '<div>';
 
-                      $dotPosition = strrpos($file['filename'], '.');
-                      $extension = substr($file['filename'], $dotPosition + 1);
+                      $filename = mb_decode_mimeheader($file['filename']);
+                      $dotPosition = strrpos($filename, '.');
+                      $extension = substr($filename, $dotPosition + 1);
+                      
+
+                      var_dump($extension);
                       //  echo "File Extension: " . $extension;
 
                       if($extension == 'jpg' | $extension == 'jpeg' | $extension == 'png'){
@@ -204,13 +208,14 @@ $attachments = [];
                                  echo "<div class='image-text' >Download </div>";
                                  echo "</a>";
                          }
-                         echo "<p class='file-name'> {$file['filename']}</p>";
+                         $filename = mb_decode_mimeheader($file['filename']);
+                         echo "<p class='file-name'> $filename</p>";
 
 
                 echo '</div>';
             echo '</div>';
         echo '</div>';
-        }
+  //      }
     }
 
 
