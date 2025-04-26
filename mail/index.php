@@ -63,17 +63,7 @@ if (isset($_SESSION["username"])) {
 			<div class="col-sm left-side" style="height: 400px;">
 				<img class="left-side-img" src="../assets/mail/img/img1.png" width="500px" height="500px" />
                
-               <?php
-
-                  global $line;
-
-                  $fh = fopen('https://skyblue.co.in/mail/counter.txt','r');
-                  while ($line = fgets($fh)) { 
-                      echo "<p class='main-text'>"."Total visters : ".($line)."<hp/>";
-                  }
-
-                fclose($fh);
-                 ?>
+              
 			</div>
             
 			<div class="col-sm right-side">
@@ -122,6 +112,32 @@ if (isset($_SESSION["username"])) {
 	</div>
 	</div>
 
+    <style>
+    .fixed-bottom {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      background-color: #222;
+      color: white;
+      text-align: left;
+      padding: 4px;
+    }
+        </style>
+
+    <div class="fixed-bottom">
+    <?php
+
+                  global $line;
+
+                  $fh = fopen('counter.txt','r');
+                  while ($line = fgets($fh)) { 
+                      echo ""."Total visitors : ".($line)."";
+                  }
+
+                fclose($fh);
+                 ?>
+  </div>
 
 	<script>
 		const button = document.getElementById('signUpButton');

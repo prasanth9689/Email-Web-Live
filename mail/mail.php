@@ -18,6 +18,48 @@ if (json_last_error() === JSON_ERROR_NONE) {
 
 switch ($access) {
 
+    case "get_inbox":
+        $mUserName = htmlspecialchars($data['email']);
+        $mPassword = htmlspecialchars($data['password']);
+
+        $hostname = '{imap.skyblue.co.in:993/imap/ssl/novalidate-cert}INBOX';
+  
+        $inbox = imap_open($hostname, $mUserName, $mPassword) or die('Cannot connect to mailbox: ' . imap_last_error());
+        
+        $numMessages = imap_num_msg($inbox);
+        $email_ids = imap_search($inbox, 'ALL'); 
+        $inbox_data = array("status"=>"true" , "message"=> "Email avalable");
+        if ($email_ids) { // sort them by ascending date
+            rsort($email_ids); // Sort email IDs by ascending date
+          
+            foreach ($email_ids as $email_id) {
+                $header = imap_headerinfo($inbox, $email_id);
+                $subject = $header->subject;
+                $from = $header->fromaddress;
+                $date = $header->date;
+                $decoded_subject0 = imap_utf8($subject);
+             //   $data = array("view"=> "message_view", "email_id"=>$email_id);
+                //$js_data = json_encode($data);
+
+                $sender_name = $header->fromaddress;
+        
+                // Sometimes the sender's name is in the 'personal' attribute
+                if (isset($header->from[0]->personal)) {
+                    $sender_name = $header->from[0]->personal;
+                }
+                $decoded_subject = imap_utf8($subject);
+                array_push($inbox_data, array( "from"=> $sender_name, "subject"=>$decoded_subject));
+             
+            }
+            header("Content-Type:Application/json");
+            print json_encode($inbox_data);
+        } else {
+            echo "No emails found.";
+        }
+        imap_close($inbox);
+        break;
+
+
     case "create_user":
 
         // Check username availability
@@ -176,7 +218,7 @@ $data = json_decode($json, true);
     
 
     default:
-        array_push($data, array("access auth"=>"true" , "status"=>"2" , "message"=>"Wrong access key" ));
+        array_push($data, array("access auth"=>false, "status"=>"0" , "message"=>"Wrong access key" ));
         header("Content-Type:Application/json");
         print json_encode($data);
         break;     

@@ -125,7 +125,7 @@
 </style>
 
             <?php
-               $hostname = '{imap.skyblue.co.in:993/imap/ssl/novalidate-cert}INBOX';
+               $hostname = '{mail.skyblue.co.in:993/imap/ssl/novalidate-cert}INBOX';
                $username = $_SESSION["username"];
                $password = $_SESSION["password"];
          
@@ -422,7 +422,7 @@
                  $username = $_SESSION["username"];
                  $password = $_SESSION["password"];
                  global $mailbox;
-                 $mailbox = imap_open("{imap.skyblue.co.in:993/imap/ssl/novalidate-cert}INBOX", $username, $password);
+                 $mailbox = imap_open("{mail.skyblue.co.in:993/imap/ssl/novalidate-cert}INBOX", $username, $password);
                
                  if (!$mailbox) {
                    echo "Failed to connect to IMAP server.";
