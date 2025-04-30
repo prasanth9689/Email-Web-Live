@@ -1,5 +1,22 @@
+    const passwordInput = document.getElementById('password');
+
+      passwordInput.addEventListener('keydown', function(event) {
+      if (event.key === 'Enter' && passwordInput.value.trim() !== '') {
+        event.preventDefault(); 
+      
+         var textView = document.getElementById("text");
+         textView.style.display = "none";
+         progressCircle.classList.remove("hidden");
+
+         var topProgressbar = document.getElementById("Loading");
+         topProgressbar.style.display = "block";
+
+	     postApi();
+      }
+    });
+
 const button = document.getElementById('signUpButton');
-button.addEventListener('click', function () {
+        button.addEventListener('click', function () {
 
     var email = document.form.email.value;
     var password = document.form.password.value;
@@ -11,13 +28,6 @@ button.addEventListener('click', function () {
         email.scrollIntoView();
         document.getElementById('error-email').style.display = 'block';
         return false;
-    }
-
-    if (!validateEmail(email)) {
-        const responseMessage = document.getElementById('message');
-        responseMessage.textContent = "Invalid email address.";
-        responseMessage.style.display = "block";
-        return;
     }
 
     if (password.length == "") {
@@ -33,10 +43,73 @@ button.addEventListener('click', function () {
     textView.style.display = "none";
     progressCircle.classList.remove("hidden");
 
-    // Top progressbar enable
     var topProgressbar = document.getElementById("Loading");
     topProgressbar.style.display = "block";
+
+	postApi();
 });
+
+function postApi(){
+
+	        const acc = "user_login";
+            const email = document.getElementById('email').value;
+			const password = document.getElementById('password').value;
+
+	const data = {
+                acc: acc,
+                email: email,
+                password: password
+            };
+
+            // POST request to the API
+            fetch('https://skyblue.co.in/mail/mail.php', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(data)
+            })
+                .then(response => response.json())
+                .then(data => {
+
+					var topProgressbar = document.getElementById("Loading");
+                    topProgressbar.style.display = "none";
+
+
+                    console.log(`Message: ${data.message}`);
+                    const status = +`${data[0].status}`;
+                    console.log("status : " + status)
+
+                    if (parseInt(status) == 1) {
+                        // window.open("https://skyblue.co.in/login/otp_verification.html?email="+email,"_self");
+                        window.open("https://skyblue.co.in/mail/pages/dashboard/", "_self");
+                    }
+
+                    if (status == 2) {
+                        const responseMessage = document.getElementById('message');
+                        responseMessage.textContent = `${data[0].message}`;
+                        responseMessage.style.display = "block";
+                    }
+
+                    var textView = document.getElementById("text");
+                    textView.style.display = "block";
+                    progressCircle.classList.add("hidden");
+                })
+				 .catch((error) => {
+                    console.error('Error:', error);
+                    const responseMessage = document.getElementById('message');
+                    responseMessage.textContent = 'Error:' + error;
+                    responseMessage.style.display = "block";
+
+                    var textView = document.getElementById("text");
+                    textView.style.display = "block";
+                    progressCircle.classList.add("hidden");
+
+					var topProgressbar = document.getElementById("Loading");
+                    topProgressbar.style.display = "none";
+                });
+              
+}
 
 const emailElement = document.getElementById("email");
 const passwordElement = document.getElementById("password");

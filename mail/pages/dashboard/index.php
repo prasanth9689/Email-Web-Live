@@ -34,16 +34,6 @@
          <div class="position-sticky">
             <div class="list-group list-group-flush mx-3 mt-4">
 
-               <script>
-                   
-                   function showView(viewId) {
-                   document.getElementById("emailDetails").innerHTML = "";
-                   document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
-                   document.getElementById(viewId).classList.add('active');
-                   }
-
-                  </script>
-
                <a href="?action=COMPOSE"   class="list-group-item list-group-item-action py-2 ripple active">
                <i class="fa fas  fa-fw me-3"></i><span>Compose Mail</span>
                </a>
@@ -71,58 +61,6 @@
       </nav>
       <div id="home" class="view active" style="background-color: white; height: 100%; width: 100%; overflow: scroll;">
          <div class="content__email_list">
-
-         <style>
-
-
- .mark-box {
-  position: absolute;
-  opacity: 0;
-  cursor: pointer;
-  height: 0;
-  width: 0;
-}
-
-.checkmark {
-  position: absolute;
-  left: 5px;
-  height: 15px;
-  width: 15px;
-  background-color: white;
-  border: 1px solid #ccc;
-}
-
-.container-mark:hover .mark-box ~ .checkmark {
-  background-color: #ccc;
-}
-
-.container-mark .mark-box:checked ~ .checkmark {
-  background-color: #2196F3;
-}
-
-.checkmark:after {
-  content: "";
-  position: absolute;
-  display: none;
-}
-
-.container-mark .mark-box:checked ~ .checkmark:after {
-  display: block;
-}
-
-.container-mark .checkmark:after {
-  left: 5px;
-  top: 2px;
-  width: 3px;
-  height: 7px;
-  border: solid white;
-  border-width: 0 2px 2px 0;
-  -webkit-transform: rotate(45deg);
-  -ms-transform: rotate(45deg);
-  transform: rotate(45deg);
-}
-
-</style>
 
             <?php
                $hostname = '{mail.skyblue.co.in:993/imap/ssl/novalidate-cert}INBOX';
@@ -206,9 +144,48 @@
          <h1>Settings view</h1>
          <p>Development under progress.</p>
       </div>
+ <!-- copy started -->
 
 
-      <div id="compose" class="view">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      <!-- <form method="post"> -->
+      <div id="compose" class="view" style="background-color:white;">
          <div class="container-compose">
             <div class="row inbox" style="height:100px;">
                <div class="col-md-9">
@@ -263,45 +240,22 @@
                            <br>	
 
                            <div id="editor" contenteditable="true" spellcheck="false" class="editor">
-                              Start typing here...
+                           Write your message here...
                            </div>
-
-     <script>
-         
-           const editor = document.getElementById('editor');
-
-           editor.addEventListener('focus', function () {
-               if (!editor.classList.contains('active')) {
-                      editor.textContent = '';
-                      editor.classList.add('active');
-                  }
-           });
-
-           editor.addEventListener('blur', function () {
-              if (editor.textContent.trim() === '') {
-                   editor.textContent = 'Write your message here...';
-                   editor.classList.remove('active');
-                 }
-           });
-
-     </script>
 
                            <div class="form-group msg-button-con">	
-                              <button type="submit" id="sendMail" class="btn btn-success">Send</button>
-                              <button type="submit" class="btn btn-default">Draft</button>
-                              <button type="submit" class="btn btn-danger">Discard</button>
+                           <div id="sendMail" style="width: 150px;" type="submit" class="btn-submit button-green" onclick="showProgress()">
+                               <div id="text-sendMail"> Send </div>
+                               <div id="progressCircleGreen" class="hidden" style="margin-top: 30px; margin-left: 20px;">
+                               </div>
                            </div>
 
-                           <script>
-                            
-                                 const sendMail = document.getElementById('sendMail');
-                                 sendMail.addEventListener('click', function () {
-                                     var editor = document.getElementById("editor").innerHTML;
-                                     console.log("log : " + editor);
-                                     alert(editor + "");
-                                  });
-
-                              </script>
+                              <!-- <button type="submit" name="sendMessage" id="sendMail" class="btn btn-success">Send</button> -->
+                              <!-- <button type="submit" class="btn btn-default">Draft</button>
+                              <button type="submit" class="btn btn-danger">Discard</button> -->
+                           </div>
+            <!-- </form > -->
+            <script src="/assets/mail/js/compose.js"></script>
 
                         </div>
                      </div>
@@ -310,6 +264,31 @@
             </div>
          </div>
       </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
       <div id="message_view" class="view" style="background-color: white;">
          <div id="emailDetails" style="background-color: red;">
@@ -893,7 +872,7 @@
             });
          });
 
-
+         
       </script>
    </body>
 </html>

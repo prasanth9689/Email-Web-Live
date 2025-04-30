@@ -53,12 +53,12 @@ if (isset($_SESSION["username"])) {
 		}
 
 		#layoutMobile {
-			display: none;
+			display: block;
 		}
 
 		#usernameLayout {
 			position: fixed;
-			display: block;
+			display: none;
 		}
 
 		.error-field2 {

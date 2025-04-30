@@ -6,7 +6,7 @@ if(!$handle) {
     $counter =(int )fread($handle,20);
         fclose($handle); 
         $counter++; 
-     //   echo"Number of visitors to this page so far: ". $counter . "" ; 
+     
     $handle = fopen("../mail/counter.txt", "w" ); 
     
     fwrite($handle,$counter);
@@ -20,8 +20,6 @@ session_start();
 if (isset($_SESSION["username"])) {
     header("Location: https://skyblue.co.in/mail/pages/dashboard/index.php");
 }
-
-
 ?>
 
 <!DOCTYPE html>
@@ -31,6 +29,7 @@ if (isset($_SESSION["username"])) {
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<title>Secure Business Email for your Organization | Skyblue Mail</title>
 	<link rel="stylesheet" href="../assets/mail/css/styles.css">
+    
 	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.1.3/dist/css/bootstrap.min.css"
 		integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
 		<link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=Ubuntu" />
@@ -62,8 +61,6 @@ if (isset($_SESSION["username"])) {
 
 			<div class="col-sm left-side" style="height: 400px;">
 				<img class="left-side-img" src="../assets/mail/img/img1.png" width="500px" height="500px" />
-               
-              
 			</div>
             
 			<div class="col-sm right-side">
@@ -112,19 +109,6 @@ if (isset($_SESSION["username"])) {
 	</div>
 	</div>
 
-    <style>
-    .fixed-bottom {
-      position: fixed;
-      bottom: 0;
-      left: 0;
-      width: 100%;
-      background-color: #222;
-      color: white;
-      text-align: left;
-      padding: 4px;
-    }
-        </style>
-
     <div class="fixed-bottom">
     <?php
 
@@ -138,133 +122,6 @@ if (isset($_SESSION["username"])) {
                 fclose($fh);
                  ?>
   </div>
-
-	<script>
-		const button = document.getElementById('signUpButton');
-        button.addEventListener('click', function () {
-
-    var email = document.form.email.value;
-    var password = document.form.password.value;
-
-    if (email.length == "") {
-        var email = document.getElementById("email");
-        document.getElementById("email").className = document.getElementById("email").className + " error";  // this adds the error class
-        email.focus();
-        email.scrollIntoView();
-        document.getElementById('error-email').style.display = 'block';
-        return false;
-    }
-
-
-
-    if (password.length == "") {
-        var password = document.getElementById("password");
-        document.getElementById("password").className = document.getElementById("password").className + " error";  // this adds the error class
-        password.focus();
-        password.scrollIntoView();
-        document.getElementById('error-password').style.display = 'block';
-        return false;
-    }
-
-    var textView = document.getElementById("text");
-    textView.style.display = "none";
-    progressCircle.classList.remove("hidden");
-
-    // Top progressbar enable
-    var topProgressbar = document.getElementById("Loading");
-    topProgressbar.style.display = "block";
-
-	postApi();
-});
-
-function postApi(){
-
-	        const acc = "user_login";
-            const email = document.getElementById('email').value;
-			const password = document.getElementById('password').value;
-
-	const data = {
-                acc: acc,
-                email: email,
-                password: password
-            };
-
-            // POST request to the API
-            fetch('https://skyblue.co.in/mail/mail.php', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify(data)
-            })
-                .then(response => response.json())
-                .then(data => {
-
-					var topProgressbar = document.getElementById("Loading");
-                    topProgressbar.style.display = "none";
-
-
-                    console.log(`Message: ${data.message}`);
-                    const status = +`${data[0].status}`;
-                    console.log("status : " + status)
-
-                    if (parseInt(status) == 1) {
-                        // window.open("https://skyblue.co.in/login/otp_verification.html?email="+email,"_self");
-                        window.open("https://skyblue.co.in/mail/pages/dashboard/", "_self");
-                    }
-
-                    if (status == 2) {
-                        const responseMessage = document.getElementById('message');
-                        responseMessage.textContent = `${data[0].message}`;
-                        responseMessage.style.display = "block";
-                    }
-
-                    var textView = document.getElementById("text");
-                    textView.style.display = "block";
-                    progressCircle.classList.add("hidden");
-                })
-				 .catch((error) => {
-                    console.error('Error:', error);
-                    const responseMessage = document.getElementById('message');
-                    responseMessage.textContent = 'Error:' + error;
-                    responseMessage.style.display = "block";
-
-                    var textView = document.getElementById("text");
-                    textView.style.display = "block";
-                    progressCircle.classList.add("hidden");
-
-					var topProgressbar = document.getElementById("Loading");
-                    topProgressbar.style.display = "none";
-                });
-              
-}
-
-const emailElement = document.getElementById("email");
-const passwordElement = document.getElementById("password");
-
-emailElement.addEventListener("input", function () {
-    document.getElementById("email").className = document.getElementById("email").className.replace(" error", "");
-    document.getElementById('error-email').style.display = 'none';
-
-    const responseMessage = document.getElementById('message');
-    responseMessage.style.display = "none";
-});
-
-passwordElement.addEventListener("input", function () {
-    document.getElementById("password").className = document.getElementById("password").className.replace(" error", "");
-    document.getElementById('error-password').style.display = 'none';
-
-    const responseMessage = document.getElementById('message');
-    responseMessage.style.display = "none";
-});
-
-function validateEmail(email) {
-    const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    return regex.test(email);
-}
-</script>
-
-
-
+  <script src="../assets/mail/js/login.js"></script>
 </body>
 </html>
