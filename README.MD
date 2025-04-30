@@ -27,7 +27,7 @@ Skyblue business email project started September 2024, purpose of development fo
 | 3    | Side nav bar | Completed |
 | 4    | Inbox list   | Completed |
 | 5    | Message viewer | Completed |
-| 6    | Compose mail | $${\color{red}Working}$$ |
+| 6    | Compose mail | $${\textcolor{red}{\text{Working}}}$$ |
 | 7    | Send list    | Not started |
 | 8    | Logout | Completed |
 | 9  | Attachment View | Completed |
