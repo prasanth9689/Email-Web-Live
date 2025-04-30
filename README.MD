@@ -28,7 +28,7 @@ Skyblue business email project started September 2024, purpose of development fo
 | 4    | Inbox list   | Completed |
 | 5    | Message viewer | Completed |
 | 6    | Compose mail | $${\textcolor{red}{\text{Working}}}$$ |
-| 7    | Send list    | $${\textcolor{red}{\text{Not started}}}$$ |
+| 7    | Send list    | $${\textcolor{orange}{\text{Not started}}}$$ |
 | 8    | Logout | Completed |
 | 9  | Attachment View | Completed |
 | 10 | Attachment download | Completed |
