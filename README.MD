@@ -20,7 +20,15 @@ Skyblue business email project started September 2024, purpose of development fo
 -----
 **Latest version 1.0** - Not released
 
-| S.NO | Feature       | Status       |
+| S.NO | Main Feature       | Status       |
 | ---- | ------------- | ------------ |
 | 1    | Login         | Completed    |
 | 2    | Free user registration  | Completed |
+| 3    | Side nav bar | Completed |
+| 4    | Inbox list   | Completed |
+| 5    | Message viewer | Completed |
+| 6    | Compose mail | $${\color{red}Working}$$ |
+| 7    | Send list    | Not started |
+| 8    | Logout | Completed |
+| 9  | Attachment View | Completed |
+| 10 | Attachment download | Completed |
