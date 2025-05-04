@@ -18,19 +18,32 @@
    </head>
    <body>
 
+   <div class="Loading" id="Loading"></div>
+
+   <div class="bottom-message-box" id="messageBox" style="position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); background-color: #2971fc; color: white; padding: 15px 25px; border-radius: 5px; box-shadow: 0 0 10px rgba(0, 0, 0, 0.3); font-family: sans-serif; font-size: 14px; display: none; z-index: 1000;">
+   </div>
+
       <nav class="navbar navbar-light navbar-custom" style="width: 100%; position: fixed; box-shadow: 0 2px 5px 0 rgb(0 0 0 / 5%), 0 2px 10px 0 rgb(0 0 0 / 5%);">
          <a class="navbar-brand" href="https://skyblue.co.in">
          <img src="/assets/mail/img/logo3.png" width="30" height="30" class="d-inline-block align-top" alt="">
          Skyblue Mail
          </a>
 
+           <style>
+            @media only screen and (max-width: 700px) {
+              .search {
+                   display: none;
+               }
+            }
+            </style>
+
          <form class="form-inline my-2 my-lg-0 search">
             <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
             <button class="btn btn-primary my-2 my-sm-0" type="submit">Search</button>
          </form>
       </nav>
-
-      <nav id="sidebarMenu" class="collapse d-lg-block sidebar collapse ">
+      <!-- <nav id="sidebarMenu" class="collapse d-lg-block sidebar collapse "> -->
+      <nav id="sidebarMenu" class=" d-lg-block sidebar  ">
          <div class="position-sticky">
             <div class="list-group list-group-flush mx-3 mt-4">
 
@@ -194,23 +207,39 @@
                         <p class="text-center" style="display:none;">New Message</p>
                         <form class="form-horizontal" role="form">
                            <div class="form-group d-flex justify-content-start">
-                              <label for="to" class="col-sm-1 control-label">To:</label>
+                              <label for="to" class="col-sm-1 control-label">To</label>
                               <div class="col-sm-11">
-                                 <input type="email" class="form-control select2-offscreen" id="to" placeholder="Type email" tabindex="-1">
+                                 <input type="email" class="form-control select2-offscreen" id="to" placeholder="Type email" value="prasanth.jhon@yahoo.com" tabindex="-1">
                               </div>
                            </div>
-                           <div class="form-group d-flex justify-content-start">
+
+                         
+                           <div style="display: none;">
+                           <div class="form-group d-flex justify-content-start" style="">
                               <label for="cc" class="col-sm-1 control-label">CC:</label>
                               <div class="col-sm-11">
                                  <input type="email" class="form-control select2-offscreen" id="cc" placeholder="Type email" tabindex="-1">
                               </div>
                            </div>
+                           </div>
+
+
+                           <div style="display: none;">
                            <div class="form-group d-flex justify-content-start">
                               <label for="bcc" class="col-sm-1 control-label">BCC:</label>
                               <div class="col-sm-11">
                                  <input type="email" class="form-control select2-offscreen" id="bcc" placeholder="Type email" tabindex="-1">
                               </div>
                            </div>
+                           </div>
+
+                           <div class="form-group d-flex justify-content-start">
+                              <label for="bcc" class="col-sm-1 control-label">Subject</label>
+                              <div class="col-sm-11">
+                                 <input type="text" class="form-control select2-offscreen" id="subject" placeholder="Subject" tabindex="-1">
+                              </div>
+                           </div>
+
                         </form>
                         <div class="col-sm-11 col-sm-offset-1" style="max-width:100%;">
                            <div class="btn-toolbar" role="toolbar">

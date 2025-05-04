@@ -3,9 +3,6 @@ session_start();
 
 $con = mysqli_connect('localhost' , 'root', 'prasanth' , 'skyblue_mail');
 
-
-// include "functions.php";
-
 // Get the raw POST data 
 $json = file_get_contents('php://input');
 
@@ -17,6 +14,29 @@ if (json_last_error() === JSON_ERROR_NONE) {
 }
 
 switch ($access) {
+
+    case "send_mail":
+        $username = $_SESSION["username"];
+        // GET Host domain name pending
+        // Like @skyblue.co.in or @companyname.com
+        $tempHostName = "skyblue.co.in";
+
+        $fromAddress = $username."@".$tempHostName;
+        $toAddress = htmlspecialchars($data['to_address']);
+        $message = htmlspecialchars($data['message']);
+        $subject = htmlspecialchars($data['subject']);
+        $headers = "From: $fromAddress";
+
+        if (mail($toAddress, $subject, $message, $headers)) {
+            array_push($data, array("access auth"=>"true" , "status"=>"1" , "message" => "Message has been sent. success."));
+            header("Content-Type:Application/json");
+            print json_encode($data);
+        } else {
+            array_push($data, array("access auth"=>"false" , "status"=>"2" , "message" => "Message not sent. Failure."));
+            header("Content-Type:Application/json");
+            print json_encode($data);
+        }
+        break;
 
     case "get_inbox":
         $mUserName = htmlspecialchars($data['email']);
@@ -38,9 +58,6 @@ switch ($access) {
                 $from = $header->fromaddress;
                 $date = $header->date;
                 $decoded_subject0 = imap_utf8($subject);
-             //   $data = array("view"=> "message_view", "email_id"=>$email_id);
-                //$js_data = json_encode($data);
-
                 $sender_name = $header->fromaddress;
         
                 // Sometimes the sender's name is in the 'personal' attribute
@@ -49,7 +66,6 @@ switch ($access) {
                 }
                 $decoded_subject = imap_utf8($subject);
                 array_push($inbox_data, array( "from"=> $sender_name, "subject"=>$decoded_subject));
-             
             }
             header("Content-Type:Application/json");
             print json_encode($inbox_data);
@@ -59,11 +75,8 @@ switch ($access) {
         imap_close($inbox);
         break;
 
-
     case "create_user":
-
         // Check username availability
-
         $mUserName = htmlspecialchars($data['username']);
         $mPassword = htmlspecialchars($data['password']);
 
@@ -79,7 +92,6 @@ switch ($access) {
             print json_encode($data);
            return;
         } 
-
         GLOBAL $mUserName;
         GLOBAL $mPassword;
 
@@ -94,13 +106,11 @@ switch ($access) {
          $shell_add_permission = "    echo '$sudo_password' | sudo -S chown -R $mUserName:$mUserName /home/$mUserName/Maildir ";
          $shell_restart_postfix = "echo '$sudo_password' | sudo -S systemctl restart postfix ";
          
- 
          shell_exec($shell_create_user);
          shell_exec($shell_create_new_password);
          shell_exec($shell_create_mail_dir);
          shell_exec($shell_add_permission);
        
-      
          exec($shell_restart_postfix, $output, $status);
 
         if ($status === 0) {
@@ -111,8 +121,6 @@ switch ($access) {
             $_SESSION["username"] = $mUserName1;
             $_SESSION["password"] = $mPassword1;
           
-
-
             // Save user information to db
             $Query = "INSERT INTO users (username, password) 
                              VALUES ('$mUserName', '$mPassword')";
@@ -128,14 +136,12 @@ switch ($access) {
             print json_encode($data);
       
                       }
-
         }else{
             array_push($data, array("access auth"=>"true" , "status"=>"2" , "message"=>"Error creating user: " . $output));
             header("Content-Type:Application/json");
             print json_encode($data);
             exit;
         }
-        
         break;
 
     case "mail_check_user":
@@ -153,7 +159,6 @@ switch ($access) {
             print json_encode($data);
            return;
         } 
-    
         array_push($data, array("access auth"=>"true" , "status"=>"1" , "message"=> "New user"));
         header("Content-Type:Application/json");
         print json_encode($data);
@@ -184,16 +189,15 @@ switch ($access) {
                 }
                  $stmt->close();
             }
-
             break;
 
         case "user_login_imap":
 
             // Get the raw POST data 
-$json = file_get_contents('php://input');
+            $json = file_get_contents('php://input');
 
-// Decode the JSON data into a PHP array
-$data = json_decode($json, true);
+            // Decode the JSON data into a PHP array
+            $data = json_decode($json, true);
 
             $hostname = '{imap.skyblue.co.in:993/imap/ssl/novalidate-cert}INBOX';
             $username = htmlspecialchars($data['email']);
