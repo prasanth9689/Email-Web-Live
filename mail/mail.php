@@ -49,6 +49,7 @@ switch ($access) {
         $numMessages = imap_num_msg($inbox);
         $email_ids = imap_search($inbox, 'ALL'); 
         $inbox_data = array("status"=>"true" , "message"=> "Email avalable");
+        $emails = [];
         if ($email_ids) { // sort them by ascending date
             rsort($email_ids); // Sort email IDs by ascending date
           
@@ -65,10 +66,20 @@ switch ($access) {
                     $sender_name = $header->from[0]->personal;
                 }
                 $decoded_subject = imap_utf8($subject);
-                array_push($inbox_data, array( "from"=> $sender_name, "subject"=>$decoded_subject));
+                array_push($emails, array( "from"=> $sender_name, "subject"=>$decoded_subject));
             }
             header("Content-Type:Application/json");
-            print json_encode($inbox_data);
+          //  print json_encode(array($inbox_data, array("emails" => $emails)));
+          //  print json_encode($inbox_data );
+
+       $formatted = [
+        'status' => $data['status'] ?? 'true',
+        'message' => $data['message'] ?? 'Email avalable',
+        'emails' => $emails
+    ];
+    
+    // Print the result as pretty JSON
+    echo json_encode($formatted, JSON_PRETTY_PRINT);
         } else {
             echo "No emails found.";
         }
