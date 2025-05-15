@@ -91,7 +91,7 @@ if (isset($_SESSION["username"])) {
 						<form class="form1" name="form" autocomplete="new-password">
 							<p>
 								<input name="mobile" style="margin-top:5px; caret-color: #2971fc;" id="mobile"
-									type="tel" maxlength="13" value="+918940570615" placeholder="Enter mobile no"
+									type="tel" maxlength="13" value="" placeholder="Enter mobile no"
 									class="edit username" autocomplete="tel" autofocus>
 							</p>
 							<p class="error-field" id="error-field">Enter mobile number.</p>

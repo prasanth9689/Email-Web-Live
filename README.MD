@@ -5,9 +5,6 @@ Skyblue email project started September 2024, purpose of development for learnin
 
 For demo https://skyblue.co.in/
 
-**Username :** prasanth\
-**Password:** Prasanth968@@
-
 **Server :** Linux\
 **Server OS :** Ubuntu 22.04.5 LTS\
 **Server type :** VPS SSD\
