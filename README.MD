@@ -21,26 +21,3 @@ For demo https://skyblue.co.in/
 
 -----
 **Latest version 1.0** - Not released
-
-| S.NO | Main Module         | Status                                       |
-| ---- | -------------       | ------------                                 |
-| 1    | Login               | Completed                                    |
-| 2    | Free registration   | Completed                                    |
-| 3    | Side nav bar        | Completed                                    |
-| 4    | Inbox list          | Completed                                    |
-| 5    | Message viewer      | Completed                                    |
-| 6    | Compose mail        | $${\textcolor{red}{\text{Working}}}$$        |
-| 7    | Send list           | $${\textcolor{orange}{\text{Not started}}}$$ |
-| 8    | Logout              | Completed                                    |
-| 9    | Attachment View     | Completed                                    |
-| 10   | Attachment download | Completed                                    |
-| 11   | Important           | $${\textcolor{orange}{\text{Not started}}}$$ |
-| 12   | Spam                | $${\textcolor{orange}{\text{Not started}}}$$ |
-| 13   | Calendar            | $${\textcolor{orange}{\text{Not started}}}$$ |
-| 15   | Settings            | $${\textcolor{orange}{\text{Not started}}}$$ |
-| 15   | Email search        | $${\textcolor{orange}{\text{Not started}}}$$ |
-| 16   | Price table         | Completed |
-| 17   | Payment gateway     | $${\textcolor{orange}{\text{Not started}}}$$ |
-| 18   | Indian currency     | $${\textcolor{orange}{\text{Not started}}}$$ |
-| 20   | Mail admin panel    | $${\textcolor{orange}{\text{Not started}}}$$ |
-| 21   | Custom domain       | $${\textcolor{orange}{\text{Not started}}}$$ |
