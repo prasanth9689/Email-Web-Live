@@ -17,6 +17,7 @@ switch ($access) {
 
     case "send_mail":
         $username = $_SESSION["username"];
+        $password =  $_SESSION["password"];
         // GET Host domain name pending
         // Like @skyblue.co.in or @companyname.com
         $tempHostName = "skyblue.co.in";
@@ -27,38 +28,28 @@ switch ($access) {
         $plainMessage = strip_tags($data['message']);
         $subject = htmlspecialchars($data['subject']);
         $date = date("r");
-      //  $headers = "From: $fromAddress";
 
-      $headers = "From: $fromAddress\r\n";
-      $headers .= "To: $toAddress\r\n";
-      $headers .= "Subject: $subject\r\n";
-      $headers .= "Date: $date\r\n";
-      $headers .= "MIME-Version: 1.0\r\n";
-      $headers .= "Content-Type: multipart/alternative; boundary=\"$boundary\"\r\n";
+        $headers = "From: $fromAddress\r\n";
+        $headers .= "To: $toAddress\r\n";
+        $headers .= "Subject: $subject\r\n";
+        $headers .= "Date: $date\r\n";
+        $headers .= "MIME-Version: 1.0\r\n";
+        $headers .= "Content-Type: multipart/alternative; boundary=\"$boundary\"\r\n";
 
-        $htmlMessage = '
-                        <html>
-                          <head>
-                        <title>HTML Email</title>
-                        </head>
-                        <body>
-                             ' . $rawMessage . '
-                        </body>
-                        </html>
-                        ';
+        $htmlMessage = '<html><head><title></title></head><body> ' . $rawMessage . '</body></html>';
 
-                        // Message body with boundary parts
-$body = "--$boundary\r\n";
-$body .= "Content-Type: text/plain; charset=UTF-8\r\n";
-$body .= "Content-Transfer-Encoding: 7bit\r\n\r\n";
-$body .= "$plainMessage\r\n\r\n";
+        // Message body with boundary parts
+        $body = "--$boundary\r\n";
+        $body .= "Content-Type: text/plain; charset=UTF-8\r\n";
+        $body .= "Content-Transfer-Encoding: 7bit\r\n\r\n";
+        $body .= "$plainMessage\r\n\r\n";
 
-$body .= "--$boundary\r\n";
-$body .= "Content-Type: text/html; charset=UTF-8\r\n";
-$body .= "Content-Transfer-Encoding: 7bit\r\n\r\n";
-$body .= "$htmlMessage\r\n\r\n";
+        $body .= "--$boundary\r\n";
+        $body .= "Content-Type: text/html; charset=UTF-8\r\n";
+        $body .= "Content-Transfer-Encoding: 7bit\r\n\r\n";
+        $body .= "$htmlMessage\r\n\r\n";
 
-$body .= "--$boundary--";
+        $body .= "--$boundary--";
 
         if (mail($toAddress, $subject, $body, $headers)) {
 
@@ -69,8 +60,7 @@ $body .= "--$boundary--";
             $headers .= $body;
 
             $imapHost = "{imap.skyblue.co.in:993/imap/ssl/novalidate-cert}";
-            $password =  $_SESSION["password"];
-            $imapStream = imap_open($imapHost, "prasanth", "Prasanth968@@");
+            $imapStream = imap_open($imapHost, $username, $password);
 
             if ($imapStream) {
               //  imap_append($imapStream, $imapHost, $body);
@@ -80,8 +70,6 @@ $body .= "--$boundary--";
             } else {
                // echo "IMAP error: " . imap_last_error();
             }
-
-         
         } else {
             array_push($data, array("access auth"=>"false" , "status"=>"2" , "message" => "Message not sent. Failure."));
             header("Content-Type:Application/json");

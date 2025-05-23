@@ -76,7 +76,7 @@ if (isset($_SESSION["username"])) {
 							<p>
 
 								<input name="email" style="margin-top:20px;" id="email" type="text" placeholder="Email"
-									class="edit username" autocomplete="new-password">
+									class="edit username">
 							</p>
 							<p class="error-email" id="error-email">Enter valid email or mobile number.</p>
 							<p></p>

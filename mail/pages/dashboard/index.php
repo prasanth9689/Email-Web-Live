@@ -96,7 +96,7 @@
                        $decoded_subject0 = imap_utf8($subject);
                        $data = array("view"=> "message_view", "email_id"=>$email_id);
                        $js_data = json_encode($data);
-                       echo "<a href='?action=execute&messageId=$email_id' class='viewEmail' data-id='$email_id' style=' text-decoration: none; color: black;'>";
+                       echo "<a href='?view=INBOX&messageId=$email_id' class='viewEmail' data-id='$email_id' style=' text-decoration: none; color: black;'>";
                        echo "<div class='email__start'>";
 
                        echo '<label class="container-mark">';
@@ -113,6 +113,12 @@
                        $decoded_subject = imap_utf8($subject);
                        echo "<b></b> $decoded_subject <br>";
                        echo "</p>";
+
+                       echo "<div style='margin-bottom:1rem'> ";  
+                       $mDate = new DateTime($date); 
+                       echo $mDate->format('F j, Y'); 
+                       echo "</div>";
+
                        echo "</a>";
                    }
                } else {
@@ -123,9 +129,55 @@
          </div>
       </div>
 
-      <div id="sent" class="view" style="background-color:white;">
-         <h1>Send email list view</h1>
-         <p>Development under progress.</p>
+      <div id="sent" class="view" style="background-color: white; height: 100%; width: 100%; overflow: scroll;">
+      <div class="content__email_list">
+
+<?php
+   $hostname = '{mail.skyblue.co.in:993/imap/ssl/novalidate-cert}Sent';
+   $username = $_SESSION["username"];
+   $password = $_SESSION["password"];
+
+   $inbox = imap_open($hostname, $username, $password) or die('Cannot connect to mailbox: ' . imap_last_error());
+   
+   $numMessages = imap_num_msg($inbox);
+   $email_ids = imap_search($inbox, 'ALL'); 
+
+   if ($email_ids) { // sort them by ascending date
+       rsort($email_ids); // Sort email IDs by ascending date
+     
+       foreach ($email_ids as $email_id) {
+           $header = imap_headerinfo($inbox, $email_id);
+           $subject = $header->subject;
+           $from = $header->fromaddress;
+           $date = $header->date;
+           $decoded_subject0 = imap_utf8($subject);
+           $data = array("view"=> "message_view", "email_id"=>$email_id);
+           $js_data = json_encode($data);
+           echo "<a href='?view=Sent&messageId=$email_id' class='viewEmail' data-id='$email_id' style=' text-decoration: none; color: black;'>";
+           echo "<div class='email__start'>";
+
+           echo '<label class="container-mark">';
+           echo '<input class="mark-box" type="checkbox">';
+           echo '<span class="checkmark"></span>';
+           echo '</label>';
+
+           echo "</div>";
+           echo "<p class='email__name'>";
+           $main = substr($from, 0, 20);
+           echo "<b></b> $main <br>";
+           echo "</p>";
+           echo "<p class='email__content'>";
+           $decoded_subject = imap_utf8($subject);
+           echo "<b></b> $decoded_subject <br>";
+           echo "</p>";
+           echo "</a>";
+       }
+   } else {
+       echo "No emails found.";
+   }
+   imap_close($inbox);
+   ?>
+</div>
       </div>
 
       <div id="draft" class="view" style="background-color:red;">
@@ -323,11 +375,12 @@
          <div id="emailDetails" style="background-color: red;">
 
             <?php
-               if (isset($_GET['action']) && $_GET['action'] === 'execute') {
+               if (isset($_GET['view'])) {
                
                if (isset($_GET['messageId'])) {
                    $messageId = $_GET['messageId'];
-                   loadMessageView($messageId); 
+                   $view = $_GET['view'];
+                   loadMessageView($view, $messageId); 
                    }
                }
 
@@ -420,7 +473,7 @@
                // }
 
                
-               function loadMessageView($messageId){
+               function loadMessageView($view , $messageId){
                  echo ' <script>
                              var viewId = "message_view";
                  document.querySelectorAll(".view").forEach(v => v.classList.remove("active"));
@@ -430,17 +483,20 @@
                  $username = $_SESSION["username"];
                  $password = $_SESSION["password"];
                  global $mailbox;
-                 $mailbox = imap_open("{mail.skyblue.co.in:993/imap/ssl/novalidate-cert}INBOX", $username, $password);
+                 $mailbox = imap_open("{mail.skyblue.co.in:993/imap/ssl/novalidate-cert}$view", $username, $password);
                
                  if (!$mailbox) {
                    echo "Failed to connect to IMAP server.";
                    exit;
                }
-                   global $subject, $from, $subject, $date;
+                   global $subject, $from, $subject, $date, $to;
                    $header = imap_headerinfo($mailbox, $messageId);
                    $from = $header->fromaddress;
+                   $to = $header->toaddress;
                    $subject = $header->subject;
-                   $date = $header->date;    
+                   $date = $header->date;   
+                   
+                   
                }
                ?>
 
@@ -479,8 +535,16 @@
                         
                         preg_match('/<(.+)>/', $from, $matches);
                         $fromEmail = $matches[1] ?? $fromFull;
+
+                        if($view === "INBOX"){
+                           echo "From: ".$fromEmail;
+                        }
+
+                        if($view === "Sent"){
+                           echo "To: ".$to;
+                        }
                         
-                        echo $fromEmail; ?> 
+                         ?> 
                      </div>
                      <div class="col">
                         <div class="view-date"> 
