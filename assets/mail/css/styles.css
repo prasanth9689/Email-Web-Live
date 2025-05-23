@@ -296,6 +296,7 @@ body {
 .content__email_list a {
 	font-family: 'Roboto', sans-serif;
 	display: flex;
+	justify-content: space-between;
 	align-items: center;
 	padding: 10px 15px;
 	padding-bottom: 0px;
@@ -305,6 +306,12 @@ body {
 	font-size: 15px;
 	font-weight: 400;
 }
+
+.text-right {
+	margin-left: auto; 
+	margin-right:250px;
+	color: #5f6368;
+  }
 
 .content__email_list a:hover {
 	border-top: 1px solid whitesmoke;
@@ -1088,8 +1095,16 @@ h6 a {
 	.sidebar {
 		display: none;
 	}
-}
 
+	.text-right {
+		margin-right: 10px; 
+		color: #5f6368;
+	  }
+
+	  .email__content {
+		display: none;
+	  }
+}
 
 /* @media only screen and (max-width: 900px) {
 	body {
