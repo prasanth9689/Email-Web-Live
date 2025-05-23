@@ -23,14 +23,65 @@ switch ($access) {
 
         $fromAddress = $username."@".$tempHostName;
         $toAddress = htmlspecialchars($data['to_address']);
-        $message = htmlspecialchars($data['message']);
+        $rawMessage = $data['message'];
+        $plainMessage = strip_tags($data['message']);
         $subject = htmlspecialchars($data['subject']);
-        $headers = "From: $fromAddress";
+        $date = date("r");
+      //  $headers = "From: $fromAddress";
 
-        if (mail($toAddress, $subject, $message, $headers)) {
+      $headers = "From: $fromAddress\r\n";
+      $headers .= "To: $toAddress\r\n";
+      $headers .= "Subject: $subject\r\n";
+      $headers .= "Date: $date\r\n";
+      $headers .= "MIME-Version: 1.0\r\n";
+      $headers .= "Content-Type: multipart/alternative; boundary=\"$boundary\"\r\n";
+
+        $htmlMessage = '
+                        <html>
+                          <head>
+                        <title>HTML Email</title>
+                        </head>
+                        <body>
+                             ' . $rawMessage . '
+                        </body>
+                        </html>
+                        ';
+
+                        // Message body with boundary parts
+$body = "--$boundary\r\n";
+$body .= "Content-Type: text/plain; charset=UTF-8\r\n";
+$body .= "Content-Transfer-Encoding: 7bit\r\n\r\n";
+$body .= "$plainMessage\r\n\r\n";
+
+$body .= "--$boundary\r\n";
+$body .= "Content-Type: text/html; charset=UTF-8\r\n";
+$body .= "Content-Transfer-Encoding: 7bit\r\n\r\n";
+$body .= "$htmlMessage\r\n\r\n";
+
+$body .= "--$boundary--";
+
+        if (mail($toAddress, $subject, $body, $headers)) {
+
             array_push($data, array("access auth"=>"true" , "status"=>"1" , "message" => "Message has been sent. success."));
             header("Content-Type:Application/json");
             print json_encode($data);
+
+            $headers .= $body;
+
+            $imapHost = "{imap.skyblue.co.in:993/imap/ssl/novalidate-cert}";
+            $password =  $_SESSION["password"];
+            $imapStream = imap_open($imapHost, "prasanth", "Prasanth968@@");
+
+            if ($imapStream) {
+              //  imap_append($imapStream, $imapHost, $body);
+              imap_append($imapStream, $imapHost . "Sent", $headers);
+                imap_close($imapStream);
+              //  echo "Message saved to Sent folder.";
+            } else {
+               // echo "IMAP error: " . imap_last_error();
+            }
+
+         
         } else {
             array_push($data, array("access auth"=>"false" , "status"=>"2" , "message" => "Message not sent. Failure."));
             header("Content-Type:Application/json");
