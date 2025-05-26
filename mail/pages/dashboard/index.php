@@ -75,7 +75,32 @@
       <div id="home" class="view active" style="background-color: #f4dcdc; height: 100%; width: 100%; overflow: scroll;">
          <div class="content__email_list">
 
+         <div class="tools" id="tools">
+  <div class="tools-container">
+    <div class="tools-left">
+      <a href="?action=delete" class="tools-btn"  style="text-decoration: none;">Delete</a>
+      <a href="?action=move" style="text-decoration: none; margin-left:10px;">Move</a>
+    </div>
 
+
+
+<a style="text-decoration: none;" id="toolsClose">
+    <div class="tools-right" >
+      X
+    </div>
+    </a>
+
+    <script>
+           const toolsClose = document.getElementById('toolsClose');
+         
+           toolsClose.addEventListener('click', function () {
+            document.getElementById("tools").style.display = "none";
+           });
+
+         </script>
+
+  </div>
+</div>
 
             <?php
                $hostname = '{mail.skyblue.co.in:993/imap/ssl/novalidate-cert}INBOX';
@@ -99,17 +124,22 @@
                        $data = array("view"=> "message_view", "email_id"=>$email_id);
                        $js_data = json_encode($data);
                        echo "<a href='?view=INBOX&messageId=$email_id' class='viewEmail' data-id='$email_id' style='background-color: white; text-decoration: none; color: black;'>";
-                     
-                     
-                     
                        echo "<div class='email__start'>";
-
                        echo '<label class="container-mark">';
-                       echo '<input class="mark-box" type="checkbox">';
+                       echo '<input id="inboxCheck" class="mark-box" type="checkbox" name="delete[]" value="'.$email_id.'" >';
                        echo '<span class="checkmark"></span>';
                        echo '</label>';
-
                        echo "</div>";
+
+                       echo "<script> 
+                       
+                            const inboxCheck = document.getElementById('inboxCheck');
+                       
+                             inboxCheck.addEventListener('click', function () {
+                                   document.getElementById('tools').style.display = 'block';
+                             });
+
+                       </script>";
                        echo "<p class='email__name' >";
                        $main = substr($from, 0, 20);
                        echo "<b></b> $main <br>";
@@ -118,20 +148,10 @@
                        $decoded_subject = imap_utf8($subject);
                        echo "<b></b> $decoded_subject <br>";
                        echo "</p>";
-
-                       
-
-
-
-
-
-                     
                        echo "<div class='text-right' style='margin-bottom:1rem; '> ";  
                        $mDate = new DateTime($date); 
                        echo $mDate->format('F j, Y'); 
                        echo "</div>";
-                  
-
                        echo "</a>";
                    }
                } else {
@@ -144,16 +164,12 @@
 
       <div id="sent" class="view" style="background-color: white; height: 100%; width: 100%; overflow: scroll;">
       <div class="content__email_list">
-
-
-
             <?php
-               $hostname = '{mail.skyblue.co.in:993/imap/ssl/novalidate-cert}INBOX';
+               $hostname = '{mail.skyblue.co.in:993/imap/ssl/novalidate-cert}Sent';
                $username = $_SESSION["username"];
                $password = $_SESSION["password"];
          
                $inbox = imap_open($hostname, $username, $password) or die('Cannot connect to mailbox: ' . imap_last_error());
-               
                $numMessages = imap_num_msg($inbox);
                $email_ids = imap_search($inbox, 'ALL'); 
             
@@ -168,17 +184,12 @@
                        $decoded_subject0 = imap_utf8($subject);
                        $data = array("view"=> "message_view", "email_id"=>$email_id);
                        $js_data = json_encode($data);
-                       echo "<a href='?view=INBOX&messageId=$email_id' class='viewEmail' data-id='$email_id' style='background-color: white; text-decoration: none; color: black;'>";
-                     
-                     
-                     
+                       echo "<a href='?view=Sent&messageId=$email_id' class='viewEmail' data-id='$email_id' style='background-color: white; text-decoration: none; color: black;'>";
                        echo "<div class='email__start'>";
-
                        echo '<label class="container-mark">';
                        echo '<input class="mark-box" type="checkbox">';
                        echo '<span class="checkmark"></span>';
                        echo '</label>';
-
                        echo "</div>";
                        echo "<p class='email__name' >";
                        $main = substr($from, 0, 20);
@@ -188,20 +199,10 @@
                        $decoded_subject = imap_utf8($subject);
                        echo "<b></b> $decoded_subject <br>";
                        echo "</p>";
-
-                       
-
-
-
-
-
-                     
                        echo "<div class='text-right' style='margin-bottom:1rem; '> ";  
                        $mDate = new DateTime($date); 
                        echo $mDate->format('F j, Y'); 
                        echo "</div>";
-                  
-
                        echo "</a>";
                    }
                } else {
@@ -241,45 +242,6 @@
          <h1>Settings view</h1>
          <p>Development under progress.</p>
       </div>
- <!-- copy started -->
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
       <!-- <form method="post"> -->
       <div id="compose" class="view" style="background-color:white;">
@@ -297,7 +259,6 @@
                               </div>
                            </div>
 
-                         
                            <div style="display: none;">
                            <div class="form-group d-flex justify-content-start" style="">
                               <label for="cc" class="col-sm-1 control-label">CC:</label>
@@ -306,7 +267,6 @@
                               </div>
                            </div>
                            </div>
-
 
                            <div style="display: none;">
                            <div class="form-group d-flex justify-content-start">
@@ -349,7 +309,6 @@
                               <button class="btn btn-default" style="margin-left:5px;"><span class="fa fa-paperclip"></span></button>
                               <button class="btn btn-default" style="margin-left:5px;"><input type="color" id="colorPicker" value="#000000" onchange="changeTextColor()"></span></button>
                            </div>
-
                            <br>	
 
                            <div id="editor" contenteditable="true" spellcheck="false" class="editor">
@@ -362,14 +321,9 @@
                                <div id="progressCircleGreen" class="hidden" style="margin-top: 30px; margin-left: 20px;">
                                </div>
                            </div>
-
-                              <!-- <button type="submit" name="sendMessage" id="sendMail" class="btn btn-success">Send</button> -->
-                              <!-- <button type="submit" class="btn btn-default">Draft</button>
-                              <button type="submit" class="btn btn-danger">Discard</button> -->
                            </div>
             <!-- </form > -->
             <script src="/assets/mail/js/compose.js"></script>
-
                         </div>
                      </div>
                   </div>
@@ -378,37 +332,11 @@
          </div>
       </div>
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
       <div id="message_view" class="view" style="background-color: white;">
          <div id="emailDetails" style="background-color: red;">
 
             <?php
-               if (isset($_GET['view'])) {
-               
+               if (isset($_GET['view'])) {               
                if (isset($_GET['messageId'])) {
                    $messageId = $_GET['messageId'];
                    $view = $_GET['view'];
@@ -497,15 +425,19 @@
                                               document.getElementById(viewId).classList.add("active");
                                              </script>';
                                              break;
+
+                                             case "ToolsViewClose":
+                                                echo "<script type='text/javascript'>
+                                                document.getElementById('tools').style.display = 'none';
+                                                alert('Clicked');
+                                                </script>";
+                                                break;
                }
-
-               // if($_GET['action'] === 'COMPOSE'){
-               //    echo "<script>alert('Your message Here');</script>"; 
-                
-               // }
-
                
                function loadMessageView($view , $messageId){
+
+                  // echo "<script type='text/javascript'>alert('$view');</script>";
+                  
                  echo ' <script>
                              var viewId = "message_view";
                  document.querySelectorAll(".view").forEach(v => v.classList.remove("active"));
@@ -526,12 +458,9 @@
                    $from = $header->fromaddress;
                    $to = $header->toaddress;
                    $subject = $header->subject;
-                   $date = $header->date;   
-                   
-                   
+                   $date = $header->date;      
                }
                ?>
-
          <a>
             <div class="container2" id="backBtn" onclick="goBack('home')">
                <div >

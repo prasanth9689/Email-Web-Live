@@ -5,6 +5,7 @@ body {
 :root {
 	--primary-blue: #2971fc;
 	--primary-green: #00bf63;
+	--primary-light: #9FD5FF;
 }
 
 /*
@@ -293,7 +294,7 @@ body {
 	display: block;
 }
 
-.content__email_list a {
+.content__email_list .viewEmail {
 	font-family: 'Roboto', sans-serif;
 	display: flex;
 	justify-content: space-between;
@@ -979,6 +980,57 @@ h6 a {
 .error {
 	border: 2px solid red;
 }
+
+.tools {
+	width: 100%;
+	padding-left: 10px;
+	padding-top: 10px;
+	padding-bottom: 10px;
+	padding-right: 20px;
+	display: none;
+	background-color: var(--primary-light);
+ }
+
+ .tools-container {
+	display: flex;
+	justify-content: space-between;
+ }
+
+ .tools-right {
+	margin-right: 250px;
+	margin-left: auto; 
+ }
+
+ /* .button-green {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	height: 40px;
+	font-size: 16px;
+	color: #fff;
+	background-color: var(--primary-green);
+	border: rgb(195, 216, 255) 1px;
+	color: white;
+	padding: 10px 32px;
+	border-radius: 50px;
+	cursor: pointer;
+	outline: none;
+	transition: 0.2s all;
+} */
+
+.tools-btn {
+	color: white;
+	background-color: var(--primary-green);
+	border: rgb(195, 216, 255) 1px;
+	color: white;
+	padding: 5px 22px;
+	border-radius: 50px;
+	cursor: pointer;
+	outline: none;
+	transition: 0.2s all;
+}
+
+ 
 
 @media only screen and (max-width: 400px) {
 	body {
