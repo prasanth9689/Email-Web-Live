@@ -14,7 +14,6 @@
          integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
       <link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=Ubuntu" />
       <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.15.4/css/all.css">
-      <!-- access id : #100 -->
    </head>
    <body>
 
@@ -42,7 +41,7 @@
             <button class="btn btn-primary my-2 my-sm-0" type="submit">Search</button>
          </form>
       </nav>
-      <!-- <nav id="sidebarMenu" class="collapse d-lg-block sidebar collapse "> -->
+
       <nav id="sidebarMenu" class=" d-lg-block sidebar  ">
          <div class="position-sticky">
             <div class="list-group list-group-flush mx-3 mt-4">
@@ -72,17 +71,21 @@
             </div>
          </div>
       </nav>
-      <div id="home" class="view active" style="background-color: #f4dcdc; height: 100%; width: 100%; overflow: scroll;">
+      <div id="home" class="view active" style="background-color: white; height: 100%; width: 100%; overflow: scroll;">
          <div class="content__email_list">
 
          <div class="tools" id="tools">
   <div class="tools-container">
     <div class="tools-left">
-      <a href="?action=delete" class="tools-btn"  style="text-decoration: none;">Delete</a>
+
+         <label class="container-mark-total" style="margin-left:-4px;">
+         <input id="inboxCheckTotal" class="mark-box-total" type="checkbox" name="delete[]" value="'.$email_id.'" >
+         <!-- <span class="checkmark"></span> -->
+         </label>
+
+      <a id="inboxDeleteMessage" class="tools-btn"  style="text-decoration: none; margin-left:10px; color: white;">Delete</a>
       <a href="?action=move" style="text-decoration: none; margin-left:10px;">Move</a>
     </div>
-
-
 
 <a style="text-decoration: none;" id="toolsClose">
     <div class="tools-right" >
@@ -90,15 +93,9 @@
     </div>
     </a>
 
-    <script>
-           const toolsClose = document.getElementById('toolsClose');
+
+
          
-           toolsClose.addEventListener('click', function () {
-            document.getElementById("tools").style.display = "none";
-           });
-
-         </script>
-
   </div>
 </div>
 
@@ -123,42 +120,40 @@
                        $decoded_subject0 = imap_utf8($subject);
                        $data = array("view"=> "message_view", "email_id"=>$email_id);
                        $js_data = json_encode($data);
-                       echo "<a href='?view=INBOX&messageId=$email_id' class='viewEmail' data-id='$email_id' style='background-color: white; text-decoration: none; color: black;'>";
-                       echo "<div class='email__start'>";
-                       echo '<label class="container-mark">';
-                       echo '<input id="inboxCheck" class="mark-box" type="checkbox" name="delete[]" value="'.$email_id.'" >';
-                       echo '<span class="checkmark"></span>';
-                       echo '</label>';
-                       echo "</div>";
+                       $checkboxId = "inboxCheck_" . $email_id;
+                       ?>
+<?php $main = substr($from, 0, 20); ?>
+<a href='?view=INBOX&messageId=<?= $email_id ?>' class='viewEmail' data-id='<?= $email_id ?>' style='background-color: white; text-decoration: none; color: black;'>
+        <div class='email__start'>
+            <label class="container-mark">
+                <input id="<?= $checkboxId ?>" class="mark-box inboxCheck" type="checkbox" name="delete[]" value="<?= $email_id ?>">
+                <span class="checkmark"></span>
+            </label>
+        </div>
 
-                       echo "<script> 
-                       
-                            const inboxCheck = document.getElementById('inboxCheck');
-                       
-                             inboxCheck.addEventListener('click', function () {
-                                   document.getElementById('tools').style.display = 'block';
-                             });
+        <p class='email__name'><b></b> <?= $main ?> <br></p>
+        <?php $decoded_subject = imap_utf8($subject); ?>
+        <p class='email__content'><b></b> <?= $decoded_subject ?> <br></p>
+        <div class='text-right' style='margin-bottom:1rem;'>
+            <?= (new DateTime($date))->format('F j, Y') ?>
+        </div>
+    </a>
 
-                       </script>";
-                       echo "<p class='email__name' >";
-                       $main = substr($from, 0, 20);
-                       echo "<b></b> $main <br>";
-                       echo "</p>";
-                       echo "<p class='email__content' >";
-                       $decoded_subject = imap_utf8($subject);
-                       echo "<b></b> $decoded_subject <br>";
-                       echo "</p>";
-                       echo "<div class='text-right' style='margin-bottom:1rem; '> ";  
-                       $mDate = new DateTime($date); 
-                       echo $mDate->format('F j, Y'); 
-                       echo "</div>";
-                       echo "</a>";
-                   }
+                  
+
+                   <?php
+                }
                } else {
                    echo "No emails found.";
                }
+               
                imap_close($inbox);
                ?>
+
+<script src="/assets/mail/js/tools.js"></script>
+<script src="/assets/mail/js/delete_message.js"></script>
+
+
          </div>
       </div>
 
@@ -173,8 +168,8 @@
                $numMessages = imap_num_msg($inbox);
                $email_ids = imap_search($inbox, 'ALL'); 
             
-               if ($email_ids) { // sort them by ascending date
-                   rsort($email_ids); // Sort email IDs by ascending date
+               if ($email_ids) {
+                   rsort($email_ids); 
                  
                    foreach ($email_ids as $email_id) {
                        $header = imap_headerinfo($inbox, $email_id);
@@ -243,7 +238,6 @@
          <p>Development under progress.</p>
       </div>
 
-      <!-- <form method="post"> -->
       <div id="compose" class="view" style="background-color:white;">
          <div class="container-compose">
             <div class="row inbox" style="height:100px;">
@@ -322,7 +316,6 @@
                                </div>
                            </div>
                            </div>
-            <!-- </form > -->
             <script src="/assets/mail/js/compose.js"></script>
                         </div>
                      </div>
@@ -435,9 +428,7 @@
                }
                
                function loadMessageView($view , $messageId){
-
-                  // echo "<script type='text/javascript'>alert('$view');</script>";
-                  
+         
                  echo ' <script>
                              var viewId = "message_view";
                  document.querySelectorAll(".view").forEach(v => v.classList.remove("active"));
@@ -574,7 +565,6 @@
                    case "MULTIPART/RELATED":
                      if (isset($structure->parts)) {
                              foreach ($structure->parts as $part_number => $part) {
-                                  // Handle the RELATED part (subtype: "ALTERNATIVE")
                                   if (isset($part->subtype) && strtolower($part->subtype) == 'alternative') {
                                          if (isset($part->parts)) { 
                                                  foreach ($part->parts as $sub_part_number => $sub_part) { 

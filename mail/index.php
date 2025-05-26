@@ -6,9 +6,7 @@ if(!$handle) {
     $counter =(int )fread($handle,20);
         fclose($handle); 
         $counter++; 
-     
     $handle = fopen("../mail/counter.txt", "w" ); 
-    
     fwrite($handle,$counter);
     fclose ($handle); 
 }
@@ -16,7 +14,6 @@ if(!$handle) {
 
 <?php
 session_start();
-
 if (isset($_SESSION["username"])) {
     header("Location: https://skyblue.co.in/mail/pages/dashboard/index.php");
 }
@@ -29,7 +26,6 @@ if (isset($_SESSION["username"])) {
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<title>Secure Business Email for your Organization | Skyblue Mail</title>
 	<link rel="stylesheet" href="../assets/mail/css/styles.css">
-    
 	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.1.3/dist/css/bootstrap.min.css"
 		integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
 		<link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=Ubuntu" />

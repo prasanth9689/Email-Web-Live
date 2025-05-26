@@ -15,6 +15,31 @@ if (json_last_error() === JSON_ERROR_NONE) {
 
 switch ($access) {
 
+    case "inbox_message_delete":
+     
+        $hostname = '{imap.skyblue.co.in:993/imap/ssl/novalidate-cert}INBOX'; // Your mail server
+$username = 'prasanth';               // Your email
+$password = 'Prasanth968@@';                        // Your password
+
+$inbox = imap_open($hostname, $username, $password) or die(json_encode(['success' => false, 'error' => imap_last_error()]));
+
+$response = ['success' => false];
+
+if (isset($data['delete']) && is_array($data['delete'])) {
+    foreach ($data['delete'] as $email_id) {
+        $email_id = (int)$email_id;
+        imap_delete($inbox, $email_id);
+    }
+    imap_expunge($inbox);
+    $response['success'] = true;
+    $response['deleted'] = $input['delete'];
+}
+
+imap_close($inbox);
+echo json_encode($response);
+
+        break;
+
     case "send_mail":
         $username = $_SESSION["username"];
         $password =  $_SESSION["password"];

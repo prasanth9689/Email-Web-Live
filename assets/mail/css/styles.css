@@ -6,6 +6,8 @@ body {
 	--primary-blue: #2971fc;
 	--primary-green: #00bf63;
 	--primary-light: #9FD5FF;
+	--white: #ffffff;
+	--red-light-dark:#ec3939;
 }
 
 /*
@@ -570,6 +572,23 @@ ul {
 	transition: 0.2s all;
 }
 
+.button-red {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	height: 40px;
+	font-size: 16px;
+	color: #fff;
+	background-color: var(--red-light-dark);
+	border: rgb(195, 216, 255) 1px;
+	color: white;
+	padding: 10px 32px;
+	border-radius: 50px;
+	cursor: pointer;
+	outline: none;
+	transition: 0.2s all;
+}
+
 /* Top Progressbar */
 
 .Loading {
@@ -988,7 +1007,7 @@ h6 a {
 	padding-bottom: 10px;
 	padding-right: 20px;
 	display: none;
-	background-color: var(--primary-light);
+	background-color: var(--white);
  }
 
  .tools-container {
@@ -1020,7 +1039,7 @@ h6 a {
 
 .tools-btn {
 	color: white;
-	background-color: var(--primary-green);
+	background-color: var(--red-light-dark);
 	border: rgb(195, 216, 255) 1px;
 	color: white;
 	padding: 5px 22px;
@@ -1029,6 +1048,12 @@ h6 a {
 	outline: none;
 	transition: 0.2s all;
 }
+
+.tools-btn:hover {
+	color: rgb(146, 146, 146);
+
+}
+
 
  
 
