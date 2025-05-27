@@ -326,7 +326,7 @@
       </div>
 
       <div id="message_view" class="view" style="background-color: white;">
-         <div id="emailDetails" style="background-color: red;">
+         <div id="emailDetails" style="background-color: white;">
 
             <?php
                if (isset($_GET['view'])) {               
@@ -459,11 +459,152 @@
                </div>
                <a class="back-text">
                   <div class="dd">Back</div>
-            </a>
+               </a>
                <div class="container3">
                </div>
+               
+               <style>
+
+.icon-container {
+  display: flex;
+  gap: 25px; /* spacing between icons */
+}
+
+.icon {
+  font-size: 20px;
+  color: #4e576c;
+  transition: color 0.3s;
+}
+
+.icon:hover {
+  color: #333;
+}
+
+
+.tooltip {
+  position: relative;
+  display: inline-block;
+  cursor: pointer;
+  opacity: unset;
+  line-height:1;
+}
+
+.tooltip .tooltiptext {
+  visibility: hidden;
+  width: auto;
+  background-color: #333;
+  color: #fff;
+  text-align: center;
+  padding: 4px 8px;
+  border-radius: 4px;
+
+  position: absolute;
+  z-index: 1;
+  bottom: 125%; /* Adjust this to change position */
+  left: 50%;
+  transform: translateX(-50%);
+  white-space: nowrap;
+
+  opacity: unset;
+  transition: opacity 0.3s;
+}
+
+.tooltip:hover .tooltiptext {
+  visibility: visible;
+  opacity: 1;
+}
+
+
+.dropdown-card {
+  position: absolute;
+  background: #fff;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+  padding: 8px 0;
+  width: 160px;
+  display: none;
+  top: 60px; /* Adjust as needed */
+  right: 20px; /* Position near ellipsis */
+  z-index: 999;
+}
+
+.dropdown-item {
+  padding: 8px 16px;
+  font-size: 14px;
+  color: #333;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.dropdown-item:hover {
+  background-color: #f0f0f0;
+}
+  </style>
+
+
+
+         
+      <div class="three-dot"> 
+            <div class="icon-container">
+                 <div class="icon tooltip" id="mViewReply"><i class="fas fa-reply"></i><span class="tooltiptext">Reply</span></div>
+                 <div class="icon tooltip" id="mViewForward"><i class="fas fa-share"></i><span class="tooltiptext">Forward</span></div>
+                 <div class="icon tooltip" id="mViewUnread"><i class="fas fa-envelope"></i><span class="tooltiptext">Email</span></div>
+                 <div class="icon tooltip" id="mViewSpam"><i class="fas fa-exclamation-triangle"></i><span class="tooltiptext">Report Spam</span></div>
+                 <div class="icon tooltip" id="mViewDelete"><i class="fas fa-trash"></i><span class="tooltiptext">Delete</span></div>
+                 <div class="icon tooltip" id="moreIcon"><i class="fas fa-ellipsis-v"></i><span class="tooltiptext">More</span></div>
+
+                      <div class="dropdown-card" id="dropdownCard">
+                           <div class="dropdown-item" onclick="alert('Raw message shown')">View Raw Message</div>
+                           <div class="dropdown-item" onclick="window.open('https://example.com', '_blank')">Open in New Tab</div>
+                      </div>
             </div>
-            </a>
+      </div>
+      <script>
+  const moreIcon = document.getElementById("moreIcon");
+  const dropdown = document.getElementById("dropdownCard");
+  const mViewDeleteMessage = document.getElementById("mViewDelete");
+  const mViewMarkSpam = document.getElementById("mViewSpam");
+  const mViewMarkUnread = document.getElementById("mViewUnread");
+
+  const mViewForward = document.getElementById("mViewForward");
+  const mViewReply = document.getElementById("mViewReply");
+
+  moreIcon.addEventListener("click", (e) => {
+    e.stopPropagation();
+    dropdown.style.display = dropdown.style.display === "block" ? "none" : "block";
+  });
+
+  document.body.addEventListener("click", () => {
+    dropdown.style.display = "none";
+  });
+
+  mViewDeleteMessage.addEventListener("click", (e) => {
+    e.stopPropagation();
+   alert("clicked del");
+  });
+
+  mViewMarkSpam.addEventListener("click", (e) => {
+    e.stopPropagation(); 
+   alert("clicked mark spam");
+  });
+
+  mViewMarkUnread.addEventListener("click", (e) => {
+    e.stopPropagation(); 
+   alert("clicked unread");
+  });
+
+  mViewForward.addEventListener("click", (e) => {
+    e.stopPropagation(); 
+   alert("clicked forward");
+  });
+
+  mViewReply.addEventListener("click", (e) => {
+    e.stopPropagation(); 
+   alert("clicked reply");
+  });
+</script>
+            </div>
 
             <div class="container4">
                <?php 

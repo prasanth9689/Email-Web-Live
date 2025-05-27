@@ -16,6 +16,7 @@ body {
   font-family: Arial, Helvetica, sans-serif;
  
  */
+ 
 
  /*
    Bottom message box
@@ -364,7 +365,7 @@ ul {
 	align-items: center;
 	justify-content: flex-start;
 	padding: 20px;
-	width: 100%;
+	width: 20%;
 	background-color: white;
 	cursor: default;
 }
@@ -440,6 +441,13 @@ ul {
 .view-date {
 	color: grey;
 	right: 0px;
+	position: absolute;
+	margin-right: 15px;
+}
+
+.three-dot {
+	color: grey;
+	right: 10px;
 	position: absolute;
 	margin-right: 15px;
 }
