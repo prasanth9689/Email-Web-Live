@@ -1,10 +1,10 @@
 <?php
-   session_start();
-   
-   if (!(isset($_SESSION['username']) && $_SESSION['password'] != '')) {
-       header ("Location: https://skyblue.co.in/");
-       }
-   ?>
+session_start();
+
+if (!(isset($_SESSION["username"]) && $_SESSION["password"] != "")) {
+    header("Location: https://skyblue.co.in/");
+}
+?>
 <html>
    <head>
       <title>Skyblue Business E-mail Dashboard</title>
@@ -93,35 +93,36 @@
     </div>
     </a>
 
-
-
-         
   </div>
 </div>
 
             <?php
-               $hostname = '{mail.skyblue.co.in:993/imap/ssl/novalidate-cert}INBOX';
-               $username = $_SESSION["username"];
-               $password = $_SESSION["password"];
-         
-               $inbox = imap_open($hostname, $username, $password) or die('Cannot connect to mailbox: ' . imap_last_error());
-               
-               $numMessages = imap_num_msg($inbox);
-               $email_ids = imap_search($inbox, 'ALL'); 
-            
-               if ($email_ids) { // sort them by ascending date
-                   rsort($email_ids); // Sort email IDs by ascending date
-                 
-                   foreach ($email_ids as $email_id) {
-                       $header = imap_headerinfo($inbox, $email_id);
-                       $subject = $header->subject;
-                       $from = $header->fromaddress;
-                       $date = $header->date;
-                       $decoded_subject0 = imap_utf8($subject);
-                       $data = array("view"=> "message_view", "email_id"=>$email_id);
-                       $js_data = json_encode($data);
-                       $checkboxId = "inboxCheck_" . $email_id;
-                       ?>
+            $hostname =
+                "{mail.skyblue.co.in:993/imap/ssl/novalidate-cert}INBOX";
+            $username = $_SESSION["username"];
+            $password = $_SESSION["password"];
+
+            ($inbox = imap_open($hostname, $username, $password)) or
+                die("Cannot connect to mailbox: " . imap_last_error());
+
+            $numMessages = imap_num_msg($inbox);
+            $email_ids = imap_search($inbox, "ALL");
+
+            if ($email_ids) {
+                // sort them by ascending date
+                rsort($email_ids); // Sort email IDs by ascending date
+
+                foreach ($email_ids as $email_id) {
+
+                    $header = imap_headerinfo($inbox, $email_id);
+                    $subject = $header->subject;
+                    $from = $header->fromaddress;
+                    $date = $header->date;
+                    $decoded_subject0 = imap_utf8($subject);
+                    $data = ["view" => "message_view", "email_id" => $email_id];
+                    $js_data = json_encode($data);
+                    $checkboxId = "inboxCheck_" . $email_id;
+                    ?>
 <?php $main = substr($from, 0, 20); ?>
 <a href='?view=INBOX&messageId=<?= $email_id ?>' class='viewEmail' data-id='<?= $email_id ?>' style='background-color: white; text-decoration: none; color: black;'>
         <div class='email__start'>
@@ -135,24 +136,31 @@
         <?php $decoded_subject = imap_utf8($subject); ?>
         <p class='email__content'><b></b> <?= $decoded_subject ?> <br></p>
         <div class='text-right' style='margin-bottom:1rem;'>
-            <?= (new DateTime($date))->format('F j, Y') ?>
+            <?= (new DateTime($date))->format("F j, Y") ?>
         </div>
     </a>
 
-                  
-
                    <?php
-                }
-               } else {
-                   echo "No emails found.";
-               }
+                } 
+                
+            } else {?>
+
+  <div class="inbox-empty-container">
+    <div class="inbox-empty-content">
+      <i class="fa fas fa-envelope fa-fw me-3 inbox-empty-img"></i>
+      <p>Emails not found</p>
+    </div>
+  </div>
+                <?php
+           
+
                
-               imap_close($inbox);
-               ?>
+            }
+            imap_close($inbox);
+            ?>
 
 <script src="/assets/mail/js/tools.js"></script>
 <script src="/assets/mail/js/delete_message.js"></script>
-
 
          </div>
       </div>
@@ -160,51 +168,49 @@
       <div id="sent" class="view" style="background-color: white; height: 100%; width: 100%; overflow: scroll;">
       <div class="content__email_list">
             <?php
-               $hostname = '{mail.skyblue.co.in:993/imap/ssl/novalidate-cert}Sent';
-               $username = $_SESSION["username"];
-               $password = $_SESSION["password"];
-         
-               $inbox = imap_open($hostname, $username, $password) or die('Cannot connect to mailbox: ' . imap_last_error());
-               $numMessages = imap_num_msg($inbox);
-               $email_ids = imap_search($inbox, 'ALL'); 
-            
-               if ($email_ids) {
-                   rsort($email_ids); 
-                 
-                   foreach ($email_ids as $email_id) {
-                       $header = imap_headerinfo($inbox, $email_id);
-                       $subject = $header->subject;
-                       $from = $header->fromaddress;
-                       $date = $header->date;
-                       $decoded_subject0 = imap_utf8($subject);
-                       $data = array("view"=> "message_view", "email_id"=>$email_id);
-                       $js_data = json_encode($data);
-                       echo "<a href='?view=Sent&messageId=$email_id' class='viewEmail' data-id='$email_id' style='background-color: white; text-decoration: none; color: black;'>";
-                       echo "<div class='email__start'>";
-                       echo '<label class="container-mark">';
-                       echo '<input class="mark-box" type="checkbox">';
-                       echo '<span class="checkmark"></span>';
-                       echo '</label>';
-                       echo "</div>";
-                       echo "<p class='email__name' >";
-                       $main = substr($from, 0, 20);
-                       echo "<b></b> $main <br>";
-                       echo "</p>";
-                       echo "<p class='email__content' >";
-                       $decoded_subject = imap_utf8($subject);
-                       echo "<b></b> $decoded_subject <br>";
-                       echo "</p>";
-                       echo "<div class='text-right' style='margin-bottom:1rem; '> ";  
-                       $mDate = new DateTime($date); 
-                       echo $mDate->format('F j, Y'); 
-                       echo "</div>";
-                       echo "</a>";
-                   }
-               } else {
-                   echo "No emails found.";
-               }
-               imap_close($inbox);
-               ?>
+            $hostname = "{mail.skyblue.co.in:993/imap/ssl/novalidate-cert}Sent";
+            $username = $_SESSION["username"];
+            $password = $_SESSION["password"];
+            ($inbox = imap_open($hostname, $username, $password)) or
+                die("Cannot connect to mailbox: " . imap_last_error());
+            $numMessages = imap_num_msg($inbox);
+            $email_ids = imap_search($inbox, "ALL");
+            if ($email_ids) {
+                rsort($email_ids);
+                foreach ($email_ids as $email_id) {
+                    $header = imap_headerinfo($inbox, $email_id);
+                    $subject = $header->subject;
+                    $from = $header->fromaddress;
+                    $date = $header->date;
+                    $decoded_subject0 = imap_utf8($subject);
+                    $data = ["view" => "message_view", "email_id" => $email_id];
+                    $js_data = json_encode($data);
+                    echo "<a href='?view=Sent&messageId=$email_id' class='viewEmail' data-id='$email_id' style='background-color: white; text-decoration: none; color: black;'>";
+                    echo "<div class='email__start'>";
+                    echo '<label class="container-mark">';
+                    echo '<input class="mark-box" type="checkbox">';
+                    echo '<span class="checkmark"></span>';
+                    echo "</label>";
+                    echo "</div>";
+                    echo "<p class='email__name' >";
+                    $main = substr($from, 0, 20);
+                    echo "<b></b> $main <br>";
+                    echo "</p>";
+                    echo "<p class='email__content' >";
+                    $decoded_subject = imap_utf8($subject);
+                    echo "<b></b> $decoded_subject <br>";
+                    echo "</p>";
+                    echo "<div class='text-right' style='margin-bottom:1rem; '> ";
+                    $mDate = new DateTime($date);
+                    echo $mDate->format("F j, Y");
+                    echo "</div>";
+                    echo "</a>";
+                }
+            } else {
+                echo "No emails found.";
+            }
+            imap_close($inbox);
+            ?>
          </div>
       </div>
 
@@ -329,129 +335,130 @@
          <div id="emailDetails" style="background-color: white;">
 
             <?php
-               if (isset($_GET['view'])) {               
-               if (isset($_GET['messageId'])) {
-                   $messageId = $_GET['messageId'];
-                   $view = $_GET['view'];
-                   loadMessageView($view, $messageId); 
-                   }
-               }
-
-               switch($_GET['action']){
-                  case "COMPOSE":
-                     echo ' <script>
+            if (isset($_GET["view"])) {
+                if (isset($_GET["messageId"])) {
+                    $messageId = $_GET["messageId"];
+                    $view = $_GET["view"];
+                    loadMessageView($view, $messageId);
+                }
+            }
+            switch ($_GET["action"]) {
+                case "COMPOSE":
+                    echo ' <script>
                      var viewId = "compose";
                       document.getElementById("emailDetails").innerHTML = "";
                       document.querySelectorAll(".view").forEach(v => v.classList.remove("active"));
                       document.getElementById(viewId).classList.add("active");
                      </script>';
-                     break;
+                break;
 
-                  case "INBOX":
-                        echo ' <script>
+                case "INBOX":
+                    echo ' <script>
                         var viewId = "home";
                          document.getElementById("emailDetails").innerHTML = "";
                          document.querySelectorAll(".view").forEach(v => v.classList.remove("active"));
                          document.getElementById(viewId).classList.add("active");
                         </script>';
-                        break;
 
-                        case "SENT":
-                           echo ' <script>
+                break;
+
+                case "SENT":
+                    echo ' <script>
                            var viewId = "sent";
                             document.getElementById("emailDetails").innerHTML = "";
                             document.querySelectorAll(".view").forEach(v => v.classList.remove("active"));
                             document.getElementById(viewId).classList.add("active");
                            </script>';
-                           break;
+                break;
 
-                           case "DRAFT":
-                              echo ' <script>
+                case "DRAFT":
+                    echo ' <script>
                               var viewId = "draft";
                                document.getElementById("emailDetails").innerHTML = "";
                                document.querySelectorAll(".view").forEach(v => v.classList.remove("active"));
                                document.getElementById(viewId).classList.add("active");
                               </script>';
-                              break;
+                break;
 
-                              case "IMPORTANT":
-                                 echo ' <script>
+                case "IMPORTANT":
+                    echo ' <script>
                                  var viewId = "important";
                                   document.getElementById("emailDetails").innerHTML = "";
                                   document.querySelectorAll(".view").forEach(v => v.classList.remove("active"));
                                   document.getElementById(viewId).classList.add("active");
                                  </script>';
-                                 break;
+                break;
 
-                                 case "SPAM":
-                                    echo ' <script>
+                case "SPAM":
+                    echo ' <script>
                                     var viewId = "spam";
                                      document.getElementById("emailDetails").innerHTML = "";
                                      document.querySelectorAll(".view").forEach(v => v.classList.remove("active"));
                                      document.getElementById(viewId).classList.add("active");
                                     </script>';
-                                    break;
+                break;
 
-                                    case "TRASH":
-                                       echo ' <script>
+                case "TRASH":
+                    echo ' <script>
                                        var viewId = "trash";
                                         document.getElementById("emailDetails").innerHTML = "";
                                         document.querySelectorAll(".view").forEach(v => v.classList.remove("active"));
                                         document.getElementById(viewId).classList.add("active");
                                        </script>';
-                                       break;
+                break;
 
-                                       case "CALENDAR":
-                                          echo ' <script>
+                case "CALENDAR":
+                    echo ' <script>
                                           var viewId = "calendar";
                                            document.getElementById("emailDetails").innerHTML = "";
                                            document.querySelectorAll(".view").forEach(v => v.classList.remove("active"));
                                            document.getElementById(viewId).classList.add("active");
                                           </script>';
-                                          break;
+                break;
 
-                                          case "SETTINGS":
-                                             echo ' <script>
+                case "SETTINGS":
+                    echo ' <script>
                                              var viewId = "settings";
                                               document.getElementById("emailDetails").innerHTML = "";
                                               document.querySelectorAll(".view").forEach(v => v.classList.remove("active"));
                                               document.getElementById(viewId).classList.add("active");
                                              </script>';
-                                             break;
+                    break;
 
-                                             case "ToolsViewClose":
-                                                echo "<script type='text/javascript'>
+                case "ToolsViewClose":
+                    echo "<script type='text/javascript'>
                                                 document.getElementById('tools').style.display = 'none';
                                                 alert('Clicked');
                                                 </script>";
-                                                break;
-               }
-               
-               function loadMessageView($view , $messageId){
-         
-                 echo ' <script>
+                break;
+            }
+            function loadMessageView($view, $messageId)
+            {
+                echo ' <script>
                              var viewId = "message_view";
                  document.querySelectorAll(".view").forEach(v => v.classList.remove("active"));
                  document.getElementById(viewId).classList.add("active");
                  </script>';
-               
-                 $username = $_SESSION["username"];
-                 $password = $_SESSION["password"];
-                 global $mailbox;
-                 $mailbox = imap_open("{mail.skyblue.co.in:993/imap/ssl/novalidate-cert}$view", $username, $password);
-               
-                 if (!$mailbox) {
-                   echo "Failed to connect to IMAP server.";
-                   exit;
-               }
-                   global $subject, $from, $subject, $date, $to;
-                   $header = imap_headerinfo($mailbox, $messageId);
-                   $from = $header->fromaddress;
-                   $to = $header->toaddress;
-                   $subject = $header->subject;
-                   $date = $header->date;      
-               }
-               ?>
+                $username = $_SESSION["username"];
+                $password = $_SESSION["password"];
+                global $mailbox;
+                $mailbox = imap_open(
+                    "{mail.skyblue.co.in:993/imap/ssl/novalidate-cert}$view",
+                    $username,
+                    $password
+                );
+                if (!$mailbox) {
+                    echo "Failed to connect to IMAP server.";
+                    exit();
+                }
+                global $subject, $from, $subject, $date, $to;
+                $header = imap_headerinfo($mailbox, $messageId);
+                $from = $header->fromaddress;
+                $to = $header->toaddress;
+                $subject = $header->subject;
+                $date = $header->date;
+            }
+            ?>
          <a>
             <div class="container2" id="backBtn" onclick="goBack('home')">
                <div >
@@ -514,7 +521,7 @@
   opacity: 1;
 }
 
-
+/* Dropdown list */
 .dropdown-card {
   position: absolute;
   background: #fff;
@@ -541,10 +548,7 @@
   background-color: #f0f0f0;
 }
   </style>
-
-
-
-         
+   
       <div class="three-dot"> 
             <div class="icon-container">
                  <div class="icon tooltip" id="mViewReply"><i class="fas fa-reply"></i><span class="tooltiptext">Reply</span></div>
@@ -607,11 +611,10 @@
             </div>
 
             <div class="container4">
-               <?php 
-                  $decoded_subject = imap_utf8($subject);
-                  echo htmlspecialchars($decoded_subject);  
-                         
-                  ?>
+               <?php
+               $decoded_subject = imap_utf8($subject);
+               echo htmlspecialchars($decoded_subject);
+               ?>
             </div>
 
             <div class="container5">
@@ -624,24 +627,23 @@
                         <div class="view-from-name">
                            <?php echo $from; ?> 
                         </div>
-                        <?php 
-                        
-                        preg_match('/<(.+)>/', $from, $matches);
+                        <?php
+                        preg_match("/<(.+)>/", $from, $matches);
                         $fromEmail = $matches[1] ?? $fromFull;
-
-                        if($view === "INBOX"){
-                           echo "From: ".$fromEmail;
+                        if ($view === "INBOX") {
+                            echo "From: " . $fromEmail;
                         }
-
-                        if($view === "Sent"){
-                           echo "To: ".$to;
+                        if ($view === "Sent") {
+                            echo "To: " . $to;
                         }
-                        
-                         ?> 
+                        ?> 
                      </div>
                      <div class="col">
                         <div class="view-date"> 
-                           <?php $mDate = new DateTime($date); echo $mDate->format('F j, Y'); ?>
+                           <?php
+                           $mDate = new DateTime($date);
+                           echo $mDate->format("F j, Y");
+                           ?>
                         </div>
                      </div>
                   </div>
@@ -650,335 +652,532 @@
 
             <div class="container6">
                <?php
-                  $structure = imap_fetchstructure($mailbox, $messageId);
-                  
-                  function getContentType($structure) {
-                      $primaryTypes = array("TEXT", "MULTIPART", "MESSAGE", "APPLICATION", "AUDIO", "IMAGE", "VIDEO", "OTHER");
-                      if (isset($primaryTypes[$structure->type])) {
-                          return $primaryTypes[$structure->type] . '/' . $structure->subtype;
-                      }
-                      return "UNKNOWN";
-                  }
-                  
-                  $contentType = getContentType($structure);
-                  $structure = imap_fetchstructure($mailbox, $messageId);
-                  $body = imap_fetchbody($mailbox, $messageId, 1);
-                  
-                  switch($contentType){
-                     case "TEXT/PLAIN":
-                        $structure = imap_fetchstructure($mailbox, $messageId);
-
-                        function get_part($mailbox, $messageId, $structure, $part_number) {
-                            $data = imap_fetchbody($mailbox, $messageId, $part_number);
-                        
-                            switch ($structure->encoding) {
-                                case 0: return $data; // 7BIT
-                                case 1: return imap_utf8($data); // 8BIT
-                                case 3: return base64_decode($data);
-                                case 4: return quoted_printable_decode($data);
-                                default: return $data;
-                            }
-                        }
-                        
-                        $plain_text = '';
-                        if ($structure->type == TYPEMULTIPART) {
-                            foreach ($structure->parts as $part_num => $part) {
-                                if ($part->subtype == 'PLAIN') {
-                                    $plain_text = get_part($mailbox, $messageId, $part, $part_num + 1);
-                                    break;
-                                }
-                            }
-                        } elseif ($structure->subtype == 'PLAIN') {
-                            $plain_text = get_part($mailbox, $messageId, $structure, 1);
-                        }
-                        echo "<pre>" . htmlspecialchars($plain_text) . "</pre>";
-                        break;
-
-                   case "TEXT/HTML":
-                   if ($structure->encoding == 3) {
-                       $body = base64_decode($body);
-                   } elseif ($structure->encoding == 4) {
-                       $body = quoted_printable_decode($body);
+               $structure = imap_fetchstructure($mailbox, $messageId);
+               function getContentType($structure)
+               {
+                   $primaryTypes = [
+                       "TEXT",
+                       "MULTIPART",
+                       "MESSAGE",
+                       "APPLICATION",
+                       "AUDIO",
+                       "IMAGE",
+                       "VIDEO",
+                       "OTHER",
+                   ];
+                   if (isset($primaryTypes[$structure->type])) {
+                       return $primaryTypes[$structure->type] .
+                           "/" .
+                           $structure->subtype;
                    }
-                   echo "$body";
-                   break;
-                  
+                   return "UNKNOWN";
+               }
+               $contentType = getContentType($structure);
+               $structure = imap_fetchstructure($mailbox, $messageId);
+               $body = imap_fetchbody($mailbox, $messageId, 1);
+               switch ($contentType) {
+                   case "TEXT/PLAIN":
+                       $structure = imap_fetchstructure($mailbox, $messageId);
+                       function get_part(
+                           $mailbox,
+                           $messageId,
+                           $structure,
+                           $part_number
+                       ) {
+                           $data = imap_fetchbody(
+                               $mailbox,
+                               $messageId,
+                               $part_number
+                           );
+                           switch ($structure->encoding) {
+                               case 0:
+                                   return $data;
+                               // 7BIT
+                               case 1:
+                                   return imap_utf8($data);
+                               // 8BIT
+                               case 3:
+                                   return base64_decode($data);
+                               case 4:
+                                   return quoted_printable_decode($data);
+                               default:
+                                   return $data;
+                           }
+                       }
+                       $plain_text = "";
+                       if ($structure->type == TYPEMULTIPART) {
+                           foreach ($structure->parts as $part_num => $part) {
+                               if ($part->subtype == "PLAIN") {
+                                   $plain_text = get_part(
+                                       $mailbox,
+                                       $messageId,
+                                       $part,
+                                       $part_num + 1
+                                   );
+                                   break;
+                               }
+                           }
+                       } elseif ($structure->subtype == "PLAIN") {
+                           $plain_text = get_part(
+                               $mailbox,
+                               $messageId,
+                               $structure,
+                               1
+                           );
+                       }
+                       echo "<pre>" . htmlspecialchars($plain_text) . "</pre>";
+
+                       break;
+                   case "TEXT/HTML":
+                       if ($structure->encoding == 3) {
+                           $body = base64_decode($body);
+                       } elseif ($structure->encoding == 4) {
+                           $body = quoted_printable_decode($body);
+                       }
+                       echo "$body";
+                       break;
                    case "MULTIPART/RELATED":
-                     if (isset($structure->parts)) {
-                             foreach ($structure->parts as $part_number => $part) {
-                                  if (isset($part->subtype) && strtolower($part->subtype) == 'alternative') {
-                                         if (isset($part->parts)) { 
-                                                 foreach ($part->parts as $sub_part_number => $sub_part) { 
-                                                   if (isset($sub_part->subtype) && strtolower($sub_part->subtype) == 'plain') {
-                                                       $body = imap_fetchbody($mailbox, $messageId, $part_number + 1 . '.' . ($sub_part_number + 1));
-                  
-                                                       if ($sub_part->encoding == 3) {
-                                                           $body = base64_decode($body);
-                                                          } elseif ($sub_part->encoding == 4) {
-                                                           $body = quoted_printable_decode($body);
-                                                          }
-                                                          $plainText .= $body;
-                                                      }
-                                                      elseif (isset($sub_part->subtype) && strtolower($sub_part->subtype) == 'html') {
-                                                            $body = imap_fetchbody($mailbox, $messageId, $part_number + 1 . '.' . ($sub_part_number + 1));
-                  
-                                                            if ($sub_part->encoding == 3) {
-                                                                $body = base64_decode($body);
-                                                            } elseif ($sub_part->encoding == 4) {
-                                                                $body = quoted_printable_decode($body);
-                                                            }
-                                                            $htmlContent .= $body;
-                                                      }
-                                                 }
-                                         }
-                                  }
-                                  elseif (isset($part->subtype) && strtolower($part->subtype) == 'png') {
-                                   if (isset($part->id)) {
-                                       $cid = trim($part->id, '<>');
-                                       $body = imap_fetchbody($mailbox, $messageId, $part_number + 1);
-                  
-                                       if ($part->encoding == 3) { 
-                                           $body = base64_decode($body);
-                                       } elseif ($part->encoding == 4) { 
-                                           $body = quoted_printable_decode($body);
+                       if (isset($structure->parts)) {
+                           foreach (
+                               $structure->parts
+                               as $part_number => $part
+                           ) {
+                               if (
+                                   isset($part->subtype) &&
+                                   strtolower($part->subtype) == "alternative"
+                               ) {
+                                   if (isset($part->parts)) {
+                                       foreach (
+                                           $part->parts
+                                           as $sub_part_number => $sub_part
+                                       ) {
+                                           if (
+                                               isset($sub_part->subtype) &&
+                                               strtolower($sub_part->subtype) ==
+                                                   "plain"
+                                           ) {
+                                               $body = imap_fetchbody(
+                                                   $mailbox,
+                                                   $messageId,
+                                                   $part_number +
+                                                       1 .
+                                                       "." .
+                                                       ($sub_part_number + 1)
+                                               );
+                                               if ($sub_part->encoding == 3) {
+                                                   $body = base64_decode($body);
+                                               } elseif (
+                                                   $sub_part->encoding == 4
+                                               ) {
+                                                   $body = quoted_printable_decode(
+                                                       $body
+                                                   );
+                                               }
+                                               $plainText .= $body;
+                                           } elseif (
+                                               isset($sub_part->subtype) &&
+                                               strtolower($sub_part->subtype) ==
+                                                   "html"
+                                           ) {
+                                               $body = imap_fetchbody(
+                                                   $mailbox,
+                                                   $messageId,
+                                                   $part_number +
+                                                       1 .
+                                                       "." .
+                                                       ($sub_part_number + 1)
+                                               );
+                                               if ($sub_part->encoding == 3) {
+                                                   $body = base64_decode($body);
+                                               } elseif (
+                                                   $sub_part->encoding == 4
+                                               ) {
+                                                   $body = quoted_printable_decode(
+                                                       $body
+                                                   );
+                                               }
+                                               $htmlContent .= $body;
+                                           }
                                        }
-                  
-                                       $imagePath = '/var/www/skyblue.co.in/mail/data/images/' . uniqid('img_', true) . '.' . get_image_extension($part->subtype);
+                                   }
+                               } elseif (
+                                   isset($part->subtype) &&
+                                   strtolower($part->subtype) == "png"
+                               ) {
+                                   if (isset($part->id)) {
+                                       $cid = trim($part->id, "<>");
+                                       $body = imap_fetchbody(
+                                           $mailbox,
+
+                                           $messageId,
+                                           $part_number + 1
+                                       );
+                                       if ($part->encoding == 3) {
+                                           $body = base64_decode($body);
+                                       } elseif ($part->encoding == 4) {
+                                           $body = quoted_printable_decode(
+                                               $body
+                                           );
+                                       }
+                                       $imagePath =
+                                           "/var/www/skyblue.co.in/mail/data/images/" .
+                                           uniqid("img_", true) .
+                                           "." .
+                                           get_image_extension($part->subtype);
                                        file_put_contents($imagePath, $body);
                                        $attachments[$cid] = $imagePath;
-                                     }
-                                  }
-                             }
-                      }
-                      foreach ($attachments as $cid => $imagePath) {
-                       $fileName = basename($imagePath);
-                       $file = "https://skyblue.co.in/mail/data/images/".$fileName;
-                       $htmlContent = str_replace('cid:' . $cid, $file, $htmlContent);
-                   }
-                   echo $htmlContent;
-                   break;
-                  
-                   case "MULTIPART/MIXED":
-                       ini_set("xdebug.var_display_max_children", '-1');
-                       ini_set("xdebug.var_display_max_data", '-1');
-                       ini_set("xdebug.var_display_max_depth", '-1');
-                  
-                    if (isset($structure->parts)) {
-                        foreach ($structure->parts as $part_number => $part) { 
-                            if (isset($part->subtype) && strtolower($part->subtype) == 'alternative') { 
-                                if (isset($part->parts)) { 
-                                    foreach ($part->parts as $sub_part_number => $sub_part) { 
-                                    
-                                     $body = imap_fetchbody($mailbox, $messageId, $part_number + 1 . '.' . ($sub_part_number + 1));
-                  
-                                     // Check plain text and html available.
-                                     if (isset($sub_part->subtype) && strtolower($sub_part->subtype) == 'plain') {
-                                        if ($sub_part->encoding == 3) {
-                                            $body = base64_decode($body);
-                                           } elseif ($sub_part->encoding == 4) {
-                                            $body = quoted_printable_decode($body);
-                                           }
-                                           $plainText .= $body;
-                                     }elseif (isset($sub_part->subtype) && strtolower($sub_part->subtype) == 'html') {
-                                        $body = imap_fetchbody($mailbox, $messageId, $part_number + 1 . '.' . ($sub_part_number + 1));
-                  
-                                        if ($sub_part->encoding == 3) {
-                                            $body = base64_decode($body);
-                                        } elseif ($sub_part->encoding == 4) {
-                                            $body = quoted_printable_decode($body);
-                                        }
-                                        $htmlContent .= $body;
-                                        echo $htmlContent."";
-                                        echo '<div class="line"></div>';
-                                        echo '<div style="color: black; padding-top:10px;">';
-                                        echo '<strong>';
-                                        echo 'Attachments';
-                                        echo '</strong>';
-                                        echo '</div>';
-                                     }
-                                    }
-                                }
-                            }
-                        }
-                    }
-                  
-                    $attachments = getAttachments($mailbox, $messageId, $structure);
-                  
-                    foreach ($attachments as $file) {
-                           // Option 2: Display inline if image
-                           $filename = mb_decode_mimeheader($file['filename']);
-                           file_put_contents('/var/www/skyblue.co.in/mail/data/images/' . $filename, $file['data']);
-                      
-                           $ext = pathinfo($file['filename'], PATHINFO_EXTENSION);
-                           $base64 = base64_encode($file['data']);
-                  
-                    echo '<div class="flex-container">';
-                        echo '<div class="flex-item">';
-                            echo '<div>';
-
-                                  $filename = mb_decode_mimeheader($file['filename']);
-                                  $dotPosition = strrpos($filename, '.');
-                                  $extension = substr($filename, $dotPosition + 1); // if (in_array(strtolower($ext), ['png', 'jpg', 'jpeg', 'gif', 'pdf'])) {
-                  
-                                  if($extension == 'jpg' | $extension == 'jpeg' | $extension == 'png'){
-                                         echo "<img src='data:image/{$ext};base64,{$base64}' class='image-thumbnail'>";
-                                         $prasanth = $filename;
-                                         echo "<a href='#' class='downloadFile' data-id='$prasanth' style=' text-decoration: none; color: black;'>";
-                                         echo "<div class='image-text' >Download </div>";
-                                         echo "</a>";
-                                    }
-                  
-                                  if($extension == 'pdf'){
-                                             echo "<img src='/assets/mail/img/pdf1.png' class='image-thumbnail'>";
-                                             $prasanth = $filename;
-                                             echo "<a href='#' class='downloadFile' data-id='$prasanth' style=' text-decoration: none; color: black;'>";
-                                             echo "<div class='image-text' >Download </div>";
-                                             echo "</a>";
-                                     }
-
-                                     echo "<p class='file-name'> $filename</p>";
-                            echo '</div>';
-                        echo '</div>';
-                    echo '</div>';
-                  }
-                  
+                                   }
+                               }
+                           }
+                       }
+                       foreach ($attachments as $cid => $imagePath) {
+                           $fileName = basename($imagePath);
+                           $file =
+                               "https://skyblue.co.in/mail/data/images/" .
+                               $fileName;
+                           $htmlContent = str_replace(
+                               "cid:" . $cid,
+                               $file,
+                               $htmlContent
+                           );
+                       }
+                       echo $htmlContent;
                        break;
-                  
+                   case "MULTIPART/MIXED":
+                       ini_set("xdebug.var_display_max_children", "-1");
+                       ini_set("xdebug.var_display_max_data", "-1");
+                       ini_set("xdebug.var_display_max_depth", "-1");
+                       if (isset($structure->parts)) {
+                           foreach (
+                               $structure->parts
+                               as $part_number => $part
+                           ) {
+                               if (
+                                   isset($part->subtype) &&
+                                   strtolower($part->subtype) == "alternative"
+                               ) {
+                                   if (isset($part->parts)) {
+                                       foreach (
+                                           $part->parts
+                                           as $sub_part_number => $sub_part
+                                       ) {
+                                           $body = imap_fetchbody(
+                                               $mailbox,
+                                               $messageId,
+                                               $part_number +
+                                                   1 .
+                                                   "." .
+                                                   ($sub_part_number + 1)
+                                           ); // Check plain text and html available.
+                                           if (
+                                               isset($sub_part->subtype) &&
+                                               strtolower($sub_part->subtype) ==
+                                                   "plain"
+                                           ) {
+                                               if ($sub_part->encoding == 3) {
+                                                   $body = base64_decode($body);
+                                               } elseif (
+                                                   $sub_part->encoding == 4
+                                               ) {
+                                                   $body = quoted_printable_decode(
+                                                       $body
+                                                   );
+                                               }
+                                               $plainText .= $body;
+                                           } elseif (
+                                               isset($sub_part->subtype) &&
+                                               strtolower($sub_part->subtype) ==
+                                                   "html"
+                                           ) {
+                                               $body = imap_fetchbody(
+                                                   $mailbox,
+                                                   $messageId,
+                                                   $part_number +
+                                                       1 .
+                                                       "." .
+                                                       ($sub_part_number + 1)
+                                               );
+                                               if ($sub_part->encoding == 3) {
+                                                   $body = base64_decode($body);
+                                               } elseif (
+                                                   $sub_part->encoding == 4
+                                               ) {
+                                                   $body = quoted_printable_decode(
+                                                       $body
+                                                   );
+                                               }
+                                               $htmlContent .= $body;
+                                               echo $htmlContent . "";
+                                               echo '<div class="line"></div>';
+                                               echo '<div style="color: black; padding-top:10px;">';
+                                               echo "<strong>";
+                                               echo "Attachments";
+                                               echo "</strong>";
+                                               echo "</div>";
+                                           }
+                                       }
+                                   }
+                               }
+                           }
+                       }
+                       $attachments = getAttachments(
+                           $mailbox,
+                           $messageId,
+                           $structure
+                       );
+                       foreach ($attachments as $file) {
+                           // Option 2: Display inline if image
+                           $filename = mb_decode_mimeheader($file["filename"]);
+                           file_put_contents(
+                               "/var/www/skyblue.co.in/mail/data/images/" .
+                                   $filename,
+                               $file["data"]
+                           );
+                           $ext = pathinfo(
+                               $file["filename"],
+                               PATHINFO_EXTENSION
+                           );
+                           $base64 = base64_encode($file["data"]);
+                           echo '<div class="flex-container">';
+                           echo '<div class="flex-item">';
+                           echo "<div>";
+                           $filename = mb_decode_mimeheader($file["filename"]);
+                           $dotPosition = strrpos($filename, ".");
+                           $extension = substr($filename, $dotPosition + 1); // if (in_array(strtolower($ext), ['png', 'jpg', 'jpeg', 'gif', 'pdf'])) {
+                           if (
+                               ($extension == "jpg") |
+                               ($extension == "jpeg") |
+                               ($extension == "png")
+                           ) {
+                               echo "<img src='data:image/{$ext};base64,{$base64}' class='image-thumbnail'>";
+                               $prasanth = $filename;
+                               echo "<a href='#' class='downloadFile' data-id='$prasanth' style=' text-decoration: none; color: black;'>";
+                               echo "<div class='image-text' >Download </div>";
+                               echo "</a>";
+                           }
+                           if ($extension == "pdf") {
+                               echo "<img src='/assets/mail/img/pdf1.png' class='image-thumbnail'>";
+                               $prasanth = $filename;
+                               echo "<a href='#' class='downloadFile' data-id='$prasanth' style=' text-decoration: none; color: black;'>";
+                               echo "<div class='image-text' >Download </div>";
+                               echo "</a>";
+                           }
+                           echo "<p class='file-name'> $filename</p>";
+                           echo "</div>";
+                           echo "</div>";
+                           echo "</div>";
+                       }
+                       break;
                    case "MULTIPART/ALTERNATIVE":
                        $structure = imap_fetchstructure($mailbox, $messageId);
-                  
-                       function get_part($mailbox, $messageId, $structure, $part_number) {
-                         $data = imap_fetchbody($mailbox, $messageId, $part_number);
-                     
-                         switch ($structure->encoding) {
-                             case 0: return $data; // 7BIT
-                             case 1: return imap_utf8($data); // 8BIT
-                             case 3: return base64_decode($data);
-                             case 4: return quoted_printable_decode($data);
-                             default: return $data;
-                         }
-                     }
-                  
-                     if ($structure->type == TYPEMULTIPART) {
-                       foreach ($structure->parts as $part_num => $part) {
-                         if ($part->subtype == 'HTML') {
-                           $html = get_part($mailbox, $messageId, $part, $part_num + 1);
-                           echo "\n$html\n";
-                         }
+                       function get_part(
+                           $mailbox,
+                           $messageId,
+                           $structure,
+                           $part_number
+                       ) {
+                           $data = imap_fetchbody(
+                               $mailbox,
+                               $messageId,
+                               $part_number
+                           );
+                           switch ($structure->encoding) {
+                               case 0:
+                                   return $data;
+                               // 7BIT
+                               case 1:
+                                   return imap_utf8($data);
+                               // 8BIT
+                               case 3:
+                                   return base64_decode($data);
+                               case 4:
+                                   return quoted_printable_decode($data);
+                               default:
+                                   return $data;
+                           }
                        }
-                     }
-                   break;
-
+                       if ($structure->type == TYPEMULTIPART) {
+                           foreach ($structure->parts as $part_num => $part) {
+                               if ($part->subtype == "HTML") {
+                                   $html = get_part(
+                                       $mailbox,
+                                       $messageId,
+                                       $part,
+                                       $part_num + 1
+                                   );
+                                   echo "\n$html\n";
+                               }
+                           }
+                       }
+                       break;
                    case "MULTIPART/REPORT":
-                     $structure = imap_fetchstructure($mailbox, $messageId);
-
-                     function get_part($mailbox, $messageId, $part, $part_number) {
-                         $body = imap_fetchbody($mailbox, $messageId, $part_number);
-                         switch ($part->encoding) {
-                             case 0: return $body; // 7BIT
-                             case 1: return imap_utf8($body); // 8BIT
-                             case 3: return base64_decode($body);
-                             case 4: return quoted_printable_decode($body);
-                             default: return $body;
-                         }
-                     }
-                     
-                     $plain_text = '';
-                     
-                     if ($structure->type == TYPEMULTIPART && strtolower($structure->subtype) === 'report') {
-                         foreach ($structure->parts as $index => $part) {
-                             if ($part->type == TYPETEXT && strtolower($part->subtype) === 'plain') {
-                                 $plain_text = get_part($mailbox, $messageId, $part, $index + 1);
-                                 break;
-                             }
-                         }
-                     }
-                     
-                     echo "<pre>" . htmlspecialchars($plain_text) . "</pre>";
-                     break;
-                  
+                       $structure = imap_fetchstructure($mailbox, $messageId);
+                       function get_part(
+                           $mailbox,
+                           $messageId,
+                           $part,
+                           $part_number
+                       ) {
+                           $body = imap_fetchbody(
+                               $mailbox,
+                               $messageId,
+                               $part_number
+                           );
+                           switch ($part->encoding) {
+                               case 0:
+                                   return $body;
+                               // 7BIT
+                               case 1:
+                                   return imap_utf8($body);
+                               // 8BIT
+                               case 3:
+                                   return base64_decode($body);
+                               case 4:
+                                   return quoted_printable_decode($body);
+                               default:
+                                   return $body;
+                           }
+                       }
+                       $plain_text = "";
+                       if (
+                           $structure->type == TYPEMULTIPART &&
+                           strtolower($structure->subtype) === "report"
+                       ) {
+                           foreach ($structure->parts as $index => $part) {
+                               if (
+                                   $part->type == TYPETEXT &&
+                                   strtolower($part->subtype) === "plain"
+                               ) {
+                                   $plain_text = get_part(
+                                       $mailbox,
+                                       $messageId,
+                                       $part,
+                                       $index + 1
+                                   );
+                                   break;
+                               }
+                           }
+                       }
+                       echo "<pre>" . htmlspecialchars($plain_text) . "</pre>";
+                       break;
                    default:
                        echo "<script type='text/javascript'>alert('default');</script>";
-                   break;
-                  }
-                  
-                  function get_image_extension($mime_type) {
-                   $ext = '';
+                       break;
+               }
+               function get_image_extension($mime_type)
+               {
+                   $ext = "";
                    switch (strtolower($mime_type)) {
-                       case 'jpeg':
-                       case 'jpg':
-                           $ext = 'jpg';
+                       case "jpeg":
+                       case "jpg":
+                           $ext = "jpg";
                            break;
-                       case 'png':
-                           $ext = 'png';
+                       case "png":
+                           $ext = "png";
                            break;
-                       case 'gif':
-                           $ext = 'gif';
+                       case "gif":
+                           $ext = "gif";
                            break;
                    }
                    return $ext;
-                  }
-                  
-                  function decodeAttachment($stream, $msgNumber, $part, $partNumber) {
+               }
+               function decodeAttachment(
+                   $stream,
+                   $msgNumber,
+                   $part,
+                   $partNumber
+               ) {
                    $data = imap_fetchbody($stream, $msgNumber, $partNumber);
                    switch ($part->encoding) {
-                       case 0: return $data;
-                       case 1: return imap_8bit($data);
-                       case 2: return imap_binary($data);
-                       case 3: return base64_decode($data);
-                       case 4: return quoted_printable_decode($data);
-                       default: return $data;
+                       case 0:
+                           return $data;
+                       case 1:
+                           return imap_8bit($data);
+                       case 2:
+                           return imap_binary($data);
+                       case 3:
+                           return base64_decode($data);
+                       case 4:
+                           return quoted_printable_decode($data);
+                       default:
+                           return $data;
                    }
-                  }
-                  
-                   function getAttachments($stream, $msgNumber, $structure, $prefix = '') {
+               }
+               function getAttachments(
+                   $stream,
+                   $msgNumber,
+                   $structure,
+                   $prefix = ""
+               ) {
                    $attachments = [];
-                  
                    if (isset($structure->parts)) {
                        foreach ($structure->parts as $index => $part) {
-                           $partNumber = $prefix === '' ? ($index + 1) : "$prefix." . ($index + 1);
-                  
-                           // If it's multipart itself, go deeper
+                           $partNumber =
+                               $prefix === ""
+                                   ? $index + 1
+                                   : "$prefix." . ($index + 1); // If it's multipart itself, go deeper
                            if ($part->type == 1 && isset($part->parts)) {
-                               $attachments = array_merge($attachments, getAttachments($stream, $msgNumber, $part, $partNumber));
-                           }
-                  
-                           // If it's a file (attachment or inline file)
-                           if ($part->type == 5 || ($part->ifdisposition && in_array(strtolower($part->disposition), ['attachment', 'inline']))) {
+                               $attachments = array_merge(
+                                   $attachments,
+                                   getAttachments(
+                                       $stream,
+                                       $msgNumber,
+                                       $part,
+                                       $partNumber
+                                   )
+                               );
+                           } // If it's a file (attachment or inline file)
+                           if (
+                               $part->type == 5 ||
+                               ($part->ifdisposition &&
+                                   in_array(strtolower($part->disposition), [
+                                       "attachment",
+                                       "inline",
+                                   ]))
+                           ) {
                                $filename = null;
-                  
                                if ($part->ifdparameters) {
                                    foreach ($part->dparameters as $param) {
-                                       if (strtolower($param->attribute) == 'filename') {
+                                       if (
+                                           strtolower($param->attribute) ==
+                                           "filename"
+                                       ) {
                                            $filename = $param->value;
                                            break;
                                        }
                                    }
                                }
-                  
                                if (!$filename && $part->ifparameters) {
                                    foreach ($part->parameters as $param) {
-                                       if (strtolower($param->attribute) == 'name') {
+                                       if (
+                                           strtolower($param->attribute) ==
+                                           "name"
+                                       ) {
                                            $filename = $param->value;
                                            break;
                                        }
                                    }
                                }
-                               $filename = $filename ?: "unknown_" . $partNumber;
-                               $content = decodeAttachment($stream, $msgNumber, $part, $partNumber);
-                  
+                               $filename =
+                                   $filename ?: "unknown_" . $partNumber;
+                               $content = decodeAttachment(
+                                   $stream,
+                                   $msgNumber,
+                                   $part,
+                                   $partNumber
+                               );
                                $attachments[] = [
-                                   'filename' => $filename,
-                                   'data' => $content,
-                                   'mime' => "application/octet-stream", // Could improve based on subtype
+                                   "filename" => $filename,
+                                   "data" => $content,
+                                   "mime" => "application/octet-stream", // Could improve based on subtype
                                ];
                            }
                        }
                    }
                    return $attachments;
-                  }
-                  imap_close($mailbox);
-                  ?>
+               }
+               imap_close($mailbox);
+               ?>
             </div>
          </div>
       </div>
