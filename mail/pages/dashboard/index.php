@@ -75,89 +75,53 @@ if (!(isset($_SESSION["username"]) && $_SESSION["password"] != "")) {
          <div class="content__email_list">
 
          <div class="tools" id="tools">
-  <div class="tools-container">
-    <div class="tools-left">
+               <div class="tools-container">
+                    <div class="tools-left">
+                         <label class="container-mark-total" style="margin-left:-4px;">
+                                 <input id="inboxCheckTotal" class="mark-box-total" type="checkbox" name="delete[]" value="'.$email_id.'" >
+                         </label>
 
-         <label class="container-mark-total" style="margin-left:-4px;">
-         <input id="inboxCheckTotal" class="mark-box-total" type="checkbox" name="delete[]" value="'.$email_id.'" >
-         <!-- <span class="checkmark"></span> -->
-         </label>
+                                   <a id="inboxDeleteMessage" class="tools-btn"  style="text-decoration: none; margin-left:10px; color: white;">
+                                       Delete
+                                   </a>
+                                   <a href="?action=move" style="text-decoration: none; margin-left:10px;">
+                                       Move
+                                   </a>
+                    </div>
 
-      <a id="inboxDeleteMessage" class="tools-btn"  style="text-decoration: none; margin-left:10px; color: white;">Delete</a>
-      <a href="?action=move" style="text-decoration: none; margin-left:10px;">Move</a>
-    </div>
+                             <a style="text-decoration: none;" id="toolsClose">
+                                    <div class="tools-right" >
+                                          X
+                                    </div>
+                            </a>
 
-<a style="text-decoration: none;" id="toolsClose">
-    <div class="tools-right" >
-      X
-    </div>
-    </a>
+                </div>
+         </div>
+<div id="emailContainer">
 
-  </div>
 </div>
 
-            <?php
-            $hostname =
-                "{mail.skyblue.co.in:993/imap/ssl/novalidate-cert}INBOX";
-            $username = $_SESSION["username"];
-            $password = $_SESSION["password"];
+<script>
 
-            ($inbox = imap_open($hostname, $username, $password)) or
-                die("Cannot connect to mailbox: " . imap_last_error());
+function fetchEmails() {
+    console.log("loaded");
+    fetch('load_emails.php')
+        .then(response => response.text())
+        .then(data => {
+            document.getElementById('emailContainer').innerHTML = data;
+        })
+        .catch(error => {
+            console.error("Error loading emails:", error);
+        });
+}
 
-            $numMessages = imap_num_msg($inbox);
-            $email_ids = imap_search($inbox, "ALL");
+// Run immediately on page load
+fetchEmails();
 
-            if ($email_ids) {
-                // sort them by ascending date
-                rsort($email_ids); // Sort email IDs by ascending date
+// Run every 1 minutes
+setInterval(fetchEmails, 60000);
+</script>
 
-                foreach ($email_ids as $email_id) {
-
-                    $header = imap_headerinfo($inbox, $email_id);
-                    $subject = $header->subject;
-                    $from = $header->fromaddress;
-                    $date = $header->date;
-                    $decoded_subject0 = imap_utf8($subject);
-                    $data = ["view" => "message_view", "email_id" => $email_id];
-                    $js_data = json_encode($data);
-                    $checkboxId = "inboxCheck_" . $email_id;
-                    ?>
-<?php $main = substr($from, 0, 20); ?>
-<a href='?view=INBOX&messageId=<?= $email_id ?>' class='viewEmail' data-id='<?= $email_id ?>' style='background-color: white; text-decoration: none; color: black;'>
-        <div class='email__start'>
-            <label class="container-mark">
-                <input id="<?= $checkboxId ?>" class="mark-box inboxCheck" type="checkbox" name="delete[]" value="<?= $email_id ?>">
-                <span class="checkmark"></span>
-            </label>
-        </div>
-
-        <p class='email__name'><b></b> <?= $main ?> <br></p>
-        <?php $decoded_subject = imap_utf8($subject); ?>
-        <p class='email__content'><b></b> <?= $decoded_subject ?> <br></p>
-        <div class='text-right' style='margin-bottom:1rem;'>
-            <?= (new DateTime($date))->format("F j, Y") ?>
-        </div>
-    </a>
-
-                   <?php
-                } 
-                
-            } else {?>
-
-  <div class="inbox-empty-container">
-    <div class="inbox-empty-content">
-      <i class="fa fas fa-envelope fa-fw me-3 inbox-empty-img"></i>
-      <p>Emails not found</p>
-    </div>
-  </div>
-                <?php
-           
-
-               
-            }
-            imap_close($inbox);
-            ?>
 
 <script src="/assets/mail/js/tools.js"></script>
 <script src="/assets/mail/js/delete_message.js"></script>

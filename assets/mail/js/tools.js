@@ -1,8 +1,8 @@
-document.querySelectorAll('.inboxCheck').forEach(cb => {
-    cb.addEventListener('click', function (e) {
+document.addEventListener('change', function (e) {
+    if (e.target.classList.contains('inboxCheck')) {
         e.stopPropagation(); // prevents the click from triggering the parent <a>
         document.getElementById('tools').style.display = 'block';
-    });
+    }
 });
 
 document.getElementById('toolsClose').addEventListener('click', function () {
@@ -28,8 +28,8 @@ document.getElementById('inboxCheckTotal').addEventListener('change', function (
 });
 
  // Show/hide tools bar when individual checkbox is clicked
- document.querySelectorAll('.inboxCheck').forEach(cb => {
-    cb.addEventListener('click', function (e) {
+ document.addEventListener('change', function (e) {
+    if (e.target.classList.contains('inboxCheck')) {
         e.stopPropagation();
 
         const anyChecked = Array.from(document.querySelectorAll('.inboxCheck')).some(box => box.checked);
@@ -39,5 +39,5 @@ document.getElementById('inboxCheckTotal').addEventListener('change', function (
         if (!this.checked) {
             document.getElementById('inboxCheckTotal').checked = false;
         }
-    });
+    }
 });

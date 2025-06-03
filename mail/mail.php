@@ -138,7 +138,6 @@ switch ($access) {
                 $decoded_subject0 = imap_utf8($subject);
                 $sender_name = $header->fromaddress;
 
-                // Sometimes the sender's name is in the 'personal' attribute
                 if (isset($header->from[0]->personal)) {
                     $sender_name = $header->from[0]->personal;
                 }
@@ -149,8 +148,6 @@ switch ($access) {
                 ]);
             }
             header("Content-Type:Application/json");
-            //  print json_encode(array($inbox_data, array("emails" => $emails)));
-            //  print json_encode($inbox_data );
 
             $formatted = [
                 "status" => $data["status"] ?? "true",
@@ -158,7 +155,6 @@ switch ($access) {
                 "emails" => $emails,
             ];
 
-            // Print the result as pretty JSON
             echo json_encode($formatted, JSON_PRETTY_PRINT);
         } else {
             echo "No emails found.";
