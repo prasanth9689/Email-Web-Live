@@ -2,7 +2,7 @@
 session_start();
 
 if (!(isset($_SESSION["username"]) && $_SESSION["password"] != "")) {
-    header("Location: https://skyblue.co.in/");
+    header("Location: https://mail.skyblue.co.in/");
 }
 ?>
 <html>
@@ -23,7 +23,7 @@ if (!(isset($_SESSION["username"]) && $_SESSION["password"] != "")) {
    </div>
 
       <nav class="navbar navbar-light navbar-custom" style="width: 100%; position: fixed; box-shadow: 0 2px 5px 0 rgb(0 0 0 / 5%), 0 2px 10px 0 rgb(0 0 0 / 5%);">
-         <a class="navbar-brand" href="https://skyblue.co.in">
+         <a class="navbar-brand" href="https://mail.skyblue.co.in">
          <img src="/assets/mail/img/logo3.png" width="30" height="30" class="d-inline-block align-top" alt="">
          Skyblue Mail
          </a>
@@ -426,7 +426,7 @@ setInterval(fetchEmails, 60000);
          <a>
             <div class="container2" id="backBtn" onclick="goBack('home')">
                <div >
-                  <img class="back-image" src="https://skyblue.co.in/assets/mail/img/back.png" alt="Back Image">
+                  <img class="back-image" src="https://mail.skyblue.co.in/assets/mail/img/back.png" alt="Back Image">
                </div>
                <a class="back-text">
                   <div class="dd">Back</div>
@@ -797,7 +797,7 @@ setInterval(fetchEmails, 60000);
                        foreach ($attachments as $cid => $imagePath) {
                            $fileName = basename($imagePath);
                            $file =
-                               "https://skyblue.co.in/mail/data/images/" .
+                               "https://mail.skyblue.co.in/mail/data/images/" .
                                $fileName;
                            $htmlContent = str_replace(
                                "cid:" . $cid,
@@ -1213,7 +1213,7 @@ setInterval(fetchEmails, 60000);
                const downloadFileName = this.getAttribute('data-id');
          
                const link = document.createElement("a");
-               link.href = "https://skyblue.co.in/mail/data/images/" + downloadFileName;
+               link.href = "https://mail.skyblue.co.in/mail/data/images/" + downloadFileName;
                document.body.appendChild(link);
                link.click();
                document.body.removeChild(link);

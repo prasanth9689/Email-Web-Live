@@ -12,7 +12,7 @@ document.addEventListener('click', function (e) {
         const acc = "inbox_message_delete";
 
         // Send AJAX request
-        fetch('https://skyblue.co.in/mail/mail.php', {
+        fetch('https://mail.skyblue.co.in/mail/mail.php', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -59,7 +59,7 @@ document.addEventListener('click', function (e) {
 //     if (!confirm("Are you sure you want to delete selected emails?")) return;
 //     const acc = "inbox_message_delete";
 //     // Send AJAX request
-//     fetch('https://skyblue.co.in/mail/mail.php', {
+//     fetch('https://mail.skyblue.co.in/mail/mail.php', {
 //         method: 'POST',
 //         headers: {
 //             'Content-Type': 'application/json'
