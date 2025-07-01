@@ -12,7 +12,7 @@ document.addEventListener('click', function (e) {
         const acc = "inbox_message_delete";
 
         // Send AJAX request
-        fetch('https://mail.skyblue.co.in/mail/mail.php', {
+        fetch('https://mail.skyblue.co.in/mail.php', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'

@@ -1,21 +1,34 @@
 <?php
-$handle = fopen("../mail/counter.txt", "r"); 
-if(!$handle) { 
-    echo "could not open the file"; 
-} else { 
-    $counter =(int )fread($handle,20);
-        fclose($handle); 
-        $counter++; 
-    $handle = fopen("../mail/counter.txt", "w" ); 
-    fwrite($handle,$counter);
-    fclose ($handle); 
+
+function getUserIP(): string {
+    if (!empty($_SERVER['HTTP_CF_CONNECTING_IP'])) {
+        return $_SERVER['HTTP_CF_CONNECTING_IP'];
+    } elseif (!empty($_SERVER['HTTP_X_FORWARDED_FOR'])) {
+        // Can be a comma-separated list
+        $ips = explode(',', $_SERVER['HTTP_X_FORWARDED_FOR']);
+        return trim($ips[0]);
+    } elseif (!empty($_SERVER['REMOTE_ADDR'])) {
+        return $_SERVER['REMOTE_ADDR'];
+    } else {
+        return 'UNKNOWN';
+    }
 }
+
+
+$filePath = "views_.txt";
+$count = file_exists($filePath) ? (int)file_get_contents($filePath) : 0;
+
+$count++;
+
+file_put_contents($filePath, $count);
+
+file_put_contents("log_.txt", date("Y-m-d H:i:s") . ' IP: ' . getUserIP(). " - Viewed\n", FILE_APPEND);
 ?>
 
 <?php
 session_start();
 if (isset($_SESSION["username"])) {
-    header("Location: https://skyblue.co.in/mail/pages/dashboard/index.php");
+    header("Location: https://skyblue.co.in/pages/dashboard/index.php");
 }
 ?>
 
@@ -25,7 +38,7 @@ if (isset($_SESSION["username"])) {
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<title>Secure Business Email for your Organization | Skyblue Mail</title>
-	<link rel="stylesheet" href="../assets/mail/css/styles.css">
+	<link rel="stylesheet" href="../assets/css/styles.css">
 	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.1.3/dist/css/bootstrap.min.css"
 		integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
 		<link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=Ubuntu" />
@@ -38,12 +51,12 @@ if (isset($_SESSION["username"])) {
 
 		<div class="leftSide">
 			 <div class="left">
-				   <a href="#" class="logo"><img class="logo" src="../assets/mail/img/logo4.png" alt="" style="height: 30px;"></a>
-				   <a href="#" class="logo1"><img class="logo1" src="../assets/mail/img/skyblue1.png" alt="" style="height: 60px;"></a>
+				   <a href="#" class="logo"><img class="logo" src="../assets/img/logo4.png" alt="" style="height: 30px;"></a>
+				   <a href="#" class="logo1"><img class="logo1" src="../assets/img/skyblue1.png" alt="" style="height: 60px;"></a>
 			 </div>
 		</div>
 
-		<a href="../mail/pages/registration/signup.php" target="_blank" rel="noopener noreferrer" style="text-decoration: none;">
+		<a href="../pages/registration/signup.php" target="_blank" rel="noopener noreferrer" style="text-decoration: none;">
 			<div class="phone-support-text"  style="margin-top: 20px;">
 				<button class="button-green" ta onclick="openPrice()" type="submit" id="btn-cr">Create an account</button>
 			</div>
@@ -56,7 +69,7 @@ if (isset($_SESSION["username"])) {
 		<div class="row">
 
 			<div class="col-sm left-side" style="height: 400px;">
-				<img class="left-side-img" src="../assets/mail/img/img1.png" width="500px" height="500px" />
+				<img class="left-side-img" src="../assets/img/img1.png" width="500px" height="500px" />
 			</div>
             
 			<div class="col-sm right-side">
@@ -110,7 +123,7 @@ if (isset($_SESSION["username"])) {
 
                   global $line;
 
-                  $fh = fopen('counter.txt','r');
+                  $fh = fopen('views_.txt','r');
                   while ($line = fgets($fh)) { 
                       echo ""."Total visitors : ".($line)."";
                   }
@@ -118,6 +131,6 @@ if (isset($_SESSION["username"])) {
                 fclose($fh);
                  ?>
   </div>
-  <script src="../assets/mail/js/login.js"></script>
+  <script src="../assets/js/login.js"></script>
 </body>
 </html>

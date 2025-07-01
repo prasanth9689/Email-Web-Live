@@ -62,7 +62,7 @@ function postApi(){
             };
 
             // POST request to the API
-            fetch('https://mail.skyblue.co.in/mail/mail.php', {
+            fetch('https://mail.skyblue.co.in/mail.php', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
@@ -82,7 +82,7 @@ function postApi(){
 
                     if (parseInt(status) == 1) {
                         // window.open("https://skyblue.co.in/login/otp_verification.html?email="+email,"_self");
-                        window.open("https://mail.skyblue.co.in/mail/pages/dashboard/", "_self");
+                        window.open("https://mail.skyblue.co.in/pages/dashboard/", "_self");
                     }
 
                     if (status == 2) {

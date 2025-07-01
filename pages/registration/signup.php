@@ -2,9 +2,8 @@
 session_start();
 
 if (isset($_SESSION["username"])) {
-    header("Location: https://skyblue.co.in/mail/pages/dashboard/index.php");
+    header("Location: https://mail.skyblue.co.in/pages/dashboard/index.php");
 }
-
 ?>
 
 <!DOCTYPE html>
@@ -14,7 +13,7 @@ if (isset($_SESSION["username"])) {
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<title>Skyblue Mail Signup</title>
-	<link rel="stylesheet" href="/assets/mail/css/styles.css">
+	<link rel="stylesheet" href="/assets/css/styles.css">
 	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.1.3/dist/css/bootstrap.min.css"
 		integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
 	<link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=Ubuntu" />
@@ -33,9 +32,9 @@ if (isset($_SESSION["username"])) {
 	<div class="header2">
 		<div class="leftSide">
 			<div class="left">
-				<a href="#" class="logo"><img class="logo" src="/assets/mail/img/logo4.png" alt=""
+				<a href="#" class="logo"><img class="logo" src="/assets/img/logo4.png" alt=""
 						style="height: 30px;"></a>
-				<a href="#" class="logo1"><img class="logo1" src="/assets/mail/img/skyblue1.png" alt=""
+				<a href="#" class="logo1"><img class="logo1" src="/assets/img/skyblue1.png" alt=""
 						style="height: 60px;"></a>
 			</div>
 		</div>
@@ -75,7 +74,7 @@ if (isset($_SESSION["username"])) {
 		<div class="row">
 
 			<div class="col-sm left-side" style="height: 400px;">
-				<img class="left-side-img" src="/assets/mail/img/register1.png" style="margin-top: 20px;" width="400px"
+				<img class="left-side-img" src="/assets/img/register1.png" style="margin-top: 20px;" width="400px"
 					height="400px" />
 			</div>
 
@@ -163,7 +162,7 @@ if (isset($_SESSION["username"])) {
 			};
 
 			// POST request to the API
-			fetch('https://skyblue.co.in/mail/mail.php', {
+			fetch('https://mail.skyblue.co.in/mail.php', {
 				method: 'POST',
 				headers: {
 					'Content-Type': 'application/json'
@@ -796,7 +795,7 @@ if (isset($_SESSION["username"])) {
 			};
 
 			// POST request to the API
-			fetch('https://skyblue.co.in/mail/mail.php', {
+			fetch('https://mail.skyblue.co.in/mail.php', {
 				method: 'POST',
 				headers: {
 					'Content-Type': 'application/json'
@@ -810,12 +809,7 @@ if (isset($_SESSION["username"])) {
 					console.log("status : " + status)
 
 					if (parseInt(status) == 1) {
-						 window.open("https://skyblue.co.in/mail/pages/dashboard/", "_self");
-						// const responseMessage = document.getElementById('message-username');
-						// responseMessage.textContent = `${data[0].message}`;
-						// responseMessage.style.display = "block";
-
-				//		alert("create user");
+						 window.open("https://mail.skyblue.co.in/pages/dashboard/", "_self");
 					}
 
 					if (status == 2) {

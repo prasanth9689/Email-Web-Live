@@ -9,7 +9,7 @@ if (!(isset($_SESSION["username"]) && $_SESSION["password"] != "")) {
    <head>
       <title>Skyblue Business E-mail Dashboard</title>
       <meta name="viewport" content="width=device-width, initial-scale=1">
-      <link rel="stylesheet" href="/assets/mail/css/styles.css">
+      <link rel="stylesheet" href="/assets/css/styles.css">
       <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.1.3/dist/css/bootstrap.min.css"
          integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
       <link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=Ubuntu" />
@@ -24,7 +24,7 @@ if (!(isset($_SESSION["username"]) && $_SESSION["password"] != "")) {
 
       <nav class="navbar navbar-light navbar-custom" style="width: 100%; position: fixed; box-shadow: 0 2px 5px 0 rgb(0 0 0 / 5%), 0 2px 10px 0 rgb(0 0 0 / 5%);">
          <a class="navbar-brand" href="https://mail.skyblue.co.in">
-         <img src="/assets/mail/img/logo3.png" width="30" height="30" class="d-inline-block align-top" alt="">
+         <img src="/assets/img/logo3.png" width="30" height="30" class="d-inline-block align-top" alt="">
          Skyblue Mail
          </a>
 
@@ -123,8 +123,8 @@ setInterval(fetchEmails, 60000);
 </script>
 
 
-<script src="/assets/mail/js/tools.js"></script>
-<script src="/assets/mail/js/delete_message.js"></script>
+<script src="/assets/js/tools.js"></script>
+<script src="/assets/js/delete_message.js"></script>
 
          </div>
       </div>
@@ -178,34 +178,28 @@ setInterval(fetchEmails, 60000);
          </div>
       </div>
 
-      <div id="draft" class="view" style="background-color:red;">
-         <h1>Draft email list view</h1>
-         <p>Development under progress.</p>
+      <div id="draft" class="view" style="background-color:white;">
+      <!-- Draft layout -->
       </div>
 
-      <div id="important" class="view" style="background-color:green;">
-         <h1>Important email list view</h1>
-         <p>Development under progress.</p>
+      <div id="important" class="view" style="background-color:white;">
+      <!-- Important layout -->
       </div>
 
-      <div id="spam" class="view" style="background-color:#fcba03;">
-         <h1>Spam email list view</h1>
-         <p>Development under progress.</p>
+      <div id="spam" class="view" style="background-color:white;">
+        <!-- Spam layout -->
       </div>
 
-      <div id="trash" class="view" style="background-color:#a1a1ab;">
-         <h1>Trash email list view</h1>
-         <p>Development under progress.</p>
+      <div id="trash" class="view" style="background-color:white;">
+        <!-- Trash layout -->
       </div>
 
-      <div id="calendar" class="view" style="background-color:#0b732e;">
-         <h1>Calendar view</h1>
-         <p>Development under progress.</p>
+      <div id="calendar" class="view" style="background-color:white;">
+          <!-- Calendar layout -->
       </div>
 
-      <div id="settings" class="view" style="background-color:#ff0073;">
-         <h1>Settings view</h1>
-         <p>Development under progress.</p>
+      <div id="settings" class="view" style="background-color:white;">
+      <!-- Settings layout -->
       </div>
 
       <div id="compose" class="view" style="background-color:white;">
@@ -286,7 +280,7 @@ setInterval(fetchEmails, 60000);
                                </div>
                            </div>
                            </div>
-            <script src="/assets/mail/js/compose.js"></script>
+            <script src="/assets/js/compose.js"></script>
                         </div>
                      </div>
                   </div>
@@ -426,7 +420,7 @@ setInterval(fetchEmails, 60000);
          <a>
             <div class="container2" id="backBtn" onclick="goBack('home')">
                <div >
-                  <img class="back-image" src="https://mail.skyblue.co.in/assets/mail/img/back.png" alt="Back Image">
+                  <img class="back-image" src="https://mail.skyblue.co.in/assets/img/back.png" alt="Back Image">
                </div>
                <a class="back-text">
                   <div class="dd">Back</div>
@@ -784,7 +778,7 @@ setInterval(fetchEmails, 60000);
                                            );
                                        }
                                        $imagePath =
-                                           "/var/www/skyblue.co.in/mail/data/images/" .
+                                           "/var/www/skyblue.co.in/data/images/" .
                                            uniqid("img_", true) .
                                            "." .
                                            get_image_extension($part->subtype);
@@ -797,7 +791,7 @@ setInterval(fetchEmails, 60000);
                        foreach ($attachments as $cid => $imagePath) {
                            $fileName = basename($imagePath);
                            $file =
-                               "https://mail.skyblue.co.in/mail/data/images/" .
+                               "https://mail.skyblue.co.in/data/images/" .
                                $fileName;
                            $htmlContent = str_replace(
                                "cid:" . $cid,
@@ -893,7 +887,7 @@ setInterval(fetchEmails, 60000);
                            // Option 2: Display inline if image
                            $filename = mb_decode_mimeheader($file["filename"]);
                            file_put_contents(
-                               "/var/www/skyblue.co.in/mail/data/images/" .
+                               "/var/www/skyblue.co.in/data/images/" .
                                    $filename,
                                $file["data"]
                            );
@@ -920,7 +914,7 @@ setInterval(fetchEmails, 60000);
                                echo "</a>";
                            }
                            if ($extension == "pdf") {
-                               echo "<img src='/assets/mail/img/pdf1.png' class='image-thumbnail'>";
+                               echo "<img src='/assets/img/pdf1.png' class='image-thumbnail'>";
                                $prasanth = $filename;
                                echo "<a href='#' class='downloadFile' data-id='$prasanth' style=' text-decoration: none; color: black;'>";
                                echo "<div class='image-text' >Download </div>";
@@ -1164,7 +1158,7 @@ setInterval(fetchEmails, 60000);
             document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
             document.getElementById(viewId).classList.add('active');
 
-            history.replaceState(null, '', '/mail/pages/dashboard/index.php?action=INBOX');
+            history.replaceState(null, '', '/pages/dashboard/index.php?action=INBOX');
          }
          
          function showEmail(data) {
@@ -1213,7 +1207,7 @@ setInterval(fetchEmails, 60000);
                const downloadFileName = this.getAttribute('data-id');
          
                const link = document.createElement("a");
-               link.href = "https://mail.skyblue.co.in/mail/data/images/" + downloadFileName;
+               link.href = "https://mail.skyblue.co.in/data/images/" + downloadFileName;
                document.body.appendChild(link);
                link.click();
                document.body.removeChild(link);

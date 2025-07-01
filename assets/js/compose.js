@@ -74,7 +74,7 @@ function sendMessage(toAddress, subject, message) {
     };
 
       // POST request to the API
-      fetch('https://mail.skyblue.co.in/mail/mail.php', {
+      fetch('https://mail.skyblue.co.in/mail.php', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'
