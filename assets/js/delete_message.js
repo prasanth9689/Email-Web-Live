@@ -33,10 +33,10 @@ document.addEventListener('click', function (e) {
                     }
                 });
 
-                showMessage("Message has been deleted", 4000);
+                showMessage("Message moved to Trash.", 4000);
                 document.getElementById('tools').style.display = 'none';
             } else {
-                alert("Error deleting emails.");
+                alert("Error moved to Trash.");
             }
         })
         .catch(err => {

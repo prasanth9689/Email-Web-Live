@@ -143,6 +143,9 @@ setInterval(fetchEmails, 60000);
                 rsort($email_ids);
                 foreach ($email_ids as $email_id) {
                     $header = imap_headerinfo($inbox, $email_id);
+                    $to = $header->toaddress;
+                    $to_name = isset($header->to[0]->personal) ? $header->to[0]->personal : $to;
+
                     $subject = $header->subject;
                     $from = $header->fromaddress;
                     $date = $header->date;
@@ -157,7 +160,7 @@ setInterval(fetchEmails, 60000);
                     echo "</label>";
                     echo "</div>";
                     echo "<p class='email__name' >";
-                    $main = substr($from, 0, 20);
+                    $main = substr("To: ".$to_name, 0, 20);
                     echo "<b></b> $main <br>";
                     echo "</p>";
                     echo "<p class='email__content' >";

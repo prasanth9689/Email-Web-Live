@@ -28,7 +28,7 @@ file_put_contents("log_.txt", date("Y-m-d H:i:s") . ' IP: ' . getUserIP(). " - V
 <?php
 session_start();
 if (isset($_SESSION["username"])) {
-    header("Location: https://skyblue.co.in/pages/dashboard/index.php");
+    header("Location: https://mail.skyblue.co.in/pages/dashboard/index.php");
 }
 ?>
 

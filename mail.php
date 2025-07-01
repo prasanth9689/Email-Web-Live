@@ -28,12 +28,24 @@ switch ($access) {
 
         if (isset($data["delete"]) && is_array($data["delete"])) {
             foreach ($data["delete"] as $email_id) {
-                $email_id = (int) $email_id;
-                imap_delete($inbox, $email_id);
+                // $email_id = (int) $email_id;
+                // imap_delete($inbox, $email_id);
+
+                $trash_folder = "Trash";
+
+                if (imap_mail_move($inbox, $email_id, $trash_folder)) {
+                    imap_expunge($inbox); // Remove the message from original folder (INBOX)
+                   // echo "Message moved to Trash.";
+                    imap_expunge($inbox);
+                    $response["success"] = true;
+                    $response["deleted"] = $input["delete"];
+                } else {
+                   // echo "Failed to move message: " . imap_last_error();
+                    $response["success"] = true;
+                    $response["deleted"] = $input["delete"];
+                }
             }
-            imap_expunge($inbox);
-            $response["success"] = true;
-            $response["deleted"] = $input["delete"];
+         
         }
 
         imap_close($inbox);
