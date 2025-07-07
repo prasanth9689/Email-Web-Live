@@ -68,8 +68,8 @@ switch ($access) {
         $date = date("r");
 
         $headers = "From: $fromAddress\r\n";
-        $headers .= "To: $toAddress\r\n";
-        $headers .= "Subject: $subject\r\n";
+       // $headers .= "To: $toAddress\r\n";
+        // $headers .= "Subject: $subject\r\n";
         $headers .= "Date: $date\r\n";
         $headers .= "MIME-Version: 1.0\r\n";
         $headers .= "Content-Type: multipart/alternative; boundary=\"$boundary\"\r\n";
@@ -100,7 +100,8 @@ switch ($access) {
             ]);
             header("Content-Type:Application/json");
             print json_encode($data);
-
+       $headers .= "To: $toAddress\r\n";
+        $headers .= "Subject: $subject\r\n";
             $headers .= $body;
 
             $imapHost = "{imap.skyblue.co.in:993/imap/ssl/novalidate-cert}";
