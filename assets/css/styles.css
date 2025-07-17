@@ -1083,6 +1083,26 @@ h6 a {
   }
  
 
+/* @media only screen and (max-width: 400px) {
+	body {
+		background-color: white;
+	}
+
+	.logo1 {
+		display: none;
+	}
+
+	.left-side {
+		display: none;
+	}
+
+	#frm {
+		width: 80%;
+		top: 60%;
+	}
+} */
+
+/* 
 @media only screen and (max-width: 400px) {
 	body {
 		background-color: white;
@@ -1100,41 +1120,11 @@ h6 a {
 		width: 80%;
 		top: 60%;
 	}
-}
-
-@media only screen and (max-width: 400px) {
-	body {
-		background-color: white;
-	}
-
-	.logo1 {
-		display: none;
-	}
-
-	.left-side {
-		display: none;
-	}
-
-	#frm {
-		width: 80%;
-		top: 60%;
-	}
-}
-
+} */
+/* 
 @media only screen and (max-width: 500px) {
-	.logo1 {
-		display: none;
-	}
-
-	.left-side {
-		display: none;
-	}
-}
-
-@media only screen and (max-width: 600px) {
-
-	.search {
-	display: none;
+	body{
+		background-color: red;
 	}
 	
 	.logo1 {
@@ -1144,9 +1134,33 @@ h6 a {
 	.left-side {
 		display: none;
 	}
+} */
+
+@media only screen and (max-width: 600px) {
+
+	body{
+		background-color: red;
+	}
+	
+	#frm {
+		width: 80%;
+		top: 100%;
+	 }
+
+	.search {
+	display: none;
+	}
+	
+	/* .logo1 {
+		display: none;
+	} */
+
+	.left-side {
+		display: none;
+	}
 }
 
-@media only screen and (max-width: 700px) {
+/* @media only screen and (max-width: 700px) {
 
 	.search {
 	display: none;
@@ -1180,9 +1194,9 @@ h6 a {
 	.left-side {
 		display: none;
 	}
-}
+} */
 
-@media only screen and (max-width: 1000px) {
+/* @media only screen and (max-width: 1000px) {
 	.logo1 {
 		display: none;
 	}
@@ -1220,7 +1234,7 @@ h6 a {
 	.inbox-empty-content p {
 		font-size: 20px;
 	  }
-}
+} */
 
 /* @media only screen and (max-width: 900px) {
 	body {

@@ -7,7 +7,7 @@ if (!(isset($_SESSION["username"]) && $_SESSION["password"] != "")) {
 ?>
 <html>
    <head>
-      <title>Skyblue Business E-mail Dashboard</title>
+      <title>Skyblue E-mail Dashboard</title>
       <meta name="viewport" content="width=device-width, initial-scale=1">
       <link rel="stylesheet" href="/assets/css/styles.css">
       <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.1.3/dist/css/bootstrap.min.css"
@@ -160,7 +160,8 @@ setInterval(fetchEmails, 60000);
                     echo "</label>";
                     echo "</div>";
                     echo "<p class='email__name' >";
-                    $main = substr("To: ".$to_name, 0, 20);
+                   // $main = substr("To: ".$to_name, 0, 20);
+                   $main = "To: ".extractNameOrUsername($to_name);
                     echo "<b></b> $main <br>";
                     echo "</p>";
                     echo "<p class='email__content' >";
@@ -176,6 +177,21 @@ setInterval(fetchEmails, 60000);
             } else {
                 echo "No emails found.";
             }
+
+            function extractNameOrUsername($toHeader) {
+                // Use regex to parse email and name
+                preg_match('/(?:"?([^"]*)"?\s)?<?([^<>]+)>?/', $toHeader, $matches);
+                
+                $name = trim($matches[1] ?? '');
+                $email = $matches[2] ?? '';
+            
+                if (!empty($name)) {
+                    return $name;
+                }
+            
+                return explode('@', $email)[0]; // fallback to email username
+            }
+            
             imap_close($inbox);
             ?>
          </div>
@@ -208,7 +224,8 @@ setInterval(fetchEmails, 60000);
       <div id="compose" class="view" style="background-color:white;">
          <div class="container-compose">
             <div class="row inbox" style="height:100px;">
-               <div class="col-md-9">
+               <!-- <div class="col-md-9" style="flex-basis: 100%;"> -->
+               <div  style="flex-basis: 100%; margin-right:5%;">
                   <div class="panel panel-default">
                      <div class="panel-body ">
                         <p class="text-center" style="display:none;">New Message</p>
@@ -216,7 +233,30 @@ setInterval(fetchEmails, 60000);
                            <div class="form-group d-flex justify-content-start">
                               <label for="to" class="col-sm-1 control-label">To</label>
                               <div class="col-sm-11">
-                                 <input type="email" class="form-control select2-offscreen" id="to" placeholder="Type email" value="prasanth.jhon@yahoo.com" tabindex="-1">
+                                <style>
+                                  .EditText {
+                                    display: block;
+                                    width: 100%;
+                                    height: calc(2.25rem + 2px);
+                                    padding: .375rem .75rem;
+                                    font-size: 1rem;
+                                    line-height: 1.5;
+                                    color: #495057;
+                                    background-color: #fff;
+                                    background-clip: padding-box;
+                                    border: 1px solid #ced4da;
+                                    border-radius: .25rem;
+                                    transition: border-color .15s ease-in-out,box-shadow .15s ease-in-out;
+                                  }
+
+                                  .EditText:hover {
+                                    border-color: #007BFF;
+                                    border-width: 2px;
+                                    border-style: solid;
+                                  }
+                                    </style>
+                                    <!-- form-control -->
+                                 <input type="email" class="EditText select2-offscreen" id="to" placeholder="Type email" value="prasanth.jhon@yahoo.com" tabindex="-1">
                               </div>
                            </div>
 
@@ -241,12 +281,19 @@ setInterval(fetchEmails, 60000);
                            <div class="form-group d-flex justify-content-start">
                               <label for="bcc" class="col-sm-1 control-label">Subject</label>
                               <div class="col-sm-11">
-                                 <input type="text" class="form-control select2-offscreen" id="subject" placeholder="Subject" tabindex="-1">
+                                 <input type="text" class="EditTextC select2-offscreen" id="subject" placeholder="Subject" tabindex="-1">
                               </div>
                            </div>
 
                         </form>
-                        <div class="col-sm-11 col-sm-offset-1" style="max-width:100%;">
+                        <div class="col-sm-11 col-sm-offset-1" style="max-width:100%; ">
+                          
+                           <br>	
+
+                           <div id="editor" contenteditable="true" spellcheck="false" class="editor">
+                           Write your message here...
+                           </div>
+                           <br>
                            <div class="btn-toolbar" role="toolbar">
                               <div class="btn-group">
                                  <button onclick="document.execCommand('bold')" class="btn btn-default"><span class="fa fa-bold"></span></button>
@@ -269,11 +316,6 @@ setInterval(fetchEmails, 60000);
                               </div>
                               <button class="btn btn-default" style="margin-left:5px;"><span class="fa fa-paperclip"></span></button>
                               <button class="btn btn-default" style="margin-left:5px;"><input type="color" id="colorPicker" value="#000000" onchange="changeTextColor()"></span></button>
-                           </div>
-                           <br>	
-
-                           <div id="editor" contenteditable="true" spellcheck="false" class="editor">
-                           Write your message here...
                            </div>
 
                            <div class="form-group msg-button-con">	

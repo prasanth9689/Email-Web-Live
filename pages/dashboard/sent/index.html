@@ -1,0 +1,19 @@
+<form action="send_email.php" method="post" enctype="multipart/form-data">
+    <label>Your Email:</label>
+    <input type="email" name="from_email" value="prasanth@skyblue.co.in" required><br><br>
+  
+    <label>To:</label>
+    <input type="email" name="to_email" value="prasanth.jhon@yahoo.com" required><br><br>
+  
+    <label>Subject:</label>
+    <input type="text" name="subject" value="Test mail with attachments - Reg"><br><br>
+  
+    <label>Message:</label><br>
+    <textarea name="message" rows="5" cols="40" required></textarea><br><br>
+  
+    <label>Attachments (you can select multiple):</label>
+    <input type="file" name="attachments[]" multiple><br><br>
+  
+    <button type="submit">Send Email</button>
+  </form>
+  

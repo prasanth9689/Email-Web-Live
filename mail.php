@@ -92,7 +92,7 @@ switch ($access) {
 
         $body .= "--$boundary--";
 
-        if (mail($toAddress, $subject, $body, $headers)) {
+        if (mail($toAddress, $subject, $body, $headers, "-f"." $fromAddress")) {
             array_push($data, [
                 "access auth" => "true",
                 "status" => "1",

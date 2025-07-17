@@ -85,14 +85,19 @@ if (isset($_SESSION["username"])) {
 					<div id="frm">
 						<div class="login">
 							<h2><strong>Create an account now</strong></h2>
+
+							
 						</div>
 
 						<form class="form1" name="form" autocomplete="new-password">
 							<p>
+							<h4 style="font-size:15px;"> Format shoud be +91XXXXXXXXXX</h4>
+							<h4 style="font-size:15px;">Start with country phone code.</h4>
 								<input name="mobile" style="margin-top:5px; caret-color: #2971fc;" id="mobile"
 									type="tel" maxlength="13" value="" placeholder="Enter mobile no"
 									class="edit username" autocomplete="tel" autofocus>
 							</p>
+
 							<p class="error-field" id="error-field">Enter mobile number.</p>
 							<div id="showCapcha"></div>
 							<div id="recaptcha-container"></div>
