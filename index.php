@@ -84,10 +84,10 @@ if (isset($_SESSION["username"])) {
 						<form class="form1" name="form" autocomplete="new-password">
 							<p>
 
-								<input name="email" style="margin-top:20px;" id="email" type="text" placeholder="Email"
+								<input name="email" style="margin-top:20px;" id="email" type="text" placeholder="Email or username"
 									class="edit username">
 							</p>
-							<p class="error-email" id="error-email">Enter valid email or mobile number.</p>
+							<p class="error-email" id="error-email">Enter valid email or username.</p>
 							<p></p>
 
 							<p>

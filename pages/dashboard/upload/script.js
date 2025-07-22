@@ -7,26 +7,49 @@ form.addEventListener("click", () =>{
   fileInput.click();
 });
 
-fileInput.onchange = ({target})=>{
-  let file = target.files[0];
-  if(file){
+fileInput.onchange = ({ target }) => {
+  const files = target.files;
+  let totalSize = 0;
+
+  // Calculate total size of all selected files
+  for (let i = 0; i < files.length; i++) {
+    totalSize += files[i].size;
+  }
+
+  const maxTotalSize = 25 * 1024 * 1024; // 25MB in bytes
+
+  if (totalSize > maxTotalSize) {
+    alert("Total file size exceeds 25MB. Please select smaller files.");
+    fileInput.value = ""; // Reset selection
+    return;
+  }
+
+  // Proceed with upload for each file
+  for (let i = 0; i < files.length; i++) {
+    const file = files[i];
     let fileName = file.name;
-    if(fileName.length >= 12){
+
+    if (fileName.length >= 12) {
       let splitName = fileName.split('.');
       fileName = splitName[0].substring(0, 13) + "... ." + splitName[1];
     }
-    uploadFile(fileName);
-  }
-}
 
-function uploadFile(name){
+    uploadFile(file, fileName);
+  }
+};
+
+
+function uploadFile(file, name){
   let xhr = new XMLHttpRequest();
   xhr.open("POST", "upload.php");
-  xhr.upload.addEventListener("progress", ({loaded, total}) =>{
+
+  xhr.upload.addEventListener("progress", ({ loaded, total }) => {
     let fileLoaded = Math.floor((loaded / total) * 100);
     let fileTotal = Math.floor(total / 1000);
-    let fileSize;
-    (fileTotal < 1024) ? fileSize = fileTotal + " KB" : fileSize = (loaded / (1024*1024)).toFixed(2) + " MB";
+    let fileSize = (fileTotal < 1024)
+      ? fileTotal + " KB"
+      : (loaded / (1024 * 1024)).toFixed(2) + " MB";
+
     let progressHTML = `<li class="row">
                           <i class="fas fa-file-alt"></i>
                           <div class="content">
@@ -41,7 +64,8 @@ function uploadFile(name){
                         </li>`;
     uploadedArea.classList.add("onprogress");
     progressArea.innerHTML = progressHTML;
-    if(loaded == total){
+
+    if (loaded === total) {
       progressArea.innerHTML = "";
       let uploadedHTML = `<li class="row">
                             <div class="content upload">
@@ -57,6 +81,9 @@ function uploadFile(name){
       uploadedArea.insertAdjacentHTML("afterbegin", uploadedHTML);
     }
   });
-  let data = new FormData(form);
-  xhr.send(data);
+
+  let formData = new FormData();
+  formData.append("file", file); // attach the actual file
+
+  xhr.send(formData);
 }

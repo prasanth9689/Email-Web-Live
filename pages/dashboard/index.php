@@ -281,7 +281,7 @@ setInterval(fetchEmails, 60000);
                            <div class="form-group d-flex justify-content-start">
                               <label for="bcc" class="col-sm-1 control-label">Subject</label>
                               <div class="col-sm-11">
-                                 <input type="text" class="EditTextC select2-offscreen" id="subject" placeholder="Subject" tabindex="-1">
+                                 <input type="text" class="EditText select2-offscreen" id="subject" placeholder="Subject" tabindex="-1">
                               </div>
                            </div>
 
@@ -909,7 +909,29 @@ setInterval(fetchEmails, 60000);
                                                        $body
                                                    );
                                                }
-                                               $htmlContent .= $body;
+                                            //    $htmlContent .= $body;
+
+                                            /*
+
+                                            Solution 1 : Working body color issue
+
+                                            $dom = new DOMDocument();
+                                            @$dom->loadHTML($body); // suppress warnings
+                                            $bodyContent = '';
+
+                                            foreach ($dom->getElementsByTagName('body')->item(0)->childNodes as $node) {
+                                                         $bodyContent .= $dom->saveHTML($node);
+                                            }
+
+                                            $htmlContent .= $bodyContent;
+                                            */
+
+                                            // Solution 1 : Working body color issue
+                                            $body = preg_replace('/<body[^>]*>/', '', $body);    // remove opening <body>
+                                            $body = str_replace('</body>', '', $body);   // remove closing </body>
+                                            $htmlContent .= $body;
+                                            //-----------
+
                                                echo $htmlContent . "";
                                                echo '<div class="line"></div>';
                                                echo '<div style="color: black; padding-top:10px;">';

@@ -12,7 +12,7 @@
   <div class="wrapper">
     <header>File Uploader JavaScript</header>
     <form action="#">
-      <input class="file-input" type="file" name="file" hidden>
+      <input class="file-input" type="file" name="files[]" multiple  hidden>
       <i class="fas fa-cloud-upload-alt"></i>
       <p>Browse File to Upload</p>
     </form>
