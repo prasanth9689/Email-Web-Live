@@ -37,7 +37,7 @@ if (isset($_SESSION["username"])) {
 <head>
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
-	<title>Skyblue Mail</title>
+	<title>Research & Paper publication | Mail</title>
 	<link rel="stylesheet" href="../assets/css/styles.css">
 	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.1.3/dist/css/bootstrap.min.css"
 		integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
@@ -52,7 +52,8 @@ if (isset($_SESSION["username"])) {
 		<div class="leftSide">
 			 <div class="left">
 				   <a href="#" class="logo"><img class="logo" src="../assets/img/logo4.png" alt="" style="height: 30px;"></a>
-				   <a href="#" class="logo1"><img class="logo1" src="../assets/img/skyblue1.png" alt="" style="height: 60px;"></a>
+				   <!-- <a href="#" class="logo1"><img class="logo1" src="../assets/img/skyblue1.png" alt="" style="height: 60px;"></a> -->
+				   <!-- <a href="#" class="logo1"><img class="logo1" src="../assets/img/3.png" alt="" style="height: 60px; width:90%;"></a> -->
 			 </div>
 		</div>
 
@@ -131,6 +132,6 @@ if (isset($_SESSION["username"])) {
                 fclose($fh);
                  ?>
   </div>
-  <script src="../assets/js/login.js"></script>
+  <script src="../assets/js/script.js"></script>
 </body>
 </html>

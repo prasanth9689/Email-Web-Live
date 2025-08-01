@@ -141,3 +141,19 @@ function isValidEmail(email) {
     const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     return regex.test(email);
 }
+
+function onClickCC() {
+    var activateCC = document.getElementById("activateCC");
+    var hideCcText = document.getElementById("ccText");
+    activateCC.style.display = "block";
+    hideCcText.style.display = "none";
+  }
+
+  function onClickBCC() {
+    var activateBCC = document.getElementById("activateBCC");
+    var hideBccText = document.getElementById("bccText");
+    activateBCC.style.display = "block";
+    hideBccText.style.display = "none";
+  }
+
+

@@ -14,6 +14,80 @@ if (json_last_error() === JSON_ERROR_NONE) {
 }
 
 switch ($access) {
+    case "updateDraft":
+        ini_set('display_errors', 1);
+        ini_set('display_startup_errors', 1);
+        error_reporting(E_ALL);
+        
+        
+        $userId = htmlspecialchars($data["user_id"]);
+        $draftId = htmlspecialchars($data["draft_id"]);
+        $to_address = $data["to_address"];
+        // $to_address_json = json_encode($to_address, JSON_UNESCAPED_UNICODE);
+        $to_address_json = json_encode($to_address);
+
+        $ccAddress = $data["cc_address"];
+        $cc_address_json = json_encode($ccAddress, JSON_UNESCAPED_UNICODE);
+
+        $bccAddress = $data["bcc_address"];
+        $bcc_address_json = json_encode($bccAddress, JSON_UNESCAPED_UNICODE);
+
+        $clientDate = htmlspecialchars($data["client_date"]);
+
+        $stmt = $con->prepare("SELECT id FROM drafts WHERE id = ? LIMIT 1");
+        $stmt->bind_param("s", $draftId);
+        $stmt->execute();
+        $stmt->store_result();
+        if ($stmt->num_rows > 0) {
+          //  echo "✅ Draft exists, update already exists";
+
+          if (!empty($draftId)) {
+            // $update = $con->prepare("UPDATE drafts SET to_address=?, cc_address=?, bcc_address=?, subject=?, content=? WHERE id=?");
+            // $update->bind_param("sssssi", $to, $cc, $bcc, $subject, $content, $draftId);
+            $update = $con->prepare("UPDATE drafts SET to_address=? , client_date=? WHERE id=?");
+            $update->bind_param("ssi", $to_address_json, $clientDate , $draftId);
+
+            if ($update->execute()) {
+                echo json_encode(["status" => "success", "message" => "Draft updated.", "draft_id" => $draftId]);
+            } else {
+                echo json_encode(["status" => "error", "message" => "Failed to update."]);
+            }
+
+          }else {
+            echo json_encode(["status" => "error", "message" => "Invalid draftId."]);
+        }
+    
+
+        } else {
+           // echo "❌ Draft not found, insert fresh";
+
+            $insert = $con->prepare("INSERT INTO drafts (user_id, to_address, cc_address, bcc_address, client_date) VALUES (?,?,?,?,?)");
+            $insert->bind_param("issss",  $userId, $to_address_json, $cc_address_json, $bcc_address_json, $clientDate);
+
+            if ($insert->execute()) {
+                $draftId = $insert->insert_id;
+
+                echo json_encode([
+                    "status" => "success",
+                    "message" => "New draft inserted",
+                    "draft_id" => $draftId
+                ]);
+
+            } else {
+                echo "❌ Insert failed: " . $insert->error;
+            }
+            $insert->close();
+        }
+
+        $stmt->close();
+        $con->close();
+        // $response =  [
+        //     "request" => $data
+        // ];
+        // header("Content-Type:Application/json");
+        // print json_encode($data);
+        break;
+
     case "inbox_message_delete":
         $hostname = "{imap.skyblue.co.in:993/imap/ssl/novalidate-cert}INBOX";
         $username = "prasanth";
@@ -288,20 +362,23 @@ switch ($access) {
 
     case "user_login":
 
-        sendMail();
+  //      sendMail();
 
         $mUsername = htmlspecialchars($data["email"]);
         $mPassword = htmlspecialchars($data["password"]);
 
         $query =
-            "SELECT username, password FROM users WHERE username = ? AND password = ?";
+            "SELECT id, username, password FROM users WHERE username = ? AND password = ?";
         if ($stmt = $con->prepare($query)) {
             $stmt->bind_param("ss", $mUsername, $mPassword);
             $stmt->execute();
-            $stmt->bind_result($mUsername, $mPassword);
+           // $stmt->bind_result($mUsername, $mPassword);
+            // Bind the result variables (including id!)
+            $stmt->bind_result($userId, $username, $password);
             if ($stmt->fetch()) {
-                $_SESSION["username"] = $mUsername;
-                $_SESSION["password"] = $mPassword;
+                $_SESSION["user_id"] = $userId;
+                $_SESSION["username"] = $username;
+                $_SESSION["password"] = $password;
 
                 array_push($data, [
                     "access auth" => "true",

@@ -7,35 +7,65 @@ form.addEventListener("click", () =>{
   fileInput.click();
 });
 
+let totalAttachments = [];
+
 fileInput.onchange = ({ target }) => {
-  const files = target.files;
-  let totalSize = 0;
+  const newFiles = Array.from(target.files);
 
-  // Calculate total size of all selected files
-  for (let i = 0; i < files.length; i++) {
-    totalSize += files[i].size;
-  }
+    // Merge with previously attached files
+    const allFiles = totalAttachments.concat(newFiles);
 
-  const maxTotalSize = 25 * 1024 * 1024; // 25MB in bytes
 
-  if (totalSize > maxTotalSize) {
-    alert("Total file size exceeds 25MB. Please select smaller files.");
-    fileInput.value = ""; // Reset selection
+  // Calculate total size
+  let totalSize = allFiles.reduce((acc, file) => acc + file.size, 0);
+
+  const maxSize = 25 * 1024 * 1024; 
+
+  if (totalSize > maxSize) {
+    alert("Total file size exceeds 25MB limit.");
+    fileInput.value = ""; // Allow reselection
     return;
   }
 
-  // Proceed with upload for each file
-  for (let i = 0; i < files.length; i++) {
-    const file = files[i];
-    let fileName = file.name;
+  // Accept new files
+  totalAttachments = allFiles;
 
-    if (fileName.length >= 12) {
-      let splitName = fileName.split('.');
-      fileName = splitName[0].substring(0, 13) + "... ." + splitName[1];
-    }
+  newFiles.forEach(file => {
+    uploadFile(file, file.name);
+    console.log("Uploading:", file.name);
+    // uploadFile(file);
+  });
 
-    uploadFile(file, fileName);
-  }
+
+
+  // const files = target.files;
+  // let totalSize = 0;
+
+  // // Calculate total size of all selected files
+  // for (let i = 0; i < files.length; i++) {
+  //   totalSize += files[i].size;
+  // }
+
+  // const maxTotalSize = 25 * 1024 * 1024; // 25MB in bytes
+
+  // if (totalSize > maxTotalSize) {
+  //   alert("Total file size exceeds 25MB. Please select smaller files.");
+  //   fileInput.value = ""; // Reset selection
+  //   return;
+  // }
+
+  // // Proceed with upload for each file
+  // for (let i = 0; i < files.length; i++) {
+  //   const file = files[i];
+  //   let fileName = file.name;
+
+  //   if (fileName.length >= 12) {
+  //     let splitName = fileName.split('.');
+  //     fileName = splitName[0].substring(0, 13) + "... ." + splitName[1];
+  //   }
+
+  //   uploadFile(file, fileName);
+  // }
 };
 
 
