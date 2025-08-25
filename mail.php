@@ -39,7 +39,7 @@ switch ($access) {
         $stmt->execute();
         $stmt->store_result();
         if ($stmt->num_rows > 0) {
-          //  echo "✅ Draft exists, update already exists";
+          //  echo " Draft exists, update already exists";
 
           if (!empty($draftId)) {
             // $update = $con->prepare("UPDATE drafts SET to_address=?, cc_address=?, bcc_address=?, subject=?, content=? WHERE id=?");
@@ -59,7 +59,7 @@ switch ($access) {
     
 
         } else {
-           // echo "❌ Draft not found, insert fresh";
+           // echo "Draft not found, insert fresh";
 
             $insert = $con->prepare("INSERT INTO drafts (user_id, to_address, cc_address, bcc_address, client_date) VALUES (?,?,?,?,?)");
             $insert->bind_param("issss",  $userId, $to_address_json, $cc_address_json, $bcc_address_json, $clientDate);
@@ -74,7 +74,7 @@ switch ($access) {
                 ]);
 
             } else {
-                echo "❌ Insert failed: " . $insert->error;
+                echo "Insert failed: " . $insert->error;
             }
             $insert->close();
         }

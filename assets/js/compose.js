@@ -25,12 +25,12 @@ message.addEventListener('blur', function () {
 
 const sendMail = document.getElementById('sendMail');
 sendMail.addEventListener('click', function () {
-    var toAddress = document.getElementById("to").value;
+    var toAddress = document.getElementById("emailInput").value.trim();
     var subject = document.getElementById("subject").value;
     const message = document.getElementById("editor").innerHTML;
     const holder = "Write your message here...";
 
-    if (toAddress.length == "") {
+    if (toAddress.length === 0) {
         alert("Please add To email address. To address shouldn't be empty.");
         return;
     }

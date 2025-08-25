@@ -1,10 +1,10 @@
 <?php
+// <meta http-equiv="refresh" content="0; url=mail/" />
 
 function getUserIP(): string {
     if (!empty($_SERVER['HTTP_CF_CONNECTING_IP'])) {
         return $_SERVER['HTTP_CF_CONNECTING_IP'];
     } elseif (!empty($_SERVER['HTTP_X_FORWARDED_FOR'])) {
-        // Can be a comma-separated list
         $ips = explode(',', $_SERVER['HTTP_X_FORWARDED_FOR']);
         return trim($ips[0]);
     } elseif (!empty($_SERVER['REMOTE_ADDR'])) {
@@ -17,11 +17,8 @@ function getUserIP(): string {
 
 $filePath = "views_.txt";
 $count = file_exists($filePath) ? (int)file_get_contents($filePath) : 0;
-
 $count++;
-
 file_put_contents($filePath, $count);
-
 file_put_contents("log_.txt", date("Y-m-d H:i:s") . ' IP: ' . getUserIP(). " - Viewed\n", FILE_APPEND);
 ?>
 
@@ -70,7 +67,24 @@ if (isset($_SESSION["username"])) {
 		<div class="row">
 
 			<div class="col-sm left-side" style="height: 400px;">
-				<img class="left-side-img" src="../assets/img/img1.png" width="500px" height="500px" />
+				<!-- <img class="left-side-img" src="../assets/img/img1.png" width="500px" height="500px" /> -->
+				<h2>Research & Paper publication</h2>
+                
+				<div class="container-kefhm">
+                  <div class="text1-evryn">Screenshots </div>
+                 <a href="https://mail.skyblue.co.in/data/doc/screenshots/08242025/"><button class="download-btn-cbfhk">View</button> </a>
+                </div>
+
+				<div class="container-kefhm" style="margin-top:10px; display: flex;gap: 10px;font-family: Arial, sans-serif;">
+                  <div class="text1-evryn">Source code </div>
+                 <a href="https://github.com/prasanth9689/Email-Web-Live"><button class="download-btn-cbfhk">View</button> </a>
+                </div>
+
+				<div class="container-kefhm2" style="margin-top:10px; display: flex;gap: 10px;font-family: Arial, sans-serif;">
+				  <div class="text1-evryn">Documentation: </div> 
+				  <p style="color: rgb(249, 5, 5);">Coming soon...</p>
+				</div>
+
 			</div>
             
 			<div class="col-sm right-side">

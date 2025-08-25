@@ -1,7 +1,6 @@
 <?php
    session_start();
    $user_Id = $_SESSION["user_id"];
-   // echo "<script>alert('Your user ID is: $user_Id');</script>";
    if (!(isset($_SESSION["username"]) && $_SESSION["password"] != "")) {
        header("Location: https://mail.skyblue.co.in/");
    }
@@ -10,32 +9,7 @@
 <html>
    <head>
       <title>Skyblue E-mail Dashboard</title>
-      <script type="application/ld+json">
-{
-  "@context": "https://schema.org",
-  "@type": "Organization",
-  "name": "SkyBlue Mail",
-  "url": "https://skyblue.co.in",
-  "logo": "https://mail.skyblue.co.in/assets/img/logo3.png",
-  "description": "SkyBlue Mail is a business email service provider offering domain-based email hosting for startups and enterprises.",
-  "founder": {
-    "@type": "Person",
-    "name": "Prasanth",
-    "jobTitle": "Founder & Developer",
-    "worksFor": {
-      "@type": "Organization",
-      "name": "SkyBlue Mail"
-    }
-  },
-  "sameAs": [
-    "https://www.linkedin.com/company/skybluemail",
-    "https://twitter.com/skybluemail"
-  ]
-}
-</script>
-
       <meta name="viewport" content="width=device-width, initial-scale=1">
-      
       <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.1.3/dist/css/bootstrap.min.css"
          integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
       <link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=Ubuntu" />
