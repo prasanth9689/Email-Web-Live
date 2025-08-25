@@ -1,0 +1,198 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Screenshots</title>
+  <style>
+    :root{
+      --thumb-width: 100;
+      --gap: 14px;
+      --radius: 14px;
+      --shadow: 0 10px 25px rgba(0,0,0,.15);
+    }
+
+    * { box-sizing: border-box; }
+    body {
+      margin: 0; font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif; background: #0f172a; color: #e2e8f0;
+      display: grid; place-items: start center; min-height: 100dvh; padding: 24px;
+    }
+    .wrap {
+      width: min(900px, 100%);
+      display: grid;
+      grid-template-columns: var(--thumb-width);
+      gap: var(--gap);
+    }
+    .title { grid-column: 1/-1; margin: 0 0 4px; font-weight: 700; letter-spacing: .2px; }
+
+    .thumbs {
+      list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: var(--gap);
+      max-height: calc(100dvh - 140px);
+      overflow: auto; padding-right: 6px;
+    }
+    .thumbs li { width: 100%; }
+    .thumb {
+      display: block; width: 100%;  object-fit: cover; border-radius: var(--radius); border: 1px solid rgba(255,255,255,.08);
+      box-shadow: var(--shadow); cursor: zoom-in; transition: transform .15s ease, box-shadow .15s ease;
+    }
+    .thumb:hover { transform: translateY(-2px); box-shadow: 0 14px 30px rgba(0,0,0,.25); }
+
+    .lightbox {
+      position: fixed; inset: 0; background: rgba(2,6,23,.8); display: none; z-index: 50; backdrop-filter: blur(6px);
+    }
+    .lightbox[open] { display: grid; place-items: center; }
+
+    .dialog {
+      position: relative; width: min(96vw, 1100px); height: min(90vh, 820px);
+      background: #0b1220; border: 1px solid rgba(255,255,255,.08);
+      border-radius: calc(var(--radius) + 6px); box-shadow: var(--shadow); overflow: hidden;
+      display: grid; grid-template-rows: auto 1fr; gap: 0;
+    }
+    .bar {
+      display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 10px 12px; border-bottom: 1px solid rgba(255,255,255,.08);
+      font-size: 14px; color: #cbd5e1;
+    }
+    .bar .controls { display: flex; gap: 8px; align-items: center; }
+    button.icon {
+      appearance: none; border: 1px solid rgba(255,255,255,.12); background: transparent; color: #e2e8f0; cursor: pointer;
+      border-radius: 999px; width: 34px; height: 34px; display: grid; place-items: center; font-size: 16px;
+    }
+    button.icon:hover { background: rgba(255,255,255,.06); }
+
+    .viewport {
+      position: relative; overflow: hidden; background: #0a0f1c; height: 100%; display: grid; place-items: center;
+    }
+    .full {
+      max-width: 100%; max-height: 100%; object-fit: contain; user-select: none; -webkit-user-drag: none; cursor: zoom-in; transition: transform .08s ease-out;
+    }
+    .zoomed {
+      cursor: grab;
+    }
+
+    @media (max-width: 720px){
+      .wrap { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <h1 class="title">Screenshots - Last updated Aug 2025</h1>
+
+    <ul class="thumbs" id="thumbs">
+      <li><img class="thumb" src="1.png"  alt="Screenshot"></li>
+      <li><img class="thumb" src="2.png"  alt="Screenshot"></li>
+      <li><img class="thumb" src="3.png"  alt="Screenshot"></li>
+      <li><img class="thumb" src="4.png"  alt="Screenshot"></li>
+      <li><img class="thumb" src="5.png"  alt="Screenshot"></li>
+      <li><img class="thumb" src="6.png"  alt="Screenshot"></li>
+      <li><img class="thumb" src="7.png"  alt="Screenshot"></li>
+      <li><img class="thumb" src="8.png"  alt="Screenshot"></li>
+      <li><img class="thumb" src="9.png"  alt="Screenshot"></li>
+                  
+    </ul>
+  </div>
+
+  <div class="lightbox" id="lightbox" aria-hidden="true">
+    <div class="dialog" role="dialog" aria-modal="true" aria-labelledby="lb-title">
+      <div class="bar">
+        <div id="lb-title">Image Preview</div>
+        <div class="controls">
+          <button class="icon" id="zoomInBtn" title="Zoom in">+</button>
+          <button class="icon" id="zoomOutBtn" title="Zoom out">−</button>
+          <button class="icon" id="resetBtn" title="Reset">⟲</button>
+          <button class="icon" id="closeBtn" title="Close">✕</button>
+        </div>
+      </div>
+      <div class="viewport" id="viewport">
+        <img class="full" id="full" alt="Full preview" />
+        <div class="helper">Click to zoom · Drag to pan</div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const thumbs = document.getElementById('thumbs');
+    const lightbox = document.getElementById('lightbox');
+    const full = document.getElementById('full');
+    const viewport = document.getElementById('viewport');
+    const closeBtn = document.getElementById('closeBtn');
+    const zoomInBtn = document.getElementById('zoomInBtn');
+    const zoomOutBtn = document.getElementById('zoomOutBtn');
+    const resetBtn = document.getElementById('resetBtn');
+
+    let scale = 1;
+    let origin = { x: 0.5, y: 0.5 };
+    let translate = { x: 0, y: 0 };
+    let isDragging = false;
+    let dragStart = { x: 0, y: 0 };
+    let prevTranslate = { x: 0, y: 0 };
+
+    function applyTransform(){
+      const tx = translate.x; const ty = translate.y;
+      full.style.transformOrigin = `${origin.x*100}% ${origin.y*100}%`;
+      full.style.transform = `translate(${tx}px, ${ty}px) scale(${scale})`;
+      full.classList.toggle('zoomed', scale > 1);
+    }
+
+    function openLightbox(src){
+      full.src = src; scale = 1; translate = {x:0,y:0}; origin = {x:.5,y:.5};
+      applyTransform();
+      lightbox.setAttribute('open','');
+      lightbox.setAttribute('aria-hidden','false');
+    }
+
+    function closeLightbox(){
+      lightbox.removeAttribute('open');
+      lightbox.setAttribute('aria-hidden','true');
+      isDragging = false; full.style.cursor = '';
+    }
+
+    thumbs.addEventListener('click', (e)=>{
+      const img = e.target.closest('img.thumb');
+      if(!img) return;
+      const fullUrl = img.dataset.full || img.src;
+      openLightbox(fullUrl);
+    });
+
+    closeBtn.addEventListener('click', closeLightbox);
+    lightbox.addEventListener('click', (e)=>{
+      if(e.target === lightbox) closeLightbox();
+    });
+    document.addEventListener('keydown', (e)=>{ if(e.key === 'Escape') closeLightbox(); });
+
+    viewport.addEventListener('click', (e)=>{
+      if(isDragging) return;
+      const rect = full.getBoundingClientRect();
+      origin.x = (e.clientX - rect.left) / rect.width;
+      origin.y = (e.clientY - rect.top) / rect.height;
+      scale = scale > 1 ? 1 : 2.2;
+      translate = {x:0,y:0};
+      applyTransform();
+    });
+
+    viewport.addEventListener('mousedown', (e)=>{
+      if(scale <= 1) return;
+      isDragging = true; full.style.cursor = 'grabbing';
+      dragStart = { x: e.clientX, y: e.clientY };
+      prevTranslate = { ...translate };
+      e.preventDefault();
+    });
+    window.addEventListener('mousemove', (e)=>{
+      if(!isDragging) return;
+      const dx = e.clientX - dragStart.x;
+      const dy = e.clientY - dragStart.y;
+      translate = { x: prevTranslate.x + dx, y: prevTranslate.y + dy };
+      applyTransform();
+    });
+    window.addEventListener('mouseup', ()=>{
+      if(isDragging){ isDragging = false; full.style.cursor = 'grab'; }
+    });
+
+    zoomInBtn.addEventListener('click', ()=>{ scale = Math.min(scale + 0.3, 5); applyTransform(); });
+    zoomOutBtn.addEventListener('click', ()=>{ scale = Math.max(scale - 0.3, 1); if(scale===1) translate={x:0,y:0}; applyTransform(); });
+    resetBtn.addEventListener('click', ()=>{ scale = 1; translate = {x:0,y:0}; origin={x:.5,y:.5}; applyTransform(); });
+
+    full.addEventListener('dragstart', (e)=> e.preventDefault());
+  </script>
+</body>
+</html>
