@@ -32,6 +32,12 @@ switch ($access) {
         $bccAddress = $data["bcc_address"];
         $bcc_address_json = json_encode($bccAddress, JSON_UNESCAPED_UNICODE);
 
+        function safe_string($value) {
+            return is_array($value) ? json_encode($value) : htmlspecialchars($value);
+        }
+        
+        $subject = safe_string($data['subject']);
+
         $clientDate = htmlspecialchars($data["client_date"]);
 
         $stmt = $con->prepare("SELECT id FROM drafts WHERE id = ? LIMIT 1");
@@ -44,8 +50,8 @@ switch ($access) {
           if (!empty($draftId)) {
             // $update = $con->prepare("UPDATE drafts SET to_address=?, cc_address=?, bcc_address=?, subject=?, content=? WHERE id=?");
             // $update->bind_param("sssssi", $to, $cc, $bcc, $subject, $content, $draftId);
-            $update = $con->prepare("UPDATE drafts SET to_address=? , cc_address=? , bcc_address=? , client_date=? WHERE id=?");
-            $update->bind_param("ssssi", $to_address_json, $cc_address_json, $bcc_address_json , $clientDate , $draftId);
+            $update = $con->prepare("UPDATE drafts SET to_address=? , cc_address=? , bcc_address=?, subject=? , client_date=? WHERE id=?");
+            $update->bind_param("sssssi", $to_address_json, $cc_address_json, $bcc_address_json , $subject, $clientDate , $draftId);
 
             if ($update->execute()) {
                 echo json_encode(["status" => "success", "message" => "Draft updated.", "draft_id" => $draftId]);

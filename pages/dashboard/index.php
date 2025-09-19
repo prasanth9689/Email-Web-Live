@@ -327,7 +327,7 @@ function updateemailOutput() {
         emailOutput.textContent = mToAddressJson;
         console.log(mToAddressJson);
         emailHiddenInput.value = mToAddressJson;
-        updateDraft(emailList, emailListCC , emailListBCC);
+        updateDraft(emailList, emailListCC , emailListBCC, subject);
     }
                             
 emailInput.addEventListener('keydown', e => {
@@ -395,7 +395,7 @@ tag.appendChild(remove);
         console.log(mCCAddressJson);
         emailHiddenInputCC.value = mCCAddressJson;
      //   updateDraft(emailList);
-     updateDraft(emailList, emailListCC , emailListBCC);
+     updateDraft(emailList, emailListCC , emailListBCC, subject);
 
     }
 
@@ -405,6 +405,13 @@ emailInputCC.addEventListener('keydown', e => {
         addEmailCC(value);
         e.preventDefault();
     }
+});
+
+emailInputCC.addEventListener('blur', () => {
+        const value = emailInputCC.value.trim();
+        if (value) {
+            addEmailCC(value);
+        }
 });
 
 // BCC address 
@@ -456,7 +463,7 @@ tag.appendChild(remove);
         console.log(mBCCAddressJson);
         emailHiddenInputBCC.value = mBCCAddressJson;
      //   updateDraft(emailList);
-     updateDraft(emailList, emailListCC , emailListBCC);
+     updateDraft(emailList, emailListCC , emailListBCC, subject);
 
     }
 
@@ -468,15 +475,32 @@ emailInputBCC.addEventListener('keydown', e => {
     }
 });
 
+emailInputBCC.addEventListener('blur', () => {
+        const value = emailInputBCC.value.trim();
+        if (value) {
+            addEmailBCC(value);
+        }
+});
+
+// Subject 
+const mSubject = document.getElementById('subject');
+
+mSubject.addEventListener('blur', () => {
+        const value = subject.value.trim();
+      //  alert(value);
+      updateDraft(emailList, emailListCC , emailListBCC, value);
+});
+
                             
-function updateDraft(mToAddressJson, mCcAddress, mBccAddress) {
+function updateDraft(mToAddressJson, mCcAddress, mBccAddress, subject) {
 var  acc = "updateDraft";                  
 if (draftId !== "") {        
      // draftId is not empty
      console.log("Valid draftId:", draftId);
 } else {
      console.log("draftId is empty");
-}                          
+}       
+  
                             
 var  ccAddressJson = "";
 var  bccAddressJson = "";
@@ -487,6 +511,7 @@ const data = {
         to_address: mToAddressJson,
         cc_address: mCcAddress,
         bcc_address: mBccAddress,
+        subject: subject,
         client_date: getFormattedDateTime(),
         user_id: <?php echo json_encode($user_Id); ?>
     };
