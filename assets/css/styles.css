@@ -1176,6 +1176,19 @@ h6 a {
 	flex: 1;
 	min-width: 100px;
 	}
+
+	.email-container-cc {
+		border: 1px solid #ccc;
+		display: flex;
+		flex-wrap: wrap;
+		cursor: text;
+		}
+		.email-container-cc input {
+		border: none;
+		outline: none;
+		flex: 1;
+		min-width: 100px;
+		}
 	
 	.email-tag {
 	background-color: #28a745;

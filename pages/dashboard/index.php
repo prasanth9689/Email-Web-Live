@@ -222,9 +222,8 @@
                                     <!-- Debug To Address -->
                                      To Address (User entered emails)
                                  <pre id="emailOutput"></pre>
-                                    Debug draft response for to address
+                                    Debug draft response for "to address"
                                     <pre id="draftResponse"></pre>
-                                    <script src="/assets/js/to_address.js"></script>
    
                               </div>
                            </div>
@@ -235,14 +234,12 @@
                                  <label style="font-weight: 600;" for="cc" class="col-sm-1 control-label">CC</label>
                                  <div class="col-sm-11">
 
-                                    <div>
-                                    <input type="email" class="EditText select2-offscreen"  id="cc" placeholder="Type email" tabindex="-1">
+                                    <div class="email-container-cc" id="emailContainerCC" onclick="emailInputCC.focus()">
+                                    <input type="email" class="EditText select2-offscreen"  id="emailInputCC" placeholder="Type email" tabindex="-1">
                                     </div>
+                                    <input type="hidden" name="emails_json_cc" id="emailsInputCC">
                                     CC Address (User entered emails)
                                     <pre id="emailOutputCC"></pre>
-                                    <script src="/assets/js/cc_address.js"></script>
-
-
                                  </div>
                               </div>
                            </div>
@@ -321,7 +318,7 @@ function updateemailOutput() {
         emailOutput.textContent = mToAddressJson;
         console.log(mToAddressJson);
         emailHiddenInput.value = mToAddressJson;
-        updateDraft(emailList);
+        updateDraft(emailList, emailListCC);
     }
                             
 emailInput.addEventListener('keydown', e => {
@@ -341,8 +338,68 @@ emailInput.addEventListener('blur', () => {
 
 
 // CC address 
+const emailInputCC = document.getElementById('emailInputCC');
+const emailContainerCC = document.getElementById('emailContainerCC');
+const emailOutputCC = document.getElementById('emailOutputCC')
+const emailHiddenInputCC = document.getElementById('emailsInputCC');
+const emailListCC = [];
+
+function addEmailCC(email) {
+     email = email.trim();
+    if (!isValidEmail(email)) {
+            alert(`Invalid email: ${email}`);
+            emailInputCC.value = '';
+            return;
+        }
                             
-function updateDraft(mToAddressJson) {
+if (emailListCC.includes(email)) {
+            alert(`Duplicate email: ${email}`);
+            emailInputCC.value = '';
+            return;
+        }
+                            
+        emailListCC.push(email);
+                            
+        const tag = document.createElement('div');
+        tag.className = 'email-tag';
+        tag.textContent = email;
+                            
+        const remove = document.createElement('span');
+        remove.textContent = '×';
+
+remove.onclick = () => {
+        emailContainerCC.removeChild(tag);
+        const index = emailListCC.indexOf(email);
+        if (index !== -1) emailListCC.splice(index, 1);
+        updateemailOutputCC();
+    };
+                            
+tag.appendChild(remove);
+        emailContainerCC.insertBefore(tag, emailInputCC);
+        emailInputCC.value = '';
+        updateemailOutputCC();         
+    }
+
+    function updateemailOutputCC() {
+        const mCCAddressJson = JSON.stringify(emailListCC);
+        emailOutputCC.textContent = mCCAddressJson;
+        console.log(mCCAddressJson);
+        emailHiddenInputCC.value = mCCAddressJson;
+     //   updateDraft(emailList);
+     updateDraft(emailList, emailListCC);
+
+    }
+
+emailInputCC.addEventListener('keydown', e => {
+        const value = emailInputCC.value.trim();
+        if ((e.key === 'Enter' || e.key === ' ') && value) {
+        addEmailCC(value);
+        e.preventDefault();
+    }
+});
+
+                            
+function updateDraft(mToAddressJson, mCcAddress) {
 var  acc = "updateDraft";                  
 if (draftId !== "") {        
      // draftId is not empty
@@ -358,7 +415,7 @@ const data = {
         acc: acc,
         draft_id: draftId,
         to_address: mToAddressJson,
-        cc_address: ccAddressJson,
+        cc_address: mCcAddress,
         bcc_address: bccAddressJson,
         client_date: getFormattedDateTime(),
         user_id: <?php echo json_encode($user_Id); ?>
