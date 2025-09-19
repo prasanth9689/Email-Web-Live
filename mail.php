@@ -44,8 +44,8 @@ switch ($access) {
           if (!empty($draftId)) {
             // $update = $con->prepare("UPDATE drafts SET to_address=?, cc_address=?, bcc_address=?, subject=?, content=? WHERE id=?");
             // $update->bind_param("sssssi", $to, $cc, $bcc, $subject, $content, $draftId);
-            $update = $con->prepare("UPDATE drafts SET to_address=? , cc_address=? , client_date=? WHERE id=?");
-            $update->bind_param("sssi", $to_address_json, $cc_address_json, $clientDate , $draftId);
+            $update = $con->prepare("UPDATE drafts SET to_address=? , cc_address=? , bcc_address=? , client_date=? WHERE id=?");
+            $update->bind_param("ssssi", $to_address_json, $cc_address_json, $bcc_address_json , $clientDate , $draftId);
 
             if ($update->execute()) {
                 echo json_encode(["status" => "success", "message" => "Draft updated.", "draft_id" => $draftId]);

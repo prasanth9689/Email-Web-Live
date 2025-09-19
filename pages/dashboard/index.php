@@ -244,15 +244,24 @@
                               </div>
                            </div>
 
-
+                           <!-- BCC Address -->
                            <div id="activateBCC" style="display: none;">
                               <div class="form-group d-flex justify-content-start">
                                  <label style="font-weight: 600;" for="bcc" class="col-sm-1 control-label">BCC:</label>
                                  <div class="col-sm-11">
-                                    <input type="email" class="EditText select2-offscreen"  id="bcc" placeholder="Type email" tabindex="-1">
+                                    <!-- <input type="email" class="EditText select2-offscreen"  id="bcc" placeholder="Type email" tabindex="-1"> -->
+                                 
+                                    <div class="email-container-bcc" id="emailContainerBCC" onclick="emailInputBCC.focus()">
+                                    <input type="email" class="EditText select2-offscreen"  id="emailInputBCC" placeholder="Type email" tabindex="-1">
+                                    </div>
+                                    <input type="hidden" name="emails_json_bcc" id="emailsInputBCC">
+                                    BCC Address (User entered emails)
+                                    <pre id="emailOutputBCC"></pre>
+
                                  </div>
                               </div>
                            </div>
+
                            <div class="form-group d-flex justify-content-start">
                               <label style="font-weight: 600;" for="bcc" class="col-sm-1 control-label">Subject</label>
                               <div class="col-sm-11">
@@ -318,7 +327,7 @@ function updateemailOutput() {
         emailOutput.textContent = mToAddressJson;
         console.log(mToAddressJson);
         emailHiddenInput.value = mToAddressJson;
-        updateDraft(emailList, emailListCC);
+        updateDraft(emailList, emailListCC , emailListBCC);
     }
                             
 emailInput.addEventListener('keydown', e => {
@@ -386,7 +395,7 @@ tag.appendChild(remove);
         console.log(mCCAddressJson);
         emailHiddenInputCC.value = mCCAddressJson;
      //   updateDraft(emailList);
-     updateDraft(emailList, emailListCC);
+     updateDraft(emailList, emailListCC , emailListBCC);
 
     }
 
@@ -398,8 +407,69 @@ emailInputCC.addEventListener('keydown', e => {
     }
 });
 
+// BCC address 
+const emailInputBCC = document.getElementById('emailInputBCC');
+const emailContainerBCC = document.getElementById('emailContainerBCC');
+const emailOutputBCC = document.getElementById('emailOutputBCC')
+const emailHiddenInputBCC = document.getElementById('emailsInputBCC');
+const emailListBCC = [];
+
+function addEmailBCC(email) {
+     email = email.trim();
+    if (!isValidEmail(email)) {
+            alert(`Invalid email: ${email}`);
+            emailInputBCC.value = '';
+            return;
+        }
                             
-function updateDraft(mToAddressJson, mCcAddress) {
+if (emailListBCC.includes(email)) {
+            alert(`Duplicate email: ${email}`);
+            emailInputBCC.value = '';
+            return;
+        }
+                            
+        emailListBCC.push(email);
+                            
+        const tag = document.createElement('div');
+        tag.className = 'email-tag';
+        tag.textContent = email;
+                            
+        const remove = document.createElement('span');
+        remove.textContent = '×';
+
+remove.onclick = () => {
+        emailContainerBCC.removeChild(tag);
+        const index = emailListBCC.indexOf(email);
+        if (index !== -1) emailListBCC.splice(index, 1);
+        updateemailOutputBCC();
+    };
+                            
+tag.appendChild(remove);
+        emailContainerBCC.insertBefore(tag, emailInputBCC);
+        emailInputBCC.value = '';
+        updateemailOutputBCC();         
+    }
+
+    function updateemailOutputBCC() {
+        const mBCCAddressJson = JSON.stringify(emailListBCC);
+        emailOutputBCC.textContent = mBCCAddressJson;
+        console.log(mBCCAddressJson);
+        emailHiddenInputBCC.value = mBCCAddressJson;
+     //   updateDraft(emailList);
+     updateDraft(emailList, emailListCC , emailListBCC);
+
+    }
+
+emailInputBCC.addEventListener('keydown', e => {
+        const value = emailInputBCC.value.trim();
+        if ((e.key === 'Enter' || e.key === ' ') && value) {
+        addEmailBCC(value);
+        e.preventDefault();
+    }
+});
+
+                            
+function updateDraft(mToAddressJson, mCcAddress, mBccAddress) {
 var  acc = "updateDraft";                  
 if (draftId !== "") {        
      // draftId is not empty
@@ -416,7 +486,7 @@ const data = {
         draft_id: draftId,
         to_address: mToAddressJson,
         cc_address: mCcAddress,
-        bcc_address: bccAddressJson,
+        bcc_address: mBccAddress,
         client_date: getFormattedDateTime(),
         user_id: <?php echo json_encode($user_Id); ?>
     };

@@ -1189,6 +1189,19 @@ h6 a {
 		flex: 1;
 		min-width: 100px;
 		}
+
+		.email-container-bcc {
+			border: 1px solid #ccc;
+			display: flex;
+			flex-wrap: wrap;
+			cursor: text;
+			}
+			.email-container-bcc input {
+			border: none;
+			outline: none;
+			flex: 1;
+			min-width: 100px;
+			}
 	
 	.email-tag {
 	background-color: #28a745;
@@ -1218,6 +1231,14 @@ h6 a {
 	padding: 10px;
 	border: 1px dashed #ccc;
 	}
+
+	#emailOutputBCC {
+		margin-top: 10px;
+		white-space: pre-wrap;
+		background: #f9f9f9;
+		padding: 10px;
+		border: 1px dashed #ccc;
+		}
 
 	.container-bcc-cc {
 		font-weight: 600; 
