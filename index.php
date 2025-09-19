@@ -34,7 +34,7 @@ if (isset($_SESSION["username"])) {
 <head>
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
-	<title>Research & Paper publication | Mail</title>
+	<title>Skyblue Email | Login</title>
 	<link rel="stylesheet" href="../assets/css/styles.css">
 	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.1.3/dist/css/bootstrap.min.css"
 		integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
@@ -67,8 +67,8 @@ if (isset($_SESSION["username"])) {
 		<div class="row">
 
 			<div class="col-sm left-side" style="height: 400px;">
-				<!-- <img class="left-side-img" src="../assets/img/img1.png" width="500px" height="500px" /> -->
-				<h2>Research & Paper publication</h2>
+				<img class="left-side-img" src="../assets/img/img1.png" width="500px" height="500px" />
+			<!--	<h2>Research & Paper publication</h2>
                 
 				<div class="container-kefhm">
                   <div class="text1-evryn">Screenshots </div>
@@ -83,7 +83,7 @@ if (isset($_SESSION["username"])) {
 				<div class="container-kefhm2" style="margin-top:10px; display: flex;gap: 10px;font-family: Arial, sans-serif;">
 				  <div class="text1-evryn">Documentation: </div> 
 				  <p style="color: rgb(249, 5, 5);">Coming soon...</p>
-				</div>
+				</div> -->
 
 			</div>
             

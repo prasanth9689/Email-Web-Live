@@ -8,7 +8,7 @@
    
 <html>
    <head>
-      <title>Skyblue E-mail Dashboard</title>
+      <title>E-Mail Dashboard</title>
       <meta name="viewport" content="width=device-width, initial-scale=1">
       <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.1.3/dist/css/bootstrap.min.css"
          integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
@@ -202,9 +202,13 @@
                            <div class="form-group d-flex justify-content-start">
                               <label style="font-weight: 600;" for="to" class="col-sm-1 control-label">To</label>
                               <div class="col-sm-11">
+
+                                 <!-- To address -->
                                  <div class="email-container" id="emailContainerTo" onclick="emailInput.focus()">
-                                    <input type="text" class="EditText select2-offscreen" id="emailInput" value="prasanth@gmail.com" placeholder="Type email and press space or enter...">
+                                    <input type="text" class="EditText select2-offscreen" id="emailInput" value="" placeholder="Type email and press space or enter...">
                                  </div>
+
+
                                  <div class="container-bcc-cc" >
                                     <div class="textviewBCC-CC" id="ccText" onclick="onClickCC()" >CC</div>
                                     <div class="textviewBCC-CC" id="bccText" onclick="onClickBCC()">BCC</div>
@@ -216,150 +220,34 @@
                                     Debug purpose
                                     -->
                                     <!-- Debug To Address -->
-                                 <!-- <pre id="emailOutput"></pre> -->
-                                    <!-- Debug draft response -->
-                                    <!-- <pre id="draftResponse"></pre> -->
-                                    <!-- <script src="/assets/js/to_address.js"></script> -->
-    <script>
-        var  draftId = "";
-        const emailInput = document.getElementById('emailInput');
-        const emailContainerTo = document.getElementById('emailContainerTo');
-        const emailOutput = document.getElementById('emailOutput');
-        const emailHiddenInput = document.getElementById('emailsInput');
-        const emailList = [];
-
-        function isValidEmail(email) {
-                const pattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-                 return pattern.test(email);
-            }
-                                                                
-        function addEmail(email) {
-             email = email.trim();
-            if (!isValidEmail(email)) {
-                    alert(`Invalid email: ${email}`);
-                    emailInput.value = '';
-                    return;
-                }
-                                    
-        if (emailList.includes(email)) {
-                    alert(`Duplicate email: ${email}`);
-                    emailInput.value = '';
-                    return;
-                }
-                                    
-                emailList.push(email);
-                                    
-                const tag = document.createElement('div');
-                tag.className = 'email-tag';
-                tag.textContent = email;
-                                    
-                const remove = document.createElement('span');
-                remove.textContent = '×';
-
-        remove.onclick = () => {
-                emailContainerTo.removeChild(tag);
-                const index = emailList.indexOf(email);
-                if (index !== -1) emailList.splice(index, 1);
-                updateemailOutput();
-            };
-                                    
-        tag.appendChild(remove);
-                emailContainerTo.insertBefore(tag, emailInput);
-                emailInput.value = '';
-                updateemailOutput();         
-            }
-                                    
-        function updateemailOutput() {
-                const mToAddressJson = JSON.stringify(emailList);
-                emailOutput.textContent = mToAddressJson;
-                console.log(mToAddressJson);
-                emailHiddenInput.value = mToAddressJson;
-                updateDraft(emailList);
-            }
-                                    
-        emailInput.addEventListener('keydown', e => {
-                const value = emailInput.value.trim();
-                if ((e.key === 'Enter' || e.key === ' ') && value) {
-                addEmail(value);
-                e.preventDefault();
-            }
-        });
-                                    
-        emailInput.addEventListener('blur', () => {
-                const value = emailInput.value.trim();
-                if (value) {
-                    addEmail(value);
-                }
-        });
-                                    
-        function updateDraft(mToAddressJson) {
-                var  acc = "updateDraft";                  
-                if (draftId !== "") {        
-                         // draftId is not empty
-                        console.log("Valid draftId:", draftId);
-                    } else {
-                        console.log("draftId is empty");
-                }                          
-                                    
-                var  ccAddressJson = "";
-                var  bccAddressJson = "";
-                                    
-              const data = {
-				acc: acc,
-                draft_id: draftId,
-                to_address: mToAddressJson,
-                cc_address: ccAddressJson,
-                bcc_address: bccAddressJson,
-                client_date: getFormattedDateTime(),
-                user_id: <?php echo json_encode($user_Id); ?>
-			};
-			// POST request to the API
-			fetch('https://mail.skyblue.co.in/mail.php', {
-				method: 'POST',
-				headers: {
-					'Content-Type': 'application/json'
-				},
-				body: JSON.stringify(data)
-			})
-				.then(response => response.json())
-				.then(data => {
-
-                    if (data.status === "success") {
-                            const responseMessage = document.getElementById('draftResponse');
-                            responseMessage.textContent = 'status: ' + data.status + '\n' + 'message: ' + data.message  + '\n' + 'draft_id: ' + data.draft_id;
-                            draftId = data.draft_id;
-                         } else {
-                                alert("Error: " + response.message);
-                         }
-				})
-				.catch((error) => {
-                    console.error("Request failed:", error);
-                    alert("Network or server error occurred.");
-				});
-        }
-        
-    function getFormattedDateTime() {
-        const now = new Date();
-        const year = now.getFullYear();
-        const month = String(now.getMonth() + 1).padStart(2, '0'); // Month is 0-based
-        const day = String(now.getDate()).padStart(2, '0');
-        const hours = String(now.getHours()).padStart(2, '0');
-        const minutes = String(now.getMinutes()).padStart(2, '0');
-        const seconds = String(now.getSeconds()).padStart(2, '0');
-  return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
-}
-  
-</script>
+                                     To Address (User entered emails)
+                                 <pre id="emailOutput"></pre>
+                                    Debug draft response for to address
+                                    <pre id="draftResponse"></pre>
+                                    <script src="/assets/js/to_address.js"></script>
+   
                               </div>
                            </div>
+
+                           <!-- CC address -->
                            <div id="activateCC" style="display: none;">
                               <div class="form-group d-flex justify-content-start" style="">
                                  <label style="font-weight: 600;" for="cc" class="col-sm-1 control-label">CC</label>
                                  <div class="col-sm-11">
+
+                                    <div>
                                     <input type="email" class="EditText select2-offscreen"  id="cc" placeholder="Type email" tabindex="-1">
+                                    </div>
+                                    CC Address (User entered emails)
+                                    <pre id="emailOutputCC"></pre>
+                                    <script src="/assets/js/cc_address.js"></script>
+
+
                                  </div>
                               </div>
                            </div>
+
+
                            <div id="activateBCC" style="display: none;">
                               <div class="form-group d-flex justify-content-start">
                                  <label style="font-weight: 600;" for="bcc" class="col-sm-1 control-label">BCC:</label>
@@ -374,6 +262,145 @@
                                  <input type="text" class="EditText select2-offscreen" id="subject" placeholder="Subject" tabindex="-1">
                               </div>
                            </div>
+
+                           <script>
+
+var  draftId = "";
+
+//===============================================================================
+// To address
+const emailInput = document.getElementById('emailInput');
+const emailContainerTo = document.getElementById('emailContainerTo');
+const emailOutput = document.getElementById('emailOutput');
+const emailHiddenInput = document.getElementById('emailsInput');
+const emailList = [];
+
+function isValidEmail(email) {
+        const pattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+         return pattern.test(email);
+    }
+                                                        
+function addEmail(email) {
+     email = email.trim();
+    if (!isValidEmail(email)) {
+            alert(`Invalid email: ${email}`);
+            emailInput.value = '';
+            return;
+        }
+                            
+if (emailList.includes(email)) {
+            alert(`Duplicate email: ${email}`);
+            emailInput.value = '';
+            return;
+        }
+                            
+        emailList.push(email);
+                            
+        const tag = document.createElement('div');
+        tag.className = 'email-tag';
+        tag.textContent = email;
+                            
+        const remove = document.createElement('span');
+        remove.textContent = '×';
+
+remove.onclick = () => {
+        emailContainerTo.removeChild(tag);
+        const index = emailList.indexOf(email);
+        if (index !== -1) emailList.splice(index, 1);
+        updateemailOutput();
+    };
+                            
+tag.appendChild(remove);
+        emailContainerTo.insertBefore(tag, emailInput);
+        emailInput.value = '';
+        updateemailOutput();         
+    }
+                            
+function updateemailOutput() {
+        const mToAddressJson = JSON.stringify(emailList);
+        emailOutput.textContent = mToAddressJson;
+        console.log(mToAddressJson);
+        emailHiddenInput.value = mToAddressJson;
+        updateDraft(emailList);
+    }
+                            
+emailInput.addEventListener('keydown', e => {
+        const value = emailInput.value.trim();
+        if ((e.key === 'Enter' || e.key === ' ') && value) {
+        addEmail(value);
+        e.preventDefault();
+    }
+});
+                            
+emailInput.addEventListener('blur', () => {
+        const value = emailInput.value.trim();
+        if (value) {
+            addEmail(value);
+        }
+});
+
+
+// CC address 
+                            
+function updateDraft(mToAddressJson) {
+var  acc = "updateDraft";                  
+if (draftId !== "") {        
+     // draftId is not empty
+     console.log("Valid draftId:", draftId);
+} else {
+     console.log("draftId is empty");
+}                          
+                            
+var  ccAddressJson = "";
+var  bccAddressJson = "";
+                            
+const data = {
+        acc: acc,
+        draft_id: draftId,
+        to_address: mToAddressJson,
+        cc_address: ccAddressJson,
+        bcc_address: bccAddressJson,
+        client_date: getFormattedDateTime(),
+        user_id: <?php echo json_encode($user_Id); ?>
+    };
+
+    // POST request to the API
+    fetch('https://mail.skyblue.co.in/mail.php', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(data)
+    })
+        .then(response => response.json())
+        .then(data => {
+
+            if (data.status === "success") {
+                    const responseMessage = document.getElementById('draftResponse');
+                    responseMessage.textContent = 'status: ' + data.status + '\n' + 'message: ' + data.message  + '\n' + 'draft_id: ' + data.draft_id;
+                    draftId = data.draft_id;
+                 } else {
+                        alert("Error: " + response.message);
+                 }
+        })
+        .catch((error) => {
+            console.error("Request failed:", error);
+            alert("Network or server error occurred.");
+        });
+}
+
+function getFormattedDateTime() {
+const now = new Date();
+const year = now.getFullYear();
+const month = String(now.getMonth() + 1).padStart(2, '0'); // Month is 0-based
+const day = String(now.getDate()).padStart(2, '0');
+const hours = String(now.getHours()).padStart(2, '0');
+const minutes = String(now.getMinutes()).padStart(2, '0');
+const seconds = String(now.getSeconds()).padStart(2, '0');
+return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
+}
+
+</script>
                         </form>
                         <div class="col-sm-11 col-sm-offset-1" style="max-width:100%; ">
                            <br>	

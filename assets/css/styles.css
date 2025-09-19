@@ -1176,6 +1176,7 @@ h6 a {
 	flex: 1;
 	min-width: 100px;
 	}
+	
 	.email-tag {
 	background-color: #28a745;
 	color: white;
@@ -1190,6 +1191,14 @@ h6 a {
 	cursor: pointer;
 	}
 	#emailOutput {
+	margin-top: 10px;
+	white-space: pre-wrap;
+	background: #f9f9f9;
+	padding: 10px;
+	border: 1px dashed #ccc;
+	}
+
+	#emailOutputCC {
 	margin-top: 10px;
 	white-space: pre-wrap;
 	background: #f9f9f9;
